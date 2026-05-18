@@ -1,0 +1,98 @@
+---
+const navLinks = [
+  { href: '/blog/', label: 'Blog' },
+  { href: '/araclar/', label: 'Araçlar' },
+  { href: '/hakkimda/', label: 'Hakkımda' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header style="background: var(--bg); border-bottom: 1px solid var(--border);">
+  <nav style="max-width: 900px; margin: 0 auto; padding: 0 1.25rem; height: 3.5rem; display: flex; align-items: center; justify-content: space-between;">
+
+    <a href="/" style="font-family: var(--font-heading); font-size: 1.125rem; font-weight: 600; color: var(--text); text-decoration: none; letter-spacing: -0.01em;">
+      Yatırım Notları
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 0.25rem;">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          style={`
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: ${currentPath.startsWith(link.href) ? 'var(--accent)' : 'var(--text-muted)'};
+            background: ${currentPath.startsWith(link.href) ? 'var(--bg-secondary)' : 'transparent'};
+            text-decoration: none;
+            transition: all 0.15s ease;
+          `}
+        >
+          {link.label}
+        </a>
+      ))}
+
+      <button
+        id="theme-toggle"
+        aria-label="Tema değiştir"
+        title="Aydınlık/Karanlık tema"
+        style="
+          margin-left: 0.5rem;
+          width: 2rem;
+          height: 2rem;
+          border: none;
+          background: var(--bg-secondary);
+          border-radius: 6px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-muted);
+          transition: all 0.15s ease;
+          padding: 0;
+        "
+      >
+        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display:none">
+          <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+        </svg>
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+        </svg>
+      </button>
+    </div>
+
+  </nav>
+</header>
+
+<script>
+  function getTheme(): string {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme: string) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const sunIcon = document.getElementById('icon-sun');
+    const moonIcon = document.getElementById('icon-moon');
+    if (theme === 'dark') {
+      sunIcon!.style.display = 'block';
+      moonIcon!.style.display = 'none';
+    } else {
+      sunIcon!.style.display = 'none';
+      moonIcon!.style.display = 'block';
+    }
+  }
+
+  const theme = getTheme();
+  applyTheme(theme);
+
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  });
+</script>

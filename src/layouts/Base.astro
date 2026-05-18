@@ -1,0 +1,81 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  pubDate?: Date;
+}
+
+const {
+  title,
+  description = 'Türk ve dünya piyasaları üzerine analiz ve notlar.',
+  image = '/og-default.png',
+  type = 'website',
+  pubDate,
+} = Astro.props;
+
+const siteUrl = 'https://yatirimnotlari.github.io';
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+const fullTitle = title === 'Yatırım Notları' ? title : `${title} — Yatırım Notları`;
+---
+
+<!doctype html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL} />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content={type} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:image" content={`${siteUrl}${image}`} />
+  <meta property="og:locale" content="tr_TR" />
+  <meta property="og:site_name" content="Yatırım Notları" />
+
+  {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={`${siteUrl}${image}`} />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="Yatırım Notları RSS" href="/rss.xml" />
+
+  <!-- Theme init — flash önlemek için head'de çalışır -->
+  <script is:inline>
+    (function() {
+      const stored = localStorage.getItem('theme');
+      const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+  <Header />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+</body>
+</html>

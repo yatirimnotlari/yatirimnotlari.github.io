@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Araçlar" description="İnteraktif finans araçları — Yatırım Notları">
+  <div style="max-width: 900px; margin: 0 auto; padding: 3rem 1.25rem 2rem;">
+
+    <h1 style="font-family: var(--font-heading); font-size: 2rem; font-weight: 700; margin: 0 0 0.75rem; color: var(--text);">
+      Araçlar
+    </h1>
+    <p style="color: var(--text-muted); margin: 0 0 2.5rem; font-size: 1rem; line-height: 1.6;">
+      Piyasa verilerini anlamlandırmak için interaktif araçlar.
+    </p>
+
+    <div style="
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+    ">
+      <div style="
+        width: 3rem;
+        height: 3rem;
+        background: var(--accent);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 16 16">
+          <path d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
+        </svg>
+      </div>
+      <div>
+        <h2 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 600; margin: 0 0 0.4rem; color: var(--text);">
+          BIST Isı Haritası
+        </h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 0.75rem; line-height: 1.6;">
+          BIST 100 hisselerini piyasa değerine ve günlük performansa göre sektör bazında görselleştiren interaktif harita.
+        </p>
+        <span style="
+          display: inline-block;
+          font-size: 0.75rem;
+          font-weight: 500;
+          padding: 0.2rem 0.6rem;
+          background: var(--border);
+          color: var(--text-muted);
+          border-radius: 4px;
+        ">Yakında</span>
+      </div>
+    </div>
+
+  </div>
+</Base>

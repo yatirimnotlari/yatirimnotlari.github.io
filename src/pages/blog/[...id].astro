@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.heroImage}
+  type="article"
+  pubDate={post.data.pubDate}
+>
+  <div style="max-width: 900px; margin: 0 auto; padding: 2.5rem 1.25rem;">
+
+    <article>
+      <!-- Üst bilgi -->
+      <header style="margin-bottom: 2.5rem;">
+        <a href="/blog/" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; margin-bottom: 1.25rem;">
+          ← Blog
+        </a>
+
+        <h1 style="font-family: var(--font-heading); font-size: 2rem; font-weight: 700; line-height: 1.25; margin: 0 0 0.75rem; color: var(--text);">
+          {post.data.title}
+        </h1>
+
+        {post.data.description && (
+          <p style="font-size: 1.05rem; color: var(--text-muted); margin: 0 0 1rem; line-height: 1.5;">
+            {post.data.description}
+          </p>
+        )}
+
+        <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {formatDate(post.data.pubDate)}
+          </time>
+          {post.data.updatedDate && (
+            <span>· Güncellendi: {formatDate(post.data.updatedDate)}</span>
+          )}
+        </div>
+
+        {post.data.heroImage && (
+          <img
+            src={post.data.heroImage}
+            alt={post.data.title}
+            style="width: 100%; border-radius: 8px; margin-top: 1.5rem;"
+          />
+        )}
+
+        <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;" />
+      </header>
+
+      <!-- İçerik -->
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+
+  </div>
+</Base>
