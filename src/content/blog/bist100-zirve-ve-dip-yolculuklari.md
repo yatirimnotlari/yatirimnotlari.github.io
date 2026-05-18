@@ -2,6 +2,7 @@
 title: "BIST 100'ün Zirve ve Dip Yolculukları"
 description: "1990'dan bu yana BIST 100'ün yaşadığı büyük düşüşler ve çıkışlar: ortalama ne kadar düştü, ne kadar sürdü?"
 pubDate: 2023-10-30
+heroImage: /images/bist-dusus-nerede-biter.jpg
 ---
 
 Borsadaki düşüşler yatırımcılara endişe yaşatıyor. Peki borsa düşüşü nerede biter? Cevabım: bilmiyorum! Sadece ben değil, hiç kimse tutarlı bir şekilde dipleri ve zirveleri tahmin edemiyor.
@@ -18,6 +19,8 @@ Ama bu soruyu sormak yerine şunu sormak daha faydalı: geçmişte ne oldu?
 
 tespit edildi.
 
+![BIST 100 tarihsel düzeltmeleri — zirveden dip grafiği (1990–2023)](/images/bist-grafik-dususler-1024x419.png)
+
 ## Temel Bulgular
 
 1990'dan bu yana BIST'de **41 defa** zirvesinden %10'dan fazla düşüş yaşandı.
@@ -29,7 +32,11 @@ tespit edildi.
 | Olağan düzeltme aralığı | ~%25 |
 | Majör düzeltmeler | %55–%70 arası |
 
+![Düzeltme oranları ve süreleri tablosu](/images/borsa-dusus-zaman-1024x401.png)
+
 **Dikkat çekici bir gözlem:** Zirveden %35 ile %55 arasında tamamlanan düzeltme sayısı son derece az. Düzeltmeler ya %35 civarında tamamlanıyor ya da %55'in üzerine fırlıyor. Aradaki bölge adeta boş.
+
+![Zirveden düşüş kategorileri](/images/zirveden-dusus.png)
 
 ## Tarihsel Büyük Düzeltmeler
 
@@ -49,6 +56,8 @@ Bu analizden çıkarılabilecek pratik sonuçlar:
 2. **Yatırım hesabındaki paraya en az 2 yıl ihtiyaç duyulmamalı.** Kısa vadeli ihtiyaçlar için borsa uygun değil.
 3. **Yedek nakit bulundur.** Büyük düzeltmelerde alım yapabilmek için el altında likit kaynak olmalı.
 4. **%50'nin üzerindeki düzeltmelerde korkmadan alım yapılabilir.** Tarihsel veriler, bu seviyelerin iyi giriş noktaları sunduğunu gösteriyor.
+
+![TradingView zirveden düşüş indikatörü](/images/zirveden-dusus-indikatoru-1024x484.png)
 
 ---
 
