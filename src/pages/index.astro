@@ -76,15 +76,17 @@ function formatDate(date: Date) {
         <a href="/araclar/" style="font-size: 0.85rem; color: var(--accent);">Tüm araçlar →</a>
       </div>
 
-      <div style="
+      <a href="/araclar/bist-isi-haritasi/" style="
+        display: flex;
+        align-items: center;
+        gap: 1rem;
         background: var(--bg-secondary);
         border: 1px solid var(--border);
         border-radius: 10px;
         padding: 1.25rem 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      ">
+        text-decoration: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      " onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 1px var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
         <div style="
           width: 2.5rem;
           height: 2.5rem;
@@ -101,9 +103,9 @@ function formatDate(date: Date) {
         </div>
         <div>
           <div style="font-weight: 500; font-size: 0.95rem; color: var(--text); margin-bottom: 0.2rem;">BIST Isı Haritası</div>
-          <div style="font-size: 0.82rem; color: var(--text-muted);">Yakında — BIST 100 hisselerini sektör bazında görselleştir</div>
+          <div style="font-size: 0.82rem; color: var(--text-muted);">Tüm BIST hisselerini piyasa değeri ve performansa göre görselleştir</div>
         </div>
-      </div>
+      </a>
     </section>
 
   </div>
