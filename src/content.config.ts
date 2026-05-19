@@ -14,4 +14,16 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const notlar = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/notlar' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    draft: z.boolean().default(false),
+    aiAuthored: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, notlar };

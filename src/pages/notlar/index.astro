@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const notlar = (await getCollection('notlar'))
+  .filter(n => !n.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<Base title="Notlar" description="Terimler, kavramlar ve kuramlar — Yatırım Notları">
+  <div style="max-width: 900px; margin: 0 auto; padding: 3rem 1.25rem 2rem;">
+
+    <h1 style="font-family: var(--font-heading); font-size: 2rem; font-weight: 700; margin: 0 0 0.75rem; color: var(--text);">
+      Notlar
+    </h1>
+    <p style="color: var(--text-muted); margin: 0 0 2rem; font-size: 1rem; line-height: 1.6;">
+      Finans terimlerini, göstergeleri ve kuramları anlatan referans yazılar. Blog'dan farklı olarak zaman bağımsız, sürekli güncel tutulan içerikler.
+    </p>
+
+    {notlar.length === 0 ? (
+      <p style="color: var(--text-muted);">Henüz yazı yok.</p>
+    ) : (
+      <div>
+        {notlar.map((not) => (
+          <article style="padding: 1.25rem 0; border-bottom: 1px solid var(--border);">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.35rem;">
+              <a
+                href={`/notlar/${not.id}/`}
+                style="font-size: 1.05rem; font-weight: 500; color: var(--text); text-decoration: none;"
+              >
+                {not.data.title}
+              </a>
+              <time
+                datetime={not.data.pubDate.toISOString()}
+                style="font-size: 0.8rem; color: var(--text-muted); white-space: nowrap;"
+              >
+                {formatDate(not.data.pubDate)}
+              </time>
+            </div>
+            {not.data.description && (
+              <p style="margin: 0; font-size: 0.875rem; color: var(--text-muted); line-height: 1.55;">
+                {not.data.description}
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    )}
+
+  </div>
+</Base>

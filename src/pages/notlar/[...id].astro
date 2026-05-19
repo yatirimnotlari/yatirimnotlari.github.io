@@ -1,0 +1,86 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notlar = await getCollection('notlar');
+  return notlar.map(not => ({
+    params: { id: not.id },
+    props: { not },
+  }));
+}
+
+const { not } = Astro.props;
+const { Content } = await render(not);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<Base
+  title={not.data.title}
+  description={not.data.description}
+  type="article"
+  pubDate={not.data.pubDate}
+>
+  <!-- KaTeX CSS — sadece bu sayfada yüklenir -->
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    crossorigin="anonymous"
+  />
+
+  <div style="max-width: 900px; margin: 0 auto; padding: 2.5rem 1.25rem;">
+    <article>
+
+      <header style="margin-bottom: 2.5rem;">
+        <a href="/notlar/" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; margin-bottom: 1.25rem;">
+          ← Notlar
+        </a>
+
+        <h1 style="font-family: var(--font-heading); font-size: 2rem; font-weight: 700; line-height: 1.25; margin: 0 0 0.75rem; color: var(--text);">
+          {not.data.title}
+        </h1>
+
+        {not.data.description && (
+          <p style="font-size: 1.05rem; color: var(--text-muted); margin: 0 0 1rem; line-height: 1.5;">
+            {not.data.description}
+          </p>
+        )}
+
+        <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+          <time datetime={not.data.pubDate.toISOString()}>
+            {formatDate(not.data.pubDate)}
+          </time>
+          {not.data.updatedDate && (
+            <span>· Güncellendi: {formatDate(not.data.updatedDate)}</span>
+          )}
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;" />
+      </header>
+
+      {not.data.aiAuthored && (
+        <div style="
+          font-size: 0.8rem;
+          color: var(--text-muted);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          padding: 0.5rem 0.875rem;
+          margin-bottom: 2rem;
+          display: inline-block;
+        ">
+          Not: Claude tarafından yazılmıştır.
+        </div>
+      )}
+
+      <div class="prose">
+        <Content />
+      </div>
+
+    </article>
+  </div>
+</Base>
