@@ -1,0 +1,42 @@
+name: BIST 100 Endeks Ağırlıkları Güncelle
+
+on:
+  schedule:
+    # Günde 1 kez — BIST açılmadan önce, sabah 06:00 UTC (09:00 TRT)
+    # Sadece iş günleri (Pazartesi–Cuma)
+    - cron: "0 6 * * 1-5"
+  workflow_dispatch:  # Elle de çalıştırılabilir
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Bağımlılıkları yükle
+        run: pip install -r requirements.txt
+
+      - name: Ağırlıkları hesapla
+        run: python scripts/fetch_endeks_agirliklari.py
+
+      - name: JSON dosyasını commit et
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/bist100-agirliklari.json
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok"
+          else
+            git commit -m "BIST 100 ağırlıkları güncellendi: $(TZ='Europe/Istanbul' date '+%d.%m.%Y %H:%M TRT')"
+            git push
+          fi

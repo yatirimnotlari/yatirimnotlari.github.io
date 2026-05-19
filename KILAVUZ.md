@@ -115,8 +115,100 @@ src/
 └── styles/global.css   ← Renkler ve genel stiller
 
 public/
-└── images/             ← Görseller buraya (yazıdan /images/x.png ile erişilir)
+├── images/             ← Görseller buraya (yazıdan /images/x.png ile erişilir)
+└── data/               ← Araçların okuduğu JSON dosyaları (otomatik güncellenir)
+    ├── bist-heatmap.json         ← Isı haritası verisi
+    └── bist-endeks-etkisi.json   ← Endeks etkisi verisi
+
+data/                   ← Script girdileri (GitHub'da saklanır, deploy edilmez)
+├── bist-tickers.json             ← Tüm BIST hisseleri, sektörler
+└── bist100-agirliklari.json      ← BIST 100 ağırlıkları (halka açıklık bazlı)
+
+scripts/                ← Otomatik veri toplama scriptleri
+├── fetch_bist_tickers.py         ← Hisse + sektör listesi (GitHub Action: güncelle-tickerlar)
+├── fetch_bist_data.py            ← Isı haritası fiyatları (GitHub Action: 15 dak.)
+├── fetch_endeks_agirliklari.py   ← BIST 100 ağırlıkları (GitHub Action: sabah günlük)
+└── calculate_endeks_etki.py      ← Endeks etkisi hesabı (GitHub Action: 15 dak.)
 ```
+
+---
+
+## Araç: BIST Isı Haritası
+
+**Sayfa:** `/araclar/bist-isi-haritasi/`
+
+Tüm BIST hisselerini piyasa değeri ve fiyat değişimine göre görselleştirir.
+
+**Veri kaynakları:**
+- `data/bist-tickers.json` — hisse listesi ve sektörler
+- `public/data/bist-heatmap.json` — güncel fiyatlar (yfinance, 15 dk.)
+
+**Bakım gerektiren durumlar:**
+- Sektör sınıflandırması yanlışsa → `scripts/fetch_bist_tickers.py` içindeki `SECTOR_MAP` sözlüğünü düzenle
+- Yeni bir hisse listeye girmiyorsa → GitHub Actions "BIST Ticker Listesi Güncelle" workflow'unu elle çalıştır
+
+---
+
+## Araç: BIST 100 Endeks Etkisi
+
+**Sayfa:** `/araclar/bist100-endeks-etkisi/`
+
+Hangi hisselerin BIST 100'ü ne kadar etkilediğini gösterir.
+**Katkı formülü:** `katkı = ağırlık(%) × değişim(%) / 100`
+
+### Veri kaynakları (5 katman)
+
+| Kaynak | Ne sağlar? | Güncelleme |
+|--------|-----------|------------|
+| BİST resmi CSV | BIST 100 üyelik listesi (tam 100 hisse) | Günlük |
+| İş Yatırım | Piyasa değeri + halka açıklık oranı | Günlük (sabah) |
+| yfinance | Anlık fiyat değişimleri | 15 dakika |
+| `data/bist100-agirliklari.json` | Hesaplanmış ağırlıklar | Günlük (sabah) |
+| `public/data/bist-endeks-etkisi.json` | Araç tarafından okunan son çıktı | 15 dakika |
+
+### GitHub Actions workflow'ları
+
+| Workflow | Dosya | Ne zaman çalışır? |
+|----------|-------|-------------------|
+| BIST 100 Endeks Ağırlıkları | `fetch-endeks-agirliklari.yml` | Pzt–Cuma 09:00 TRT |
+| BIST Fiyat Verisi | `fetch-prices.yml` | Pzt–Cuma 09:30–18:30 TRT (15 dk.) |
+
+### `agirlik_kaynagi` alanı nasıl kontrol edilir?
+
+`data/bist100-agirliklari.json` dosyasını aç, `agirlik_metodoloji` bölümüne bak:
+
+```json
+"agirlik_metodoloji": {
+  "kaynak": "BİST CSV + İş Yatırım (halka açıklık × piyasa değeri, %10 cap)",
+  "son_basarili_cekim": "2026-05-19T09:29:04+03:00",
+  "fallback_aktif": false,
+  "fallback_aciklama": null
+}
+```
+
+- `fallback_aktif: false` → Normal, güncel veri kullanılıyor
+- `fallback_aktif: true` → İş Yatırım'dan veri alınamadı, önceki günün ağırlıkları kullanılıyor (sayfada uyarı çıkar)
+
+### %10 cap nedir?
+
+BIST 100 endeksinin resmi kuralı: hiçbir hisse endekste %10'dan fazla ağırlık taşıyamaz.
+Aşan hissenin fazlası diğer hisselere orantılı dağıtılır.
+2026 itibarıyla genellikle ASELS bu limite takılıyor.
+
+### Çeyrek dönem revizyonları
+
+BİST 100 endeksi her yılın Şubat, Nisan, Ağustos ve Ekim aylarında revize edilir.
+Revizyon sonrası üyelik değişirse `fetch_endeks_agirliklari.py` otomatik günceller
+(BİST resmi CSV'sini okur). Manuel müdahale gerekmez.
+
+### Sorun giderme
+
+| Sorun | Muhtemel neden | Çözüm |
+|-------|---------------|-------|
+| Sayfada "Veri yüklenemedi" | `bist-endeks-etkisi.json` eksik | `fetch-prices.yml` workflow'unu elle çalıştır |
+| Sektörler hep "Diğer" | `bist-tickers.json` eski | "BIST Ticker Listesi Güncelle" workflow'unu çalıştır |
+| Fark yüksek (>100 bps) | Aylık hesap için normaldir; günlük >50 bps ise araştır | Actions loguna bak |
+| İş Yatırım fallback aktif | Site geçici olarak erişilemez | Sabah tekrar dene, genellikle kendiliğinden düzelir |
 
 ---
 

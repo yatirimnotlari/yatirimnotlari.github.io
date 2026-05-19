@@ -1,0 +1,480 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="BIST 100 Endeks Etkisi"
+  description="Hangi hisseler bugün BIST 100'ü yukarı veya aşağı çekiyor? Ağırlık ve değişime göre etki analizi."
+>
+  <div style="max-width: 960px; margin: 0 auto; padding: 2.5rem 1.25rem 3rem;">
+
+    <!-- Başlık -->
+    <div style="margin-bottom: 2rem;">
+      <h1 style="font-family: var(--font-heading); font-size: 1.75rem; font-weight: 700; margin: 0 0 0.5rem; color: var(--text);">
+        BIST 100 Endeks Etkisi
+      </h1>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0; line-height: 1.6;">
+        Hangi hisseler bugün BIST 100'ü yukarı veya aşağı çekiyor?
+        Katkı = ağırlık × değişim.
+      </p>
+    </div>
+
+    <!-- Dönem seçici -->
+    <div id="period-tabs" style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+      <button class="period-btn active" data-period="daily"
+        style="padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid var(--accent);
+               background: var(--accent); color: #fff; font-size: 0.85rem; cursor: pointer; font-weight: 500;">
+        Günlük
+      </button>
+      <button class="period-btn" data-period="weekly"
+        style="padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid var(--border);
+               background: transparent; color: var(--text-muted); font-size: 0.85rem; cursor: pointer;">
+        Haftalık
+      </button>
+      <button class="period-btn" data-period="monthly"
+        style="padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid var(--border);
+               background: transparent; color: var(--text-muted); font-size: 0.85rem; cursor: pointer;">
+        Aylık
+      </button>
+    </div>
+
+    <!-- Yükleniyor -->
+    <div id="loading" style="text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.95rem;">
+      Veri yükleniyor…
+    </div>
+
+    <!-- Hata -->
+    <div id="error-box" style="display: none; background: #fff1f0; border: 1px solid #ffa39e;
+         border-radius: 8px; padding: 1.25rem; color: #cf1322; font-size: 0.9rem; margin-bottom: 1.5rem;">
+    </div>
+
+    <!-- İçerik (başta gizli) -->
+    <div id="content" style="display: none;">
+
+      <!-- Endeks özet satırı -->
+      <div id="endeks-ozet" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; align-items: center;">
+      </div>
+
+      <!-- ── Bölüm 1: Endeks DNA'sı ── -->
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 600;
+                   color: var(--text); margin: 0 0 0.75rem;">
+          Endeks DNA'sı
+          <span style="font-weight: 400; color: var(--text-muted); font-size: 0.82rem; margin-left: 0.5rem;">
+            — her bloğun genişliği = endeks ağırlığı, rengi = değişim
+          </span>
+        </h2>
+        <div id="dna-band" style="display: flex; width: 100%; height: 56px; border-radius: 8px;
+             overflow: hidden; gap: 1px; flex-wrap: nowrap;"></div>
+        <div style="display: flex; gap: 2rem; margin-top: 0.6rem; align-items: center;">
+          <div style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.75rem; color: var(--text-muted);">
+            <div style="width: 14px; height: 14px; border-radius: 3px; background: #16a34a;"></div> Artış
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.75rem; color: var(--text-muted);">
+            <div style="width: 14px; height: 14px; border-radius: 3px; background: #dc2626;"></div> Düşüş
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.75rem; color: var(--text-muted);">
+            <div style="width: 14px; height: 14px; border-radius: 3px; background: var(--border);"></div> Veri yok
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Bölüm 2: Etki çubukları ── -->
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 600;
+                   color: var(--text); margin: 0 0 1rem;">
+          En Büyük Etkiler
+          <span style="font-weight: 400; color: var(--text-muted); font-size: 0.82rem; margin-left: 0.5rem;">
+            — endeks puanına katkı (pozitif / negatif)
+          </span>
+        </h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <div style="font-size: 0.82rem; font-weight: 600; color: #16a34a; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              En Çok Artıranlar
+            </div>
+            <div id="pos-bars"></div>
+          </div>
+          <div>
+            <div style="font-size: 0.82rem; font-weight: 600; color: #dc2626; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              En Çok Düşürenler
+            </div>
+            <div id="neg-bars"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Bölüm 3: Hikâye kutusu ── -->
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 600;
+                   color: var(--text); margin: 0 0 0.75rem;">
+          Piyasa Özeti
+        </h2>
+        <div id="hikaye-kutu" style="background: var(--bg-secondary); border: 1px solid var(--border);
+             border-radius: 10px; padding: 1.25rem 1.5rem; font-size: 0.92rem; color: var(--text);
+             line-height: 1.7;">
+        </div>
+      </section>
+
+      <!-- ── Bölüm 4: Sektör katkıları ── -->
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 600;
+                   color: var(--text); margin: 0 0 0.75rem;">
+          Sektör Bazlı Katkı
+        </h2>
+        <div id="sektor-table"></div>
+      </section>
+
+      <!-- ── Bölüm 5: Doğrulama notu ── -->
+      <section>
+        <div id="dogrulama-notu" style="font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border);
+             padding-top: 1rem; line-height: 1.6;">
+        </div>
+      </section>
+
+    </div><!-- /content -->
+  </div>
+
+  <style>
+    .period-btn { transition: all 0.15s; }
+    .period-btn:hover { opacity: 0.85; }
+    .bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .bar-label { font-size: 0.82rem; font-weight: 600; color: var(--text); min-width: 56px; }
+    .bar-track { flex: 1; height: 22px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; position: relative; }
+    .bar-fill  { height: 100%; border-radius: 4px; transition: width 0.3s; }
+    .bar-val   { font-size: 0.75rem; color: var(--text-muted); min-width: 44px; text-align: right; }
+    .dna-block { cursor: default; position: relative; transition: opacity 0.15s; }
+    .dna-block:hover { opacity: 0.85; }
+    .dna-tooltip {
+      display: none; position: fixed; background: var(--bg-secondary);
+      border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.75rem;
+      font-size: 0.8rem; color: var(--text); pointer-events: none; z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12); white-space: nowrap;
+    }
+  </style>
+
+  <div class="dna-tooltip" id="dna-tooltip"></div>
+
+  <script>
+    // ─── Sabitler ────────────────────────────────────────────────────────────
+    const DATA_URL = '/data/bist-endeks-etkisi.json';
+    const TOP_N = 10;
+
+    const PERIOD_LABELS = { daily: 'Günlük', weekly: 'Haftalık', monthly: 'Aylık' };
+
+    // Renk ölçeği: değişim yüzdesine göre
+    function pctToColor(pct) {
+      if (pct === null || pct === undefined) return 'var(--border)';
+      if (pct >= 4)  return '#15803d';
+      if (pct >= 2)  return '#16a34a';
+      if (pct >= 0.5) return '#4ade80';
+      if (pct >= 0)  return '#86efac';
+      if (pct > -0.5) return '#fca5a5';
+      if (pct > -2)  return '#ef4444';
+      if (pct > -4)  return '#dc2626';
+      return '#991b1b';
+    }
+
+    // Sayı formatı
+    function fmtPct(v, sign = true) {
+      if (v === null || v === undefined) return '—';
+      const s = sign && v > 0 ? '+' : '';
+      return s + v.toFixed(2) + '%';
+    }
+    function fmtKatki(v) {
+      if (v === null || v === undefined) return '—';
+      const s = v > 0 ? '+' : '';
+      return s + v.toFixed(3);
+    }
+
+    // ─── Veri yükle ──────────────────────────────────────────────────────────
+    let DATA = null;
+    let currentPeriod = 'daily';
+
+    async function loadData() {
+      try {
+        const res = await fetch(DATA_URL + '?t=' + Date.now());
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        DATA = await res.json();
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        renderAll();
+      } catch (e) {
+        document.getElementById('loading').style.display = 'none';
+        const errBox = document.getElementById('error-box');
+        errBox.style.display = 'block';
+        errBox.textContent = 'Veri yüklenemedi: ' + e.message + '. Lütfen daha sonra tekrar deneyin.';
+      }
+    }
+
+    // ─── Render fonksiyonları ─────────────────────────────────────────────────
+    function renderAll() {
+      if (!DATA) return;
+      renderOzet();
+      renderDNA();
+      renderBars();
+      renderHikaye();
+      renderSektorTable();
+      renderDogrulama();
+    }
+
+    function renderOzet() {
+      const p = currentPeriod;
+      const idx = DATA.endeks_degisim?.[p];
+      const katki = DATA.endeks_katki_toplam?.[p];
+      const label = PERIOD_LABELS[p];
+      const updated = new Date(DATA.updated_at).toLocaleString('tr-TR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+
+      const idxColor = idx === null ? 'var(--text-muted)' : idx >= 0 ? '#16a34a' : '#dc2626';
+
+      document.getElementById('endeks-ozet').innerHTML = `
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px;
+                    padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 0.2rem; min-width: 160px;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+            XU100 ${label}
+          </div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: ${idxColor}; font-family: var(--font-heading);">
+            ${fmtPct(idx)}
+          </div>
+        </div>
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px;
+                    padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 0.2rem; min-width: 160px;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+            Σ Katkı (hesaplanan)
+          </div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--text); font-family: var(--font-heading);">
+            ${katki !== null && katki !== undefined ? (katki > 0 ? '+' : '') + katki.toFixed(2) : '—'}
+          </div>
+        </div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); align-self: flex-end; padding-bottom: 0.25rem;">
+          Son güncelleme: ${updated}
+          ${DATA.fallback_aktif ? '<br><span style="color:#d97706;">⚠ Yedek veri kullanılıyor</span>' : ''}
+          ${DATA.agirlik_metodoloji?.fallback_aktif ? '<br><span style="color:#d97706;">⚠ Ağırlıklar yedekten</span>' : ''}
+        </div>
+      `;
+    }
+
+    function renderDNA() {
+      const stocks = DATA.stocks?.[currentPeriod] || [];
+      const band = document.getElementById('dna-band');
+      const tooltip = document.getElementById('dna-tooltip');
+      band.innerHTML = '';
+
+      // Ağırlık toplamına göre genişlik hesapla
+      const totalWeight = stocks.reduce((s, h) => s + (h.agirlik || 0), 0);
+
+      stocks.forEach(h => {
+        const widthPct = totalWeight > 0 ? (h.agirlik / totalWeight) * 100 : 0;
+        const color = pctToColor(h.degisim);
+
+        const block = document.createElement('div');
+        block.className = 'dna-block';
+        block.style.cssText = `
+          flex: 0 0 ${widthPct}%;
+          height: 100%;
+          background: ${color};
+          min-width: 2px;
+        `;
+
+        block.addEventListener('mousemove', (e) => {
+          tooltip.style.display = 'block';
+          tooltip.style.left = (e.clientX + 12) + 'px';
+          tooltip.style.top = (e.clientY - 36) + 'px';
+          tooltip.innerHTML = `
+            <strong>${h.ticker}</strong> — ${h.name || ''}<br>
+            Ağırlık: ${h.agirlik?.toFixed(2)}% &nbsp;|&nbsp;
+            Değişim: ${fmtPct(h.degisim)} &nbsp;|&nbsp;
+            Katkı: ${fmtKatki(h.katki)}
+          `;
+        });
+        block.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+        });
+
+        band.appendChild(block);
+      });
+    }
+
+    function renderBars() {
+      const stocks = DATA.stocks?.[currentPeriod] || [];
+
+      const pos = stocks
+        .filter(h => h.katki !== null && h.katki > 0)
+        .slice(0, TOP_N);
+      const neg = stocks
+        .filter(h => h.katki !== null && h.katki < 0)
+        .reverse()
+        .slice(0, TOP_N);
+
+      const maxAbs = Math.max(
+        ...pos.map(h => Math.abs(h.katki || 0)),
+        ...neg.map(h => Math.abs(h.katki || 0)),
+        0.001,
+      );
+
+      function barHTML(h, isPos) {
+        const barWidth = Math.abs(h.katki || 0) / maxAbs * 100;
+        const color = isPos ? '#16a34a' : '#dc2626';
+        return `
+          <div class="bar-row">
+            <div class="bar-label">${h.ticker}</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: ${barWidth}%; background: ${color};"></div>
+            </div>
+            <div class="bar-val">${fmtKatki(h.katki)}</div>
+          </div>
+        `;
+      }
+
+      document.getElementById('pos-bars').innerHTML =
+        pos.length ? pos.map(h => barHTML(h, true)).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">Veri yok</p>';
+      document.getElementById('neg-bars').innerHTML =
+        neg.length ? neg.map(h => barHTML(h, false)).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">Veri yok</p>';
+    }
+
+    function renderHikaye() {
+      const p = currentPeriod;
+      const label = PERIOD_LABELS[p].toLowerCase();
+      const sektorler = DATA.sektor_katki?.[p] || [];
+      const idx = DATA.endeks_degisim?.[p];
+      const stocks = DATA.stocks?.[p] || [];
+
+      if (!sektorler.length) {
+        document.getElementById('hikaye-kutu').textContent = 'Veri yok.';
+        return;
+      }
+
+      // Endeks yönü
+      const yon = idx === null ? 'yatay seyretti'
+        : idx > 0.5 ? 'yükseldi'
+        : idx < -0.5 ? 'geriledi'
+        : 'yatay seyretti';
+
+      // En büyük pozitif sektör
+      const topPos = sektorler.find(s => s.katki > 0);
+      const topNeg = [...sektorler].reverse().find(s => s.katki < 0);
+
+      // En büyük bireysel katkı
+      const topStk = stocks.find(h => h.katki !== null);
+      const botStk = [...stocks].filter(h => h.katki !== null).slice(-1)[0];
+
+      let text = `BIST 100 ${label} bazda `;
+      text += idx !== null ? `<strong>${fmtPct(idx)}</strong> ile ${yon}. ` : `${yon}. `;
+
+      if (topPos) {
+        text += `<strong>${topPos.sektor}</strong> sektörü `;
+        text += `${fmtKatki(topPos.katki)} katkıyla endeksi en çok destekleyen sektör oldu. `;
+      }
+      if (topNeg) {
+        text += `<strong>${topNeg.sektor}</strong> sektörü `;
+        text += `${fmtKatki(topNeg.katki)} katkıyla en büyük baskıyı oluşturdu. `;
+      }
+      if (topStk) {
+        text += `Bireysel olarak <strong>${topStk.ticker}</strong> (${fmtPct(topStk.degisim)}, katkı ${fmtKatki(topStk.katki)}) endekse en fazla pozitif katkı yaptı`;
+        if (botStk && botStk.ticker !== topStk.ticker) {
+          text += `; <strong>${botStk.ticker}</strong> (${fmtPct(botStk.degisim)}, katkı ${fmtKatki(botStk.katki)}) ise en çok baskı yaratan hisse oldu`;
+        }
+        text += '.';
+      }
+
+      const veriEksik = stocks.filter(h => h.katki === null).length;
+      if (veriEksik > 5) {
+        text += ` <span style="color:var(--text-muted);font-size:0.85rem;">(${veriEksik} hisse için fiyat verisi alınamadı.)</span>`;
+      }
+
+      document.getElementById('hikaye-kutu').innerHTML = text;
+    }
+
+    function renderSektorTable() {
+      const sektorler = DATA.sektor_katki?.[currentPeriod] || [];
+      if (!sektorler.length) {
+        document.getElementById('sektor-table').innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Veri yok.</p>';
+        return;
+      }
+
+      const maxAbs = Math.max(...sektorler.map(s => Math.abs(s.katki)), 0.001);
+
+      const rows = sektorler.map(s => {
+        const barW = Math.abs(s.katki) / maxAbs * 100;
+        const color = s.katki >= 0 ? '#16a34a' : '#dc2626';
+        const dir = s.katki >= 0 ? 'left' : 'right';
+        return `
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.5rem 0.75rem 0.5rem 0; font-size: 0.85rem; color: var(--text); white-space: nowrap; width: 130px;">${s.sektor}</td>
+            <td style="padding: 0.5rem 0; width: 100%;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; height: 18px;">
+                <div style="flex: 1; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; height: 100%; position: relative;">
+                  <div style="position: absolute; ${dir === 'left' ? 'left' : 'right'}: 0; width: ${barW}%; height: 100%; background: ${color}; border-radius: 3px;"></div>
+                </div>
+              </div>
+            </td>
+            <td style="padding: 0.5rem 0 0.5rem 0.75rem; text-align: right; font-size: 0.82rem; font-weight: 600; color: ${color}; white-space: nowrap; width: 60px;">
+              ${fmtKatki(s.katki)}
+            </td>
+            <td style="padding: 0.5rem 0 0.5rem 0.5rem; text-align: right; font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; width: 60px;">
+              ${s.hisse_sayisi} hisse
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('sektor-table').innerHTML = `
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; font-size: 0.75rem; color: var(--text-muted); padding: 0 0.75rem 0.5rem 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Sektör</th>
+              <th></th>
+              <th style="text-align: right; font-size: 0.75rem; color: var(--text-muted); padding: 0 0.75rem 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Katkı</th>
+              <th style="text-align: right; font-size: 0.75rem; color: var(--text-muted); padding: 0 0 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Hisse</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function renderDogrulama() {
+      const p = currentPeriod;
+      const fark = DATA.dogrulama_farki_bps?.[p];
+      const idx = DATA.endeks_degisim?.[p];
+      const metodoloji = DATA.agirlik_metodoloji || {};
+
+      let text = `<strong>Metodoloji:</strong> ${metodoloji.kaynak || 'BİST CSV + İş Yatırım'}. `;
+      text += `Son ağırlık güncellemesi: ${metodoloji.son_basarili_cekim ? new Date(metodoloji.son_basarili_cekim).toLocaleString('tr-TR', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '?'}. `;
+
+      if (fark !== null && fark !== undefined && idx !== null) {
+        text += `<strong>Doğrulama:</strong> Hesaplanan katkı toplamı (${DATA.endeks_katki_toplam?.[p]?.toFixed(2) ?? '?'}%) ile `;
+        text += `XU100.IS değişimi (${idx.toFixed(2)}%) arasındaki fark: <strong>${fark > 0 ? '+' : ''}${fark.toFixed(1)} bps</strong>. `;
+        if (Math.abs(fark) < 50) {
+          text += 'Hesaplama tutarlı.';
+        } else {
+          text += 'Fark yüksek — veri gecikmesi veya kur farkı olabilir.';
+        }
+      }
+
+      text += ` <br>Katkı = ağırlık (%) × fiyat değişimi (%) — yaklaşık endeks puanı katkısı. Yatırım tavsiyesi değildir.`;
+      document.getElementById('dogrulama-notu').innerHTML = text;
+    }
+
+    // ─── Dönem seçici ────────────────────────────────────────────────────────
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentPeriod = btn.dataset.period;
+        document.querySelectorAll('.period-btn').forEach(b => {
+          const isActive = b === btn;
+          b.style.background = isActive ? 'var(--accent)' : 'transparent';
+          b.style.color = isActive ? '#fff' : 'var(--text-muted)';
+          b.style.borderColor = isActive ? 'var(--accent)' : 'var(--border)';
+          b.classList.toggle('active', isActive);
+        });
+        renderAll();
+      });
+    });
+
+    // ─── Başlat ──────────────────────────────────────────────────────────────
+    loadData();
+  </script>
+</Base>

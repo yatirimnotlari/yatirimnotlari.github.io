@@ -38,11 +38,14 @@ jobs:
       - name: Fiyat verisini çek
         run: python scripts/fetch_bist_data.py
 
-      - name: JSON dosyasını commit et
+      - name: Endeks etkisini hesapla
+        run: python scripts/calculate_endeks_etki.py
+
+      - name: JSON dosyalarını commit et
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/bist-heatmap.json
+          git add public/data/bist-heatmap.json public/data/bist-endeks-etkisi.json
           if git diff --staged --quiet; then
             echo "Değişiklik yok"
           else
