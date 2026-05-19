@@ -1,0 +1,51 @@
+name: BIST Fiyat Verisi Güncelle
+
+on:
+  schedule:
+    # BIST açık saatler: Pzt-Cuma 09:30-18:30 TRT = 06:30-15:30 UTC
+    # Her 15 dakikada bir, sadece borsa saatlerinde
+    - cron: "30,45 6 * * 1-5"   # 06:30, 06:45
+    - cron: "0,15,30,45 7 * * 1-5"
+    - cron: "0,15,30,45 8 * * 1-5"
+    - cron: "0,15,30,45 9 * * 1-5"
+    - cron: "0,15,30,45 10 * * 1-5"
+    - cron: "0,15,30,45 11 * * 1-5"
+    - cron: "0,15,30,45 12 * * 1-5"
+    - cron: "0,15,30,45 13 * * 1-5"
+    - cron: "0,15,30,45 14 * * 1-5"
+    - cron: "0,15,30 15 * * 1-5"   # 15:00, 15:15, 15:30 UTC (= 18:30 TRT)
+  workflow_dispatch:  # Elle de çalıştırılabilir
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Bağımlılıkları yükle
+        run: pip install -r requirements.txt
+
+      - name: Fiyat verisini çek
+        run: python scripts/fetch_bist_data.py
+
+      - name: JSON dosyasını commit et
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/bist-heatmap.json
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok"
+          else
+            git commit -m "BIST verisi güncellendi: $(TZ='Europe/Istanbul' date '+%H:%M TRT')"
+            git push
+          fi

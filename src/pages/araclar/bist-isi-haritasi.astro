@@ -1,0 +1,442 @@
+---
+import Base from '../../layouts/Base.astro';
+import { readFileSync, existsSync } from 'fs';
+import { resolve } from 'path';
+
+// JSON dosyasını build zamanında oku (varsa)
+const jsonPath = resolve('public/data/bist-heatmap.json');
+const hasData = existsSync(jsonPath);
+const rawData = hasData ? JSON.parse(readFileSync(jsonPath, 'utf-8')) : null;
+---
+
+<Base
+  title="BIST Isı Haritası"
+  description="BIST hisselerini piyasa değeri ve performansa göre görselleştiren interaktif ısı haritası. Veriler 15 dakikada bir güncellenir."
+>
+  <div style="max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 3rem;">
+
+    <!-- Başlık -->
+    <div style="margin-bottom: 1.25rem;">
+      <a href="/araclar/" style="font-size: 0.82rem; color: var(--text-muted); text-decoration: none;">← Araçlar</a>
+      <h1 style="font-family: var(--font-heading); font-size: 1.75rem; font-weight: 700; margin: 0.5rem 0 0.4rem; color: var(--text);">
+        BIST Isı Haritası
+      </h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0 0 0.5rem; line-height: 1.5; max-width: 650px;">
+        Tüm BIST hisselerini piyasa değeri ve performansa göre görün. Büyük kare = büyük piyasa değeri, renk = değişim oranı.
+      </p>
+      <div id="update-info" style="font-size: 0.78rem; color: var(--text-muted);">
+        {hasData && rawData
+          ? `Son güncelleme: ${new Date(rawData.updated_at).toLocaleString('tr-TR')} · ${rawData.with_data} hisse`
+          : 'Veri henüz oluşturulmadı — ilk çalıştırma sonrası görüntülenecek'}
+      </div>
+    </div>
+
+    {!hasData ? (
+      <!-- Veri yoksa bilgi kartı -->
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; text-align: center; color: var(--text-muted);">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">⏳</div>
+        <p style="margin: 0; font-size: 0.95rem;">
+          Veri henüz hazır değil. GitHub Actions ilk çalıştığında otomatik olarak oluşturulacak.
+        </p>
+        <p style="margin: 0.5rem 0 0; font-size: 0.82rem;">
+          Elle başlatmak için: GitHub → Actions → "BIST Fiyat Verisi Güncelle" → Run workflow
+        </p>
+      </div>
+    ) : (
+      <>
+        <!-- Kontroller -->
+        <div id="controls" style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; align-items: center;">
+
+          <!-- Endeks seçici -->
+          <div class="btn-group" data-group="index">
+            <button class="ctrl-btn active" data-value="ALL">Tüm BIST</button>
+            <button class="ctrl-btn" data-value="BIST100">BIST 100</button>
+            <button class="ctrl-btn" data-value="BIST50">BIST 50</button>
+            <button class="ctrl-btn" data-value="BIST30">BIST 30</button>
+          </div>
+
+          <!-- Zaman aralığı -->
+          <div class="btn-group" data-group="period" style="margin-left: 0.5rem;">
+            <button class="ctrl-btn active" data-value="daily">Günlük</button>
+            <button class="ctrl-btn" data-value="weekly">Haftalık</button>
+            <button class="ctrl-btn" data-value="monthly">Aylık</button>
+            <button class="ctrl-btn" data-value="yearly">Yıllık</button>
+          </div>
+
+          <!-- Görünüm toggle -->
+          <div class="btn-group" data-group="view" style="margin-left: auto;">
+            <button class="ctrl-btn active" data-value="sector">Sektör</button>
+            <button class="ctrl-btn" data-value="flat">Düz</button>
+          </div>
+
+        </div>
+
+        <!-- Renk skalası açıklaması -->
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.75rem; color: var(--text-muted);">
+          <span>−3%+</span>
+          <div style="display: flex; height: 12px; border-radius: 4px; overflow: hidden; width: 140px; flex-shrink: 0;">
+            <div style="flex:1; background:#b91c1c;"></div>
+            <div style="flex:1; background:#dc2626;"></div>
+            <div style="flex:1; background:#ef4444;"></div>
+            <div style="flex:1; background:#6b7280;"></div>
+            <div style="flex:1; background:#22c55e;"></div>
+            <div style="flex:1; background:#16a34a;"></div>
+            <div style="flex:1; background:#15803d;"></div>
+          </div>
+          <span>+3%+</span>
+        </div>
+
+        <!-- Heatmap container -->
+        <div id="heatmap" style="width: 100%; height: 70vh; min-height: 400px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;"></div>
+
+        <!-- Yasal uyarı -->
+        <p style="margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
+          Bu sayfadaki veriler Yahoo Finance üzerinden 15 dakika gecikmeli olarak alınmaktadır.
+          Hisse listesi günde bir kez güncellenir. Bilgi amaçlıdır, yatırım tavsiyesi değildir.
+          Ayrıntılar için <a href="/yasal-uyari/" style="color: var(--accent);">Yasal Uyarı</a>.
+        </p>
+      </>
+    )}
+  </div>
+</Base>
+
+<style>
+  .btn-group {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ctrl-btn {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+
+  .ctrl-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text);
+  }
+
+  .ctrl-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    #controls { gap: 0.4rem; }
+    .ctrl-btn { padding: 0.25rem 0.5rem; font-size: 0.78rem; }
+    #heatmap { height: 55vh; }
+  }
+</style>
+
+<script define:vars={{ rawData, hasData }}>
+if (!hasData || !rawData) {
+  // Veri yoksa script çalışmasın
+} else {
+
+// ─── Veri ───────────────────────────────────────────────────────────────────
+
+const ALL_STOCKS = rawData.stocks;
+
+// ─── Renk skalası ────────────────────────────────────────────────────────────
+
+const COLOR_STEPS = [
+  { threshold: -3,   color: '#b91c1c' }, // koyu kırmızı
+  { threshold: -2,   color: '#dc2626' },
+  { threshold: -1,   color: '#ef4444' },
+  { threshold: -0.1, color: '#6b7280' }, // gri
+  { threshold:  1,   color: '#22c55e' },
+  { threshold:  2,   color: '#16a34a' },
+  { threshold:  Infinity, color: '#15803d' }, // koyu yeşil
+];
+
+const NULL_COLOR = '#374151'; // veri yok → koyu gri
+
+function changeColor(pct) {
+  if (pct === null || pct === undefined) return NULL_COLOR;
+  for (const step of COLOR_STEPS) {
+    if (pct <= step.threshold) return step.color;
+  }
+  return '#15803d';
+}
+
+// ─── Filtre & dönem ──────────────────────────────────────────────────────────
+
+let activeIndex  = 'ALL';
+let activePeriod = 'daily';
+let activeView   = 'sector';
+
+function filteredStocks() {
+  if (activeIndex === 'ALL') return ALL_STOCKS;
+  return ALL_STOCKS.filter(s => s.indices && s.indices.includes(activeIndex));
+}
+
+function changeField() {
+  const map = { daily: 'change_daily', weekly: 'change_weekly', monthly: 'change_monthly', yearly: 'change_yearly' };
+  return map[activePeriod] || 'change_daily';
+}
+
+// ─── ECharts başlat ──────────────────────────────────────────────────────────
+
+let chart = null;
+
+function initChart() {
+  const container = document.getElementById('heatmap');
+  if (!container) return;
+
+  // ECharts'ı dinamik olarak yükle
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js';
+  script.onload = () => {
+    chart = window.echarts.init(container, null, { renderer: 'canvas' });
+    renderChart();
+    window.addEventListener('resize', () => chart && chart.resize());
+  };
+  document.head.appendChild(script);
+}
+
+// ─── Veri dönüştürme ─────────────────────────────────────────────────────────
+
+function buildFlatData(stocks) {
+  return stocks
+    .filter(s => s.market_cap_tl && s.market_cap_tl > 0)
+    .map(s => {
+      const pct = s[changeField()];
+      return {
+        name:  s.ticker,
+        value: s.market_cap_tl,
+        pct,
+        fullName:  s.name,
+        sector:    s.sector,
+        price:     s.price,
+        changeD:   s.change_daily,
+        changeW:   s.change_weekly,
+        changeM:   s.change_monthly,
+        changeY:   s.change_yearly,
+      };
+    });
+}
+
+function buildSectorData(stocks) {
+  const sectorMap = {};
+  for (const s of stocks) {
+    if (!s.market_cap_tl || s.market_cap_tl <= 0) continue;
+    const sector = s.sector || 'Diğer';
+    if (!sectorMap[sector]) sectorMap[sector] = [];
+    sectorMap[sector].push(s);
+  }
+
+  const children = [];
+  for (const [sector, items] of Object.entries(sectorMap)) {
+    const sectorChildren = items.map(s => {
+      const pct = s[changeField()];
+      return {
+        name:  s.ticker,
+        value: s.market_cap_tl,
+        pct,
+        fullName:  s.name,
+        sector:    s.sector,
+        price:     s.price,
+        changeD:   s.change_daily,
+        changeW:   s.change_weekly,
+        changeM:   s.change_monthly,
+        changeY:   s.change_yearly,
+      };
+    });
+
+    const totalMcap = items.reduce((sum, s) => sum + (s.market_cap_tl || 0), 0);
+    children.push({
+      name:     sector,
+      value:    totalMcap,
+      children: sectorChildren,
+    });
+  }
+
+  return { name: 'BIST', children };
+}
+
+// ─── Tooltip ─────────────────────────────────────────────────────────────────
+
+function fmt(val, suffix = '%') {
+  if (val === null || val === undefined) return '<span style="color:#9ca3af">—</span>';
+  const sign = val > 0 ? '+' : '';
+  const color = val > 0 ? '#22c55e' : val < 0 ? '#ef4444' : '#9ca3af';
+  return `<span style="color:${color};font-weight:600">${sign}${val.toFixed(2)}${suffix}</span>`;
+}
+
+function tooltipFormatter(params) {
+  const d = params.data;
+  if (!d || !d.fullName) return '';
+
+  return `
+    <div style="min-width:180px;font-size:13px;line-height:1.6">
+      <div style="font-weight:700;font-size:15px;margin-bottom:4px">${d.name}</div>
+      <div style="color:#9ca3af;font-size:11px;margin-bottom:6px">${d.fullName}</div>
+      <div style="color:#9ca3af;font-size:11px;margin-bottom:8px">${d.sector || ''}</div>
+      ${d.price ? `<div>Fiyat: <b>${d.price.toFixed(2)} ₺</b></div>` : ''}
+      <div>Günlük:  ${fmt(d.changeD)}</div>
+      <div>Haftalık: ${fmt(d.changeW)}</div>
+      <div>Aylık:   ${fmt(d.changeM)}</div>
+      <div>Yıllık:  ${fmt(d.changeY)}</div>
+      ${d.value ? `<div style="margin-top:4px;color:#9ca3af;font-size:11px">Piyasa değeri: ${(d.value/1e9).toFixed(1)} milyar ₺</div>` : ''}
+    </div>
+  `;
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+
+function renderChart() {
+  if (!chart) return;
+  const stocks = filteredStocks();
+  const field  = changeField();
+
+  let seriesData;
+  let seriesType = 'treemap';
+
+  if (activeView === 'sector') {
+    const tree = buildSectorData(stocks);
+    seriesData = tree.children;
+  } else {
+    seriesData = buildFlatData(stocks);
+  }
+
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item',
+      formatter: tooltipFormatter,
+      backgroundColor: 'rgba(15,15,15,0.95)',
+      borderColor: '#374151',
+      borderWidth: 1,
+      textStyle: { color: '#f3f4f6', fontSize: 12 },
+      extraCssText: 'border-radius:8px;padding:10px 14px;',
+      confine: true,
+    },
+    series: [{
+      type: seriesType,
+      data: seriesData,
+      width:  '100%',
+      height: '100%',
+      roam: false,
+      nodeClick: false,
+      squareRatio: 1,
+      breadcrumb: { show: activeView === 'sector' },
+      upperLabel: {
+        show: activeView === 'sector',
+        height: 24,
+        color: '#f9fafb',
+        fontWeight: 700,
+        fontSize: 12,
+        backgroundColor: 'rgba(0,0,0,0.35)',
+        padding: [4, 8],
+      },
+      label: {
+        show: true,
+        formatter(params) {
+          const d = params.data;
+          // Sektör (parent) düğümü — upperLabel zaten gösteriyor
+          if (!d || d.children) return '';
+          const area = params.rect
+            ? params.rect.width * params.rect.height
+            : 9999;
+          if (area < 600) return '';
+          if (area < 2500) return d.name || '';
+          const pct = d.pct;
+          const sign = pct !== null && pct !== undefined && pct > 0 ? '+' : '';
+          const pctStr = pct !== null && pct !== undefined
+            ? `${sign}${pct.toFixed(1)}%`
+            : '';
+          return `{ticker|${d.name}}\n{pct|${pctStr}}`;
+        },
+        rich: {
+          ticker: {
+            fontSize: 11,
+            fontWeight: 700,
+            color: '#fff',
+            textShadow: '0 1px 3px rgba(0,0,0,0.7)',
+            lineHeight: 16,
+          },
+          pct: {
+            fontSize: 10,
+            color: 'rgba(255,255,255,0.85)',
+            textShadow: '0 1px 2px rgba(0,0,0,0.7)',
+            lineHeight: 15,
+          },
+        },
+      },
+      itemStyle: {
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.15)',
+        gapWidth: 2,
+      },
+      emphasis: {
+        itemStyle: {
+          borderWidth: 2,
+          borderColor: '#fff',
+        },
+      },
+      colorMappingBy: 'value',
+      // Renk atama: pct değerine göre manuel
+      colorSaturation: [0.35, 1],
+      color: ['#b91c1c', '#15803d'], // fallback (üstüne yazılacak)
+
+      // itemStyle.color'ı d.pct'ye göre dinamik ata
+      itemStyle_DYNAMIC: true, // işaret, aşağıda loop'ta değiştiriyoruz
+    }],
+  };
+
+  // Her hücreye renk ata (ECharts treemap'te itemStyle.color data üzerinden)
+  function colorizeData(items) {
+    if (!items) return;
+    for (const item of items) {
+      const pct = item.pct;
+      item.itemStyle = { color: changeColor(pct) };
+      if (item.children) colorizeData(item.children);
+    }
+  }
+  colorizeData(option.series[0].data);
+
+  chart.setOption(option, true);
+}
+
+// ─── Kontrol butonları ────────────────────────────────────────────────────────
+
+document.querySelectorAll('.btn-group').forEach(group => {
+  group.querySelectorAll('.ctrl-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const groupName = group.dataset.group;
+      const val = btn.dataset.value;
+
+      if (groupName === 'index')  activeIndex  = val;
+      if (groupName === 'period') activePeriod = val;
+      if (groupName === 'view')   activeView   = val;
+
+      renderChart();
+    });
+  });
+});
+
+// ─── Dark mode değişimini izle ────────────────────────────────────────────────
+
+const observer = new MutationObserver(() => {
+  if (chart) chart.resize();
+});
+observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+// ─── Başlat ───────────────────────────────────────────────────────────────────
+
+initChart();
+
+} // end if hasData
+</script>
