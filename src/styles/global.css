@@ -5,9 +5,10 @@
   --bg-secondary: #F3F1EC;
   --text: #1C1917;
   --text-muted: #6B6459;
-  --accent: #5C7A3E;
-  --accent-hover: #4A6331;
+  --accent: #4A5B7A;
+  --accent-hover: #384966;
   --secondary: #8B7355;
+  --warm-accent: #B8763E;
   --border: #E7E5E0;
   --card-bg: #FFFFFF;
 
@@ -22,9 +23,10 @@
   --bg-secondary: #1E1D1A;
   --text: #F5F0E8;
   --text-muted: #A89F93;
-  --accent: #7FA856;
-  --accent-hover: #94C265;
+  --accent: #8FA3C2;
+  --accent-hover: #A3B5D0;
   --secondary: #A8956B;
+  --warm-accent: #D4A574;
   --border: #2C2B27;
   --card-bg: #1E1D1A;
 
@@ -70,6 +72,9 @@ a {
 
 a:hover {
   color: var(--accent-hover);
+  text-decoration: underline;
+  text-decoration-color: var(--warm-accent);
+  text-underline-offset: 2px;
 }
 
 /* Blog prose styles */
@@ -85,14 +90,15 @@ a:hover {
 .prose p { margin-top: 0; margin-bottom: 1.25rem; }
 .prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
 .prose li { margin-bottom: 0.35rem; }
-.prose blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; margin-left: 0; color: var(--text-muted); font-style: italic; }
+.prose blockquote { border-left: 3px solid var(--warm-accent); padding-left: 1rem; margin-left: 0; color: var(--text-muted); font-style: italic; }
 .prose img { max-width: 100%; height: auto; border-radius: 6px; margin: 1.5rem 0; }
 .prose hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
 .prose strong { color: var(--text); font-weight: 600; }
 .prose code { background: var(--bg-secondary); padding: 0.15em 0.35em; border-radius: 4px; font-size: 0.9em; border: 1px solid var(--border); }
 .prose pre { background: #1e1e1e; border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
 .prose pre code { background: none; padding: 0; border: none; font-size: 0.875rem; color: #e6edf3; }
-.prose a { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+.prose a { text-decoration: underline; text-decoration-color: var(--warm-accent); text-underline-offset: 2px; }
+.prose a:hover { text-decoration-color: var(--warm-accent); opacity: 0.8; }
 .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: 0.9rem; }
 .prose th { background: var(--bg-secondary); text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border); }
 .prose td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
