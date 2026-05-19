@@ -12,15 +12,17 @@ import Base from '../../layouts/Base.astro';
       Piyasa verilerini anlamlandırmak için interaktif araçlar.
     </p>
 
-    <div style="
+    <a href="/araclar/bist-isi-haritasi/" style="
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 2rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 1.25rem;
-    ">
+      text-decoration: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    " onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 1px var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
       <div style="
         width: 3rem;
         height: 3rem;
@@ -40,19 +42,19 @@ import Base from '../../layouts/Base.astro';
           BIST Isı Haritası
         </h2>
         <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 0.75rem; line-height: 1.6;">
-          BIST 100 hisselerini piyasa değerine ve günlük performansa göre sektör bazında görselleştiren interaktif harita.
+          Tüm BIST hisselerini piyasa değeri ve performansa göre görselleştir. Sektör bazlı veya düz liste görünümü, 4 zaman aralığı.
         </p>
         <span style="
           display: inline-block;
-          font-size: 0.75rem;
+          font-size: 0.82rem;
           font-weight: 500;
-          padding: 0.2rem 0.6rem;
-          background: var(--border);
-          color: var(--text-muted);
-          border-radius: 4px;
-        ">Yakında</span>
+          padding: 0.3rem 0.8rem;
+          background: var(--accent);
+          color: #fff;
+          border-radius: 6px;
+        ">Aracı Aç →</span>
       </div>
-    </div>
+    </a>
 
   </div>
 </Base>
