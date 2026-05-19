@@ -82,26 +82,13 @@ import Base from '../../layouts/Base.astro';
       <!-- ── Bölüm 2: Etki çubukları ── -->
       <section style="margin-bottom: 2.5rem;">
         <h2 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 600;
-                   color: var(--text); margin: 0 0 1rem;">
+                   color: var(--text); margin: 0 0 0.75rem;">
           En Büyük Etkiler
           <span style="font-weight: 400; color: var(--text-muted); font-size: 0.82rem; margin-left: 0.5rem;">
             — endeks puanına katkı (pozitif / negatif)
           </span>
         </h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-          <div>
-            <div style="font-size: 0.82rem; font-weight: 600; color: #16a34a; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;">
-              En Çok Artıranlar
-            </div>
-            <div id="pos-bars"></div>
-          </div>
-          <div>
-            <div style="font-size: 0.82rem; font-weight: 600; color: #dc2626; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;">
-              En Çok Düşürenler
-            </div>
-            <div id="neg-bars"></div>
-          </div>
-        </div>
+        <div id="etki-table"></div>
       </section>
 
       <!-- ── Bölüm 3: Hikâye kutusu ── -->
@@ -138,11 +125,6 @@ import Base from '../../layouts/Base.astro';
   <style>
     .period-btn { transition: all 0.15s; }
     .period-btn:hover { opacity: 0.85; }
-    .bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
-    .bar-label { font-size: 0.82rem; font-weight: 600; color: var(--text); min-width: 56px; }
-    .bar-track { flex: 1; height: 22px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; position: relative; }
-    .bar-fill  { height: 100%; border-radius: 4px; transition: width 0.3s; }
-    .bar-val   { font-size: 0.75rem; color: var(--text-muted); min-width: 44px; text-align: right; }
     .dna-block { cursor: default; position: relative; transition: opacity 0.15s; }
     .dna-block:hover { opacity: 0.85; }
     .dna-tooltip {
@@ -301,38 +283,54 @@ import Base from '../../layouts/Base.astro';
     function renderBars() {
       const stocks = DATA.stocks?.[currentPeriod] || [];
 
-      const pos = stocks
-        .filter(h => h.katki !== null && h.katki > 0)
-        .slice(0, TOP_N);
-      const neg = stocks
-        .filter(h => h.katki !== null && h.katki < 0)
-        .reverse()
-        .slice(0, TOP_N);
+      // En büyük TOP_N pozitif + en büyük TOP_N negatif, mutlak değere göre sıralı
+      const top = [
+        ...stocks.filter(h => h.katki !== null && h.katki > 0).slice(0, TOP_N),
+        ...stocks.filter(h => h.katki !== null && h.katki < 0).slice(-TOP_N).reverse(),
+      ].sort((a, b) => Math.abs(b.katki) - Math.abs(a.katki));
 
-      const maxAbs = Math.max(
-        ...pos.map(h => Math.abs(h.katki || 0)),
-        ...neg.map(h => Math.abs(h.katki || 0)),
-        0.001,
-      );
-
-      function barHTML(h, isPos) {
-        const barWidth = Math.abs(h.katki || 0) / maxAbs * 100;
-        const color = isPos ? '#16a34a' : '#dc2626';
-        return `
-          <div class="bar-row">
-            <div class="bar-label">${h.ticker}</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width: ${barWidth}%; background: ${color};"></div>
-            </div>
-            <div class="bar-val">${fmtKatki(h.katki)}</div>
-          </div>
-        `;
+      if (!top.length) {
+        document.getElementById('etki-table').innerHTML =
+          '<p style="color:var(--text-muted);font-size:0.85rem;">Veri yok.</p>';
+        return;
       }
 
-      document.getElementById('pos-bars').innerHTML =
-        pos.length ? pos.map(h => barHTML(h, true)).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">Veri yok</p>';
-      document.getElementById('neg-bars').innerHTML =
-        neg.length ? neg.map(h => barHTML(h, false)).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">Veri yok</p>';
+      const maxAbs = Math.max(...top.map(h => Math.abs(h.katki)), 0.001);
+
+      const rows = top.map(h => {
+        const isPos = h.katki >= 0;
+        const barW = Math.abs(h.katki) / maxAbs * 100;
+        const color = isPos ? '#16a34a' : '#dc2626';
+        const dir = isPos ? 'left' : 'right';
+        return `
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.5rem 0.75rem 0.5rem 0; font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; width: 64px;">${h.ticker}</td>
+            <td style="padding: 0.5rem 0; font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; width: 140px; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">${h.name || ''}</td>
+            <td style="padding: 0.5rem 0 0.5rem 0.75rem; width: 100%;">
+              <div style="height: 18px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; position: relative;">
+                <div style="position: absolute; ${dir}: 0; width: ${barW}%; height: 100%; background: ${color}; border-radius: 3px;"></div>
+              </div>
+            </td>
+            <td style="padding: 0.5rem 0.5rem 0.5rem 0.75rem; text-align: right; font-size: 0.82rem; font-weight: 600; color: ${color}; white-space: nowrap; width: 52px;">${fmtKatki(h.katki)}</td>
+            <td style="padding: 0.5rem 0; text-align: right; font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; width: 52px;">${fmtPct(h.degisim)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('etki-table').innerHTML = `
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; font-size: 0.75rem; color: var(--text-muted); padding: 0 0.75rem 0.5rem 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Hisse</th>
+              <th style="text-align: left; font-size: 0.75rem; color: var(--text-muted); padding: 0 0 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;"></th>
+              <th></th>
+              <th style="text-align: right; font-size: 0.75rem; color: var(--text-muted); padding: 0 0.5rem 0.5rem 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Katkı</th>
+              <th style="text-align: right; font-size: 0.75rem; color: var(--text-muted); padding: 0 0 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Değişim</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
     }
 
     function renderHikaye() {
