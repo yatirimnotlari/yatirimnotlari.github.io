@@ -11,13 +11,8 @@ const currentPath = Astro.url.pathname;
 <header style="background: var(--bg); border-bottom: 1px solid var(--border);">
   <nav style="max-width: 900px; margin: 0 auto; padding: 0 1.25rem; height: 3.5rem; display: flex; align-items: center; justify-content: space-between;">
 
-    <a href="/" style="display: flex; align-items: center; text-decoration: none;">
-      <img
-        id="site-logo"
-        src="/images/logo-light.svg"
-        alt="Yatırım Notları"
-        style="display: block; height: 28px; width: auto;"
-      />
+    <a href="/" style="font-family: 'Dancing Script', cursive; font-size: 1.5rem; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.01em;">
+      Yatırım Notları
     </a>
 
     <div style="display: flex; align-items: center; gap: 0.25rem;">
@@ -82,15 +77,12 @@ const currentPath = Astro.url.pathname;
     document.documentElement.setAttribute('data-theme', theme);
     const sunIcon = document.getElementById('icon-sun');
     const moonIcon = document.getElementById('icon-moon');
-    const logo = document.getElementById('site-logo') as HTMLImageElement | null;
     if (theme === 'dark') {
       sunIcon!.style.display = 'block';
       moonIcon!.style.display = 'none';
-      if (logo) logo.src = '/images/logo-dark.svg';
     } else {
       sunIcon!.style.display = 'none';
       moonIcon!.style.display = 'block';
-      if (logo) logo.src = '/images/logo-light.svg';
     }
   }
 
