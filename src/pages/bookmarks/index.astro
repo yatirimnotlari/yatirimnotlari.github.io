@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookmarkCard from '../../components/BookmarkCard.astro';
+import BookmarkFilters from '../../components/BookmarkFilters.astro';
+import { getAllBookmarks, loadBookmarkCategories } from '../../lib/bookmarks';
+
+const bookmarks = await getAllBookmarks();
+const categoryMeta = loadBookmarkCategories();
+
+// Count per category
+const countMap: Record<string, number> = {};
+for (const bm of bookmarks) {
+  countMap[bm.categorySlug] = (countMap[bm.categorySlug] ?? 0) + 1;
+}
+
+const categories = categoryMeta.map(cat => ({
+  slug: cat.slug,
+  category: cat.category,
+  order: cat.order,
+  count: countMap[cat.slug] ?? 0,
+}));
+---
+
+<Base
+  title="Bookmarks"
+  description="İlginç bulduğum yazılar, tweetler, profiller ve araçlar. Küratöryel bir koleksiyon, sürekli güncelleniyor."
+>
+  <div style="max-width: 900px; margin: 0 auto; padding: 3rem 1.25rem 4rem;">
+
+    <h1 style="font-family: var(--font-heading); font-size: 2rem; font-weight: 700; margin: 0 0 0.75rem; color: var(--text);">
+      Bookmarks
+    </h1>
+    <p style="color: var(--text-muted); margin: 0 0 2rem; font-size: 1rem; line-height: 1.6;">
+      İlginç bulduğum yazılar, tweetler, profiller ve araçlar. Küratöryel bir koleksiyon, sürekli güncelleniyor.
+    </p>
+
+    <div style="margin-bottom: 2rem;">
+      <BookmarkFilters categories={categories} total={bookmarks.length} />
+    </div>
+
+    {bookmarks.length === 0 ? (
+      <p style="color: var(--text-muted); text-align: center; padding: 3rem 0;">
+        Henüz bookmark eklenmedi.
+      </p>
+    ) : (
+      <div class="bm-grid">
+        {bookmarks.map(bookmark => (
+          <div class="bm-card-wrapper" data-category={bookmark.categorySlug}>
+            <BookmarkCard bookmark={bookmark} />
+          </div>
+        ))}
+      </div>
+    )}
+
+  </div>
+</Base>
+
+<style>
+  .bm-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 640px) {
+    .bm-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

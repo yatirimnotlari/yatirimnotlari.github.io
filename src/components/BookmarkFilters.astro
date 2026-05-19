@@ -1,0 +1,130 @@
+---
+interface Category {
+  slug: string;
+  category: string;
+  order: number;
+  count: number;
+}
+
+interface Props {
+  categories: Category[];
+  total: number;
+}
+
+const { categories, total } = Astro.props;
+const sorted = [...categories].sort((a, b) => a.order - b.order);
+---
+
+<div class="bm-filters" role="group" aria-label="Kategori filtresi">
+  <button
+    class="bm-pill"
+    data-filter="tum"
+    aria-pressed="true"
+  >
+    Tüm Bookmarks <span class="bm-count">{total}</span>
+  </button>
+
+  {sorted.map(cat => (
+    <button
+      class="bm-pill"
+      data-filter={cat.slug}
+      aria-pressed="false"
+    >
+      {cat.category} <span class="bm-count">{cat.count}</span>
+    </button>
+  ))}
+</div>
+
+<style>
+  .bm-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .bm-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bm-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    font-family: var(--font-body);
+  }
+
+  .bm-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg-secondary);
+  }
+
+  .bm-pill[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  .bm-pill[aria-pressed="true"] .bm-count {
+    opacity: 0.8;
+  }
+
+  .bm-count {
+    font-size: 0.75rem;
+    opacity: 0.65;
+  }
+</style>
+
+<script>
+  function initFilters() {
+    const pills = document.querySelectorAll<HTMLButtonElement>('.bm-pill');
+    const cards = document.querySelectorAll<HTMLElement>('.bm-card-wrapper');
+
+    function applyFilter(slug: string) {
+      pills.forEach(pill => {
+        const isActive = pill.dataset.filter === slug;
+        pill.setAttribute('aria-pressed', String(isActive));
+      });
+
+      cards.forEach(card => {
+        const cardSlug = card.dataset.category ?? '';
+        card.style.display = (slug === 'tum' || cardSlug === slug) ? '' : 'none';
+      });
+
+      const url = new URL(window.location.href);
+      if (slug === 'tum') {
+        url.searchParams.delete('kategori');
+      } else {
+        url.searchParams.set('kategori', slug);
+      }
+      history.replaceState(null, '', url.toString());
+    }
+
+    // Read initial filter from URL
+    const initial = new URLSearchParams(window.location.search).get('kategori') ?? 'tum';
+    applyFilter(initial);
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        applyFilter(pill.dataset.filter ?? 'tum');
+      });
+    });
+  }
+
+  // Run on first load and after Astro page transitions
+  initFilters();
+  document.addEventListener('astro:page-load', initFilters);
+</script>
