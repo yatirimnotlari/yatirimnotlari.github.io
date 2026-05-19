@@ -26,13 +26,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Hisse listesini güncelle
-        id: fetch
-        run: |
-          OUTPUT=$(python scripts/fetch_bist_tickers.py 2>&1)
-          echo "$OUTPUT"
-          # Son satırı commit mesajı olarak kaydet
-          LAST_LINE=$(echo "$OUTPUT" | tail -1)
-          echo "msg=$LAST_LINE" >> $GITHUB_OUTPUT
+        run: python scripts/fetch_bist_tickers.py
 
       - name: Değişiklik varsa commit et
         run: |
@@ -42,7 +36,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "Değişiklik yok, commit atlandı"
           else
-            MSG="${{ steps.fetch.outputs.msg }}"
-            git commit -m "Tickers güncellendi: ${MSG:-otomatik güncelleme}"
+            git commit -m "Tickers güncellendi: $(TZ='Europe/Istanbul' date '+%d.%m.%Y')"
             git push
           fi

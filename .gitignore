@@ -15,7 +15,8 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
 
 # macOS-specific files
 .DS_Store
@@ -30,3 +31,10 @@ pnpm-debug.log*
 .venv/
 __pycache__/
 *.pyc
+
+# Hassas dosyalar
+secrets.json
+credentials.json
+*.key
+*.pem
+*.p12

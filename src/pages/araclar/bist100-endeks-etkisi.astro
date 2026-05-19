@@ -157,6 +157,15 @@ import Base from '../../layouts/Base.astro';
       return '#991b1b';
     }
 
+    // HTML özel karakterlerini kaçır — innerHTML'e dış veri girerken kullan
+    function esc(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
     // Sayı formatı
     function fmtPct(v, sign = true) {
       if (v === null || v === undefined) return '—';
@@ -266,7 +275,7 @@ import Base from '../../layouts/Base.astro';
           tooltip.style.left = (e.clientX + 12) + 'px';
           tooltip.style.top = (e.clientY - 36) + 'px';
           tooltip.innerHTML = `
-            <strong>${h.ticker}</strong> — ${h.name || ''}<br>
+            <strong>${esc(h.ticker)}</strong> — ${esc(h.name)}<br>
             Ağırlık: ${h.agirlik?.toFixed(2)}% &nbsp;|&nbsp;
             Değişim: ${fmtPct(h.degisim)} &nbsp;|&nbsp;
             Katkı: ${fmtKatki(h.katki)}
@@ -304,8 +313,8 @@ import Base from '../../layouts/Base.astro';
         const dir = isPos ? 'left' : 'right';
         return `
           <tr style="border-bottom: 1px solid var(--border);">
-            <td style="padding: 0.5rem 0.75rem 0.5rem 0; font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; width: 64px;">${h.ticker}</td>
-            <td style="padding: 0.5rem 0; font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; width: 140px; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">${h.name || ''}</td>
+            <td style="padding: 0.5rem 0.75rem 0.5rem 0; font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; width: 64px;">${esc(h.ticker)}</td>
+            <td style="padding: 0.5rem 0; font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; width: 140px; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">${esc(h.name)}</td>
             <td style="padding: 0.5rem 0 0.5rem 0.75rem; width: 100%;">
               <div style="height: 18px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; position: relative;">
                 <div style="position: absolute; ${dir}: 0; width: ${barW}%; height: 100%; background: ${color}; border-radius: 3px;"></div>
@@ -363,17 +372,17 @@ import Base from '../../layouts/Base.astro';
       text += idx !== null ? `<strong>${fmtPct(idx)}</strong> ile ${yon}. ` : `${yon}. `;
 
       if (topPos) {
-        text += `<strong>${topPos.sektor}</strong> sektörü `;
+        text += `<strong>${esc(topPos.sektor)}</strong> sektörü `;
         text += `${fmtKatki(topPos.katki)} katkıyla endeksi en çok destekleyen sektör oldu. `;
       }
       if (topNeg) {
-        text += `<strong>${topNeg.sektor}</strong> sektörü `;
+        text += `<strong>${esc(topNeg.sektor)}</strong> sektörü `;
         text += `${fmtKatki(topNeg.katki)} katkıyla en büyük baskıyı oluşturdu. `;
       }
       if (topStk) {
-        text += `Bireysel olarak <strong>${topStk.ticker}</strong> (${fmtPct(topStk.degisim)}, katkı ${fmtKatki(topStk.katki)}) endekse en fazla pozitif katkı yaptı`;
+        text += `Bireysel olarak <strong>${esc(topStk.ticker)}</strong> (${fmtPct(topStk.degisim)}, katkı ${fmtKatki(topStk.katki)}) endekse en fazla pozitif katkı yaptı`;
         if (botStk && botStk.ticker !== topStk.ticker) {
-          text += `; <strong>${botStk.ticker}</strong> (${fmtPct(botStk.degisim)}, katkı ${fmtKatki(botStk.katki)}) ise en çok baskı yaratan hisse oldu`;
+          text += `; <strong>${esc(botStk.ticker)}</strong> (${fmtPct(botStk.degisim)}, katkı ${fmtKatki(botStk.katki)}) ise en çok baskı yaratan hisse oldu`;
         }
         text += '.';
       }
@@ -401,7 +410,7 @@ import Base from '../../layouts/Base.astro';
         const dir = s.katki >= 0 ? 'left' : 'right';
         return `
           <tr style="border-bottom: 1px solid var(--border);">
-            <td style="padding: 0.5rem 0.75rem 0.5rem 0; font-size: 0.85rem; color: var(--text); white-space: nowrap; width: 130px;">${s.sektor}</td>
+            <td style="padding: 0.5rem 0.75rem 0.5rem 0; font-size: 0.85rem; color: var(--text); white-space: nowrap; width: 130px;">${esc(s.sektor)}</td>
             <td style="padding: 0.5rem 0; width: 100%;">
               <div style="display: flex; align-items: center; gap: 0.5rem; height: 18px;">
                 <div style="flex: 1; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; height: 100%; position: relative;">
