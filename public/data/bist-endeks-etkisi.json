@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-28T21:26:31.916419+03:00",
+  "updated_at": "2026-05-28T21:43:22.037279+03:00",
   "fallback_aktif": false,
   "fallback_aciklama": null,
   "agirlik_metodoloji": {
@@ -14,9 +14,9 @@
     "monthly": null
   },
   "endeks_katki_toplam": {
-    "daily": -1.5323,
-    "weekly": -2.3407,
-    "monthly": -3.4588
+    "daily": -1.5341,
+    "weekly": -2.3459,
+    "monthly": -3.4657
   },
   "dogrulama_farki_bps": {
     "daily": null,
@@ -297,6 +297,13 @@
         "name": "Cw Enerji",
         "agirlik": 0.359,
         "degisim": -0.5048,
+        "katki": -0.0018
+      },
+      {
+        "ticker": "TUKAS",
+        "name": "Tukaş",
+        "agirlik": 0.1454,
+        "degisim": -1.2295,
         "katki": -0.0018
       },
       {
@@ -718,13 +725,6 @@
         "agirlik": 10.0,
         "degisim": -5.3516,
         "katki": -0.5352
-      },
-      {
-        "ticker": "TUKAS",
-        "name": "Tukaş",
-        "agirlik": 0.1454,
-        "degisim": null,
-        "katki": null
       }
     ],
     "weekly": [
@@ -1056,6 +1056,13 @@
         "agirlik": 1.0782,
         "degisim": -0.3956,
         "katki": -0.0043
+      },
+      {
+        "ticker": "TUKAS",
+        "name": "Tukaş",
+        "agirlik": 0.1454,
+        "degisim": -3.6,
+        "katki": -0.0052
       },
       {
         "ticker": "SARKY",
@@ -1420,13 +1427,6 @@
         "agirlik": 10.0,
         "degisim": -5.4104,
         "katki": -0.541
-      },
-      {
-        "ticker": "TUKAS",
-        "name": "Tukaş",
-        "agirlik": 0.1454,
-        "degisim": null,
-        "katki": null
       }
     ],
     "monthly": [
@@ -1709,6 +1709,13 @@
         "agirlik": 0.1803,
         "degisim": -2.4117,
         "katki": -0.0043
+      },
+      {
+        "ticker": "TUKAS",
+        "name": "Tukaş",
+        "agirlik": 0.1454,
+        "degisim": -4.7431,
+        "katki": -0.0069
       },
       {
         "ticker": "AKSEN",
@@ -2122,13 +2129,6 @@
         "agirlik": 4.2277,
         "degisim": -20.038,
         "katki": -0.8471
-      },
-      {
-        "ticker": "TUKAS",
-        "name": "Tukaş",
-        "agirlik": 0.1454,
-        "degisim": null,
-        "katki": null
       }
     ]
   },
@@ -2142,9 +2142,9 @@
       },
       {
         "sektor": "Sanayi",
-        "katki": -0.2566,
-        "hisse_sayisi": 31,
-        "eksik": 1
+        "katki": -0.2584,
+        "hisse_sayisi": 32,
+        "eksik": 0
       },
       {
         "sektor": "Enerji",
@@ -2234,9 +2234,9 @@
       },
       {
         "sektor": "Sanayi",
-        "katki": -0.2386,
-        "hisse_sayisi": 31,
-        "eksik": 1
+        "katki": -0.2438,
+        "hisse_sayisi": 32,
+        "eksik": 0
       },
       {
         "sektor": "İletişim",
@@ -2313,16 +2313,16 @@
         "eksik": 0
       },
       {
+        "sektor": "Sanayi",
+        "katki": -0.1951,
+        "hisse_sayisi": 32,
+        "eksik": 0
+      },
+      {
         "sektor": "İnşaat ve Bayındırlık",
         "katki": -0.1914,
         "hisse_sayisi": 6,
         "eksik": 0
-      },
-      {
-        "sektor": "Sanayi",
-        "katki": -0.1882,
-        "hisse_sayisi": 31,
-        "eksik": 1
       },
       {
         "sektor": "Teknoloji",
