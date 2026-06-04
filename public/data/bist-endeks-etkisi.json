@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-04T21:31:52.135823+03:00",
+  "updated_at": "2026-06-04T21:38:19.750606+03:00",
   "fallback_aktif": false,
   "fallback_aciklama": null,
   "agirlik_metodoloji": {
@@ -14,9 +14,9 @@
     "monthly": null
   },
   "endeks_katki_toplam": {
-    "daily": -0.5033,
-    "weekly": 1.8917,
-    "monthly": -2.865
+    "daily": -0.4981,
+    "weekly": 1.8964,
+    "monthly": -2.8696
   },
   "dogrulama_farki_bps": {
     "daily": null,
@@ -242,6 +242,13 @@
         "agirlik": 0.1876,
         "degisim": 2.8019,
         "katki": 0.0053
+      },
+      {
+        "ticker": "ENERY",
+        "name": "Enerya Enerji",
+        "agirlik": 0.4184,
+        "degisim": 1.25,
+        "katki": 0.0052
       },
       {
         "ticker": "DOHOL",
@@ -718,13 +725,6 @@
         "agirlik": 9.8821,
         "degisim": -5.5411,
         "katki": -0.5476
-      },
-      {
-        "ticker": "ENERY",
-        "name": "Enerya Enerji",
-        "agirlik": 0.4184,
-        "degisim": null,
-        "katki": null
       }
     ],
     "weekly": [
@@ -1086,6 +1086,13 @@
         "katki": 0.005
       },
       {
+        "ticker": "ENERY",
+        "name": "Enerya Enerji",
+        "agirlik": 0.4184,
+        "degisim": 1.1351,
+        "katki": 0.0047
+      },
+      {
         "ticker": "CWENE",
         "name": "Cw Enerji",
         "agirlik": 0.3565,
@@ -1420,13 +1427,6 @@
         "agirlik": 9.8821,
         "degisim": -4.7337,
         "katki": -0.4678
-      },
-      {
-        "ticker": "ENERY",
-        "name": "Enerya Enerji",
-        "agirlik": 0.4184,
-        "degisim": null,
-        "katki": null
       }
     ],
     "monthly": [
@@ -1765,6 +1765,13 @@
         "agirlik": 0.1535,
         "degisim": -2.7615,
         "katki": -0.0042
+      },
+      {
+        "ticker": "ENERY",
+        "name": "Enerya Enerji",
+        "agirlik": 0.4184,
+        "degisim": -1.1099,
+        "katki": -0.0046
       },
       {
         "ticker": "GSRAY",
@@ -2122,13 +2129,6 @@
         "agirlik": 9.8821,
         "degisim": -15.2136,
         "katki": -1.5034
-      },
-      {
-        "ticker": "ENERY",
-        "name": "Enerya Enerji",
-        "agirlik": 0.4184,
-        "degisim": null,
-        "katki": null
       }
     ]
   },
@@ -2141,15 +2141,15 @@
         "eksik": 0
       },
       {
-        "sektor": "Enerji",
-        "katki": -0.5572,
-        "hisse_sayisi": 15,
-        "eksik": 1
-      },
-      {
         "sektor": "Finans",
         "katki": 0.5533,
         "hisse_sayisi": 20,
+        "eksik": 0
+      },
+      {
+        "sektor": "Enerji",
+        "katki": -0.552,
+        "hisse_sayisi": 16,
         "eksik": 0
       },
       {
@@ -2270,9 +2270,9 @@
       },
       {
         "sektor": "Enerji",
-        "katki": 0.0173,
-        "hisse_sayisi": 15,
-        "eksik": 1
+        "katki": 0.022,
+        "hisse_sayisi": 16,
+        "eksik": 0
       },
       {
         "sektor": "İletişim Cihazları",
@@ -2314,9 +2314,9 @@
       },
       {
         "sektor": "Enerji",
-        "katki": -0.3097,
-        "hisse_sayisi": 15,
-        "eksik": 1
+        "katki": -0.3143,
+        "hisse_sayisi": 16,
+        "eksik": 0
       },
       {
         "sektor": "İletişim",
