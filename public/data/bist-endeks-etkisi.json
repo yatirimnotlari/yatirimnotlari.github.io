@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-16T22:55:58.645607+03:00",
+  "updated_at": "2026-06-16T22:59:13.661632+03:00",
   "fallback_aktif": false,
   "fallback_aciklama": null,
   "agirlik_metodoloji": {
@@ -14,9 +14,9 @@
     "monthly": null
   },
   "endeks_katki_toplam": {
-    "daily": 0.395,
-    "weekly": 5.9532,
-    "monthly": 3.1148
+    "daily": 0.4013,
+    "weekly": 5.9091,
+    "monthly": 3.1244
   },
   "dogrulama_farki_bps": {
     "daily": null,
@@ -242,13 +242,6 @@
         "agirlik": 0.3053,
         "degisim": 1.079,
         "katki": 0.0033
-      },
-      {
-        "ticker": "CWENE",
-        "name": "Cw Enerji",
-        "agirlik": 0.2591,
-        "degisim": 1.217,
-        "katki": 0.0032
       },
       {
         "ticker": "ECILC",
@@ -622,13 +615,6 @@
         "katki": -0.0092
       },
       {
-        "ticker": "TURSG",
-        "name": "Türkiye Sigorta",
-        "agirlik": 0.5713,
-        "degisim": -1.6541,
-        "katki": -0.0095
-      },
-      {
         "ticker": "SAHOL",
         "name": "Sabancı Holding",
         "agirlik": 2.4964,
@@ -725,6 +711,20 @@
         "agirlik": 7.2122,
         "degisim": -2.0305,
         "katki": -0.1464
+      },
+      {
+        "ticker": "TURSG",
+        "name": "Türkiye Sigorta",
+        "agirlik": 0.5713,
+        "degisim": null,
+        "katki": null
+      },
+      {
+        "ticker": "CWENE",
+        "name": "Cw Enerji",
+        "agirlik": 0.2591,
+        "degisim": null,
+        "katki": null
       }
     ],
     "weekly": [
@@ -995,13 +995,6 @@
         "katki": 0.026
       },
       {
-        "ticker": "TURSG",
-        "name": "Türkiye Sigorta",
-        "agirlik": 0.5713,
-        "degisim": 4.2231,
-        "katki": 0.0241
-      },
-      {
         "ticker": "DOAS",
         "name": "Doğuş Otomotiv",
         "agirlik": 0.3973,
@@ -1014,13 +1007,6 @@
         "agirlik": 0.6578,
         "degisim": 3.259,
         "katki": 0.0214
-      },
-      {
-        "ticker": "CWENE",
-        "name": "Cw Enerji",
-        "agirlik": 0.2591,
-        "degisim": 7.7172,
-        "katki": 0.02
       },
       {
         "ticker": "TSKB",
@@ -1427,6 +1413,20 @@
         "agirlik": 0.5335,
         "degisim": -16.3934,
         "katki": -0.0875
+      },
+      {
+        "ticker": "TURSG",
+        "name": "Türkiye Sigorta",
+        "agirlik": 0.5713,
+        "degisim": null,
+        "katki": null
+      },
+      {
+        "ticker": "CWENE",
+        "name": "Cw Enerji",
+        "agirlik": 0.2591,
+        "degisim": null,
+        "katki": null
       }
     ],
     "monthly": [
@@ -1652,13 +1652,6 @@
         "name": "Koç Holding",
         "agirlik": 3.0203,
         "degisim": 0.5528,
-        "katki": 0.0167
-      },
-      {
-        "ticker": "CWENE",
-        "name": "Cw Enerji",
-        "agirlik": 0.2591,
-        "degisim": 6.4533,
         "katki": 0.0167
       },
       {
@@ -1956,13 +1949,6 @@
         "katki": -0.0256
       },
       {
-        "ticker": "TURSG",
-        "name": "Türkiye Sigorta",
-        "agirlik": 0.5713,
-        "degisim": -4.5952,
-        "katki": -0.0263
-      },
-      {
         "ticker": "TRMET",
         "name": "TR Anadolu Metal",
         "agirlik": 0.4146,
@@ -2129,6 +2115,20 @@
         "agirlik": 4.7768,
         "degisim": -12.8046,
         "katki": -0.6117
+      },
+      {
+        "ticker": "TURSG",
+        "name": "Türkiye Sigorta",
+        "agirlik": 0.5713,
+        "degisim": null,
+        "katki": null
+      },
+      {
+        "ticker": "CWENE",
+        "name": "Cw Enerji",
+        "agirlik": 0.2591,
+        "degisim": null,
+        "katki": null
       }
     ]
   },
@@ -2178,20 +2178,20 @@
       },
       {
         "sektor": "Enerji",
-        "katki": -0.014,
-        "hisse_sayisi": 16,
-        "eksik": 0
+        "katki": -0.0172,
+        "hisse_sayisi": 15,
+        "eksik": 1
+      },
+      {
+        "sektor": "Finans",
+        "katki": 0.0135,
+        "hisse_sayisi": 19,
+        "eksik": 1
       },
       {
         "sektor": "İnşaat ve Bayındırlık",
         "katki": -0.0119,
         "hisse_sayisi": 6,
-        "eksik": 0
-      },
-      {
-        "sektor": "Finans",
-        "katki": 0.004,
-        "hisse_sayisi": 20,
         "eksik": 0
       },
       {
@@ -2210,9 +2210,9 @@
     "weekly": [
       {
         "sektor": "Finans",
-        "katki": 2.7338,
-        "hisse_sayisi": 20,
-        "eksik": 0
+        "katki": 2.7097,
+        "hisse_sayisi": 19,
+        "eksik": 1
       },
       {
         "sektor": "Teknoloji",
@@ -2270,9 +2270,9 @@
       },
       {
         "sektor": "Enerji",
-        "katki": -0.0109,
-        "hisse_sayisi": 16,
-        "eksik": 0
+        "katki": -0.0309,
+        "hisse_sayisi": 15,
+        "eksik": 1
       },
       {
         "sektor": "İletişim Cihazları",
@@ -2284,15 +2284,15 @@
     "monthly": [
       {
         "sektor": "Finans",
-        "katki": 3.7037,
-        "hisse_sayisi": 20,
-        "eksik": 0
+        "katki": 3.73,
+        "hisse_sayisi": 19,
+        "eksik": 1
       },
       {
         "sektor": "Enerji",
-        "katki": -0.8069,
-        "hisse_sayisi": 16,
-        "eksik": 0
+        "katki": -0.8236,
+        "hisse_sayisi": 15,
+        "eksik": 1
       },
       {
         "sektor": "Havayolları ve Hizm.",
