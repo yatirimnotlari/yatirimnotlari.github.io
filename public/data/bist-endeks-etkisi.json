@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-23T18:46:24.511646+03:00",
+  "updated_at": "2026-06-23T19:17:37.169635+03:00",
   "fallback_aktif": false,
   "fallback_aciklama": null,
   "agirlik_metodoloji": {
@@ -14,7 +14,7 @@
     "monthly": null
   },
   "endeks_katki_toplam": {
-    "daily": -1.2827,
+    "daily": -1.4061,
     "weekly": 0.6836,
     "monthly": 9.0204
   },
@@ -109,6 +109,13 @@
         "agirlik": 0.1489,
         "degisim": 0.9615,
         "katki": 0.0014
+      },
+      {
+        "ticker": "CIMSA",
+        "name": "Çimsa",
+        "agirlik": 0.4798,
+        "degisim": 0.2412,
+        "katki": 0.0012
       },
       {
         "ticker": "CWENE",
@@ -335,13 +342,6 @@
         "katki": -0.0061
       },
       {
-        "ticker": "TUPRS",
-        "name": "Tüpraş",
-        "agirlik": 4.5902,
-        "degisim": -0.1359,
-        "katki": -0.0062
-      },
-      {
         "ticker": "EFOR",
         "name": "Efor Yat. San.",
         "agirlik": 0.2411,
@@ -354,13 +354,6 @@
         "agirlik": 0.3247,
         "degisim": -2.1526,
         "katki": -0.007
-      },
-      {
-        "ticker": "CIMSA",
-        "name": "Çimsa",
-        "agirlik": 0.4798,
-        "degisim": -1.5202,
-        "katki": -0.0073
       },
       {
         "ticker": "GENIL",
@@ -405,13 +398,6 @@
         "katki": -0.0088
       },
       {
-        "ticker": "DOAS",
-        "name": "Doğuş Otomotiv",
-        "agirlik": 0.3741,
-        "degisim": -2.4768,
-        "katki": -0.0093
-      },
-      {
         "ticker": "ECILC",
         "name": "Eczacıbaşı İlaç",
         "agirlik": 0.2851,
@@ -454,13 +440,6 @@
         "katki": -0.0106
       },
       {
-        "ticker": "TAVHL",
-        "name": "TAV Holding",
-        "agirlik": 1.1549,
-        "degisim": -1.0417,
-        "katki": -0.012
-      },
-      {
         "ticker": "TABGD",
         "name": "Tab Gıda",
         "agirlik": 0.2905,
@@ -480,6 +459,13 @@
         "agirlik": 0.3007,
         "degisim": -4.1939,
         "katki": -0.0126
+      },
+      {
+        "ticker": "KRDMD",
+        "name": "Kardemir (D)",
+        "agirlik": 0.6659,
+        "degisim": -1.9127,
+        "katki": -0.0127
       },
       {
         "ticker": "OYAKC",
@@ -573,6 +559,13 @@
         "katki": -0.0188
       },
       {
+        "ticker": "DOAS",
+        "name": "Doğuş Otomotiv",
+        "agirlik": 0.3741,
+        "degisim": -5.0251,
+        "katki": -0.0188
+      },
+      {
         "ticker": "TRMET",
         "name": "TR Anadolu Metal",
         "agirlik": 0.4129,
@@ -580,11 +573,11 @@
         "katki": -0.0189
       },
       {
-        "ticker": "KRDMD",
-        "name": "Kardemir (D)",
-        "agirlik": 0.6659,
-        "degisim": -3.1946,
-        "katki": -0.0213
+        "ticker": "GUBRF",
+        "name": "Gübre Fabrikaları",
+        "agirlik": 0.7967,
+        "degisim": -2.398,
+        "katki": -0.0191
       },
       {
         "ticker": "AEFES",
@@ -671,11 +664,11 @@
         "katki": -0.046
       },
       {
-        "ticker": "GUBRF",
-        "name": "Gübre Fabrikaları",
-        "agirlik": 0.7967,
-        "degisim": -6.0413,
-        "katki": -0.0481
+        "ticker": "TAVHL",
+        "name": "TAV Holding",
+        "agirlik": 1.1549,
+        "degisim": -4.0404,
+        "katki": -0.0467
       },
       {
         "ticker": "SASA",
@@ -718,6 +711,13 @@
         "agirlik": 5.0383,
         "degisim": -1.8293,
         "katki": -0.0922
+      },
+      {
+        "ticker": "TUPRS",
+        "name": "Tüpraş",
+        "agirlik": 4.5902,
+        "degisim": -2.8647,
+        "katki": -0.1315
       },
       {
         "ticker": "ASTOR",
@@ -2141,15 +2141,15 @@
         "eksik": 0
       },
       {
-        "sektor": "Sanayi",
-        "katki": -0.3586,
-        "hisse_sayisi": 32,
+        "sektor": "Enerji",
+        "katki": -0.3722,
+        "hisse_sayisi": 15,
         "eksik": 0
       },
       {
-        "sektor": "Enerji",
-        "katki": -0.2469,
-        "hisse_sayisi": 15,
+        "sektor": "Sanayi",
+        "katki": -0.322,
+        "hisse_sayisi": 32,
         "eksik": 0
       },
       {
@@ -2171,6 +2171,12 @@
         "eksik": 0
       },
       {
+        "sektor": "Havayolları ve Hizm.",
+        "katki": -0.0655,
+        "hisse_sayisi": 3,
+        "eksik": 0
+      },
+      {
         "sektor": "Madencilik",
         "katki": -0.0625,
         "hisse_sayisi": 3,
@@ -2186,12 +2192,6 @@
         "sektor": "İnşaat ve Bayındırlık",
         "katki": -0.0388,
         "hisse_sayisi": 6,
-        "eksik": 0
-      },
-      {
-        "sektor": "Havayolları ve Hizm.",
-        "katki": -0.0308,
-        "hisse_sayisi": 3,
         "eksik": 0
       },
       {
