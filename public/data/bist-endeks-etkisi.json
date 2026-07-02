@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-02T18:58:20.083192+03:00",
+  "updated_at": "2026-07-02T19:49:08.485496+03:00",
   "fallback_aktif": false,
   "fallback_aciklama": null,
   "agirlik_metodoloji": {
@@ -14,9 +14,9 @@
     "monthly": null
   },
   "endeks_katki_toplam": {
-    "daily": 0.7216,
-    "weekly": 1.757,
-    "monthly": 7.614
+    "daily": 0.7318,
+    "weekly": 1.7708,
+    "monthly": 7.6185
   },
   "dogrulama_farki_bps": {
     "daily": null,
@@ -137,6 +137,13 @@
         "agirlik": 0.2469,
         "degisim": 4.4728,
         "katki": 0.011
+      },
+      {
+        "ticker": "OTKAR",
+        "name": "Otokar",
+        "agirlik": 0.264,
+        "degisim": 3.8567,
+        "katki": 0.0102
       },
       {
         "ticker": "RALYH",
@@ -718,13 +725,6 @@
         "agirlik": 6.7047,
         "degisim": -1.9204,
         "katki": -0.1288
-      },
-      {
-        "ticker": "OTKAR",
-        "name": "Otokar",
-        "agirlik": 0.264,
-        "degisim": null,
-        "katki": null
       }
     ],
     "weekly": [
@@ -902,6 +902,13 @@
         "agirlik": 0.2856,
         "degisim": 4.9462,
         "katki": 0.0141
+      },
+      {
+        "ticker": "OTKAR",
+        "name": "Otokar",
+        "agirlik": 0.264,
+        "degisim": 5.2338,
+        "katki": 0.0138
       },
       {
         "ticker": "SAHOL",
@@ -1420,13 +1427,6 @@
         "agirlik": 6.7047,
         "degisim": -4.7936,
         "katki": -0.3214
-      },
-      {
-        "ticker": "OTKAR",
-        "name": "Otokar",
-        "agirlik": 0.264,
-        "degisim": null,
-        "katki": null
       }
     ],
     "monthly": [
@@ -1653,6 +1653,13 @@
         "agirlik": 0.478,
         "degisim": 0.975,
         "katki": 0.0047
+      },
+      {
+        "ticker": "OTKAR",
+        "name": "Otokar",
+        "agirlik": 0.264,
+        "degisim": 1.6858,
+        "katki": 0.0045
       },
       {
         "ticker": "TRMET",
@@ -2122,13 +2129,6 @@
         "agirlik": 9.7311,
         "degisim": -5.6407,
         "katki": -0.5489
-      },
-      {
-        "ticker": "OTKAR",
-        "name": "Otokar",
-        "agirlik": 0.264,
-        "degisim": null,
-        "katki": null
       }
     ]
   },
@@ -2171,12 +2171,6 @@
         "eksik": 0
       },
       {
-        "sektor": "Sanayi",
-        "katki": -0.0171,
-        "hisse_sayisi": 30,
-        "eksik": 1
-      },
-      {
         "sektor": "Gayrimenkul",
         "katki": 0.0168,
         "hisse_sayisi": 3,
@@ -2192,6 +2186,12 @@
         "sektor": "İletişim",
         "katki": -0.0089,
         "hisse_sayisi": 2,
+        "eksik": 0
+      },
+      {
+        "sektor": "Sanayi",
+        "katki": -0.0069,
+        "hisse_sayisi": 31,
         "eksik": 0
       },
       {
@@ -2245,6 +2245,12 @@
         "eksik": 0
       },
       {
+        "sektor": "Sanayi",
+        "katki": 0.0561,
+        "hisse_sayisi": 31,
+        "eksik": 0
+      },
+      {
         "sektor": "İletişim",
         "katki": -0.0462,
         "hisse_sayisi": 2,
@@ -2255,12 +2261,6 @@
         "katki": 0.0445,
         "hisse_sayisi": 3,
         "eksik": 0
-      },
-      {
-        "sektor": "Sanayi",
-        "katki": 0.0423,
-        "hisse_sayisi": 30,
-        "eksik": 1
       },
       {
         "sektor": "Madencilik",
@@ -2302,9 +2302,9 @@
       },
       {
         "sektor": "Sanayi",
-        "katki": -0.7784,
-        "hisse_sayisi": 30,
-        "eksik": 1
+        "katki": -0.7739,
+        "hisse_sayisi": 31,
+        "eksik": 0
       },
       {
         "sektor": "Havayolları ve Hizm.",
