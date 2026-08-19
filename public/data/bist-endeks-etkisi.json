@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-19T17:59:17.084863+03:00",
+  "updated_at": "2026-08-19T18:28:53.406565+03:00",
   "fallback_aktif": false,
   "fallback_aciklama": null,
   "agirlik_metodoloji": {
@@ -14,9 +14,9 @@
     "monthly": null
   },
   "endeks_katki_toplam": {
-    "daily": 2.5007,
-    "weekly": 3.0285,
-    "monthly": 5.566
+    "daily": 2.3232,
+    "weekly": 2.8718,
+    "monthly": 4.0344
   },
   "dogrulama_farki_bps": {
     "daily": null,
@@ -30,36 +30,43 @@
         "ticker": "ASELS",
         "name": "Aselsan",
         "agirlik": 10.0,
-        "degisim": 5.8361,
-        "katki": 0.5836
+        "degisim": 5.7049,
+        "katki": 0.5705
       },
       {
         "ticker": "TUPRS",
         "name": "Tüpraş",
         "agirlik": 8.0106,
-        "degisim": 6.4171,
-        "katki": 0.514
+        "degisim": 5.7487,
+        "katki": 0.4605
       },
       {
         "ticker": "BIMAS",
         "name": "Bim Birleşik Mağazalar A.Ş",
         "agirlik": 7.648,
-        "degisim": 3.0247,
-        "katki": 0.2313
+        "degisim": 2.8395,
+        "katki": 0.2172
       },
       {
         "ticker": "AKBNK",
         "name": "Akbank",
         "agirlik": 4.2726,
-        "degisim": 3.9911,
-        "katki": 0.1705
+        "degisim": 3.9172,
+        "katki": 0.1674
       },
       {
         "ticker": "ASTOR",
         "name": "Astor Enerji",
         "agirlik": 3.124,
-        "degisim": 3.5101,
-        "katki": 0.1097
+        "degisim": 3.4321,
+        "katki": 0.1072
+      },
+      {
+        "ticker": "DSTKF",
+        "name": "Destek Finans Faktoring",
+        "agirlik": 3.9409,
+        "degisim": 2.7027,
+        "katki": 0.1065
       },
       {
         "ticker": "KCHOL",
@@ -67,13 +74,6 @@
         "agirlik": 3.1715,
         "degisim": 3.2227,
         "katki": 0.1022
-      },
-      {
-        "ticker": "DSTKF",
-        "name": "Destek Finans Faktoring",
-        "agirlik": 3.9409,
-        "degisim": 2.3587,
-        "katki": 0.093
       },
       {
         "ticker": "GUBRF",
@@ -86,8 +86,8 @@
         "ticker": "TRALT",
         "name": "Türk Altın",
         "agirlik": 1.0282,
-        "degisim": 6.2421,
-        "katki": 0.0642
+        "degisim": 6.137,
+        "katki": 0.0631
       },
       {
         "ticker": "YKBNK",
@@ -100,71 +100,85 @@
         "ticker": "GARAN",
         "name": "Garanti Bankası",
         "agirlik": 1.739,
-        "degisim": 2.1655,
-        "katki": 0.0377
+        "degisim": 2.0882,
+        "katki": 0.0363
       },
       {
         "ticker": "SAHOL",
         "name": "Sabancı Holding",
         "agirlik": 2.2264,
-        "degisim": 1.6301,
-        "katki": 0.0363
-      },
-      {
-        "ticker": "ISCTR",
-        "name": "İş Bankası (C)",
-        "agirlik": 2.2866,
-        "degisim": 1.5347,
-        "katki": 0.0351
-      },
-      {
-        "ticker": "BRSAN",
-        "name": "Borusan Birleşik Boru Fab.",
-        "agirlik": 0.4519,
-        "degisim": 7.2612,
-        "katki": 0.0328
-      },
-      {
-        "ticker": "EKGYO",
-        "name": "Emlak Konut GYO",
-        "agirlik": 0.7867,
-        "degisim": 4.0642,
-        "katki": 0.032
-      },
-      {
-        "ticker": "ENKAI",
-        "name": "Enka İnşaat",
-        "agirlik": 0.9115,
-        "degisim": 3.2099,
-        "katki": 0.0293
-      },
-      {
-        "ticker": "SISE",
-        "name": "Şişecam",
-        "agirlik": 1.2633,
-        "degisim": 2.2036,
-        "katki": 0.0278
-      },
-      {
-        "ticker": "KRDMD",
-        "name": "Kardemir (D)",
-        "agirlik": 0.7303,
-        "degisim": 3.7273,
-        "katki": 0.0272
-      },
-      {
-        "ticker": "ULKER",
-        "name": "Ülker Bisküvi",
-        "agirlik": 0.3439,
-        "degisim": 7.6503,
-        "katki": 0.0263
+        "degisim": 1.5739,
+        "katki": 0.035
       },
       {
         "ticker": "KTLEV",
         "name": "Katılımevim",
         "agirlik": 2.0244,
-        "degisim": 1.1207,
-        "katki": 0.0227
+        "degisim": 1.7241,
+        "katki": 0.0349
+      },
+      {
+        "ticker": "BRSAN",
+        "name": "Borusan Birleşik Boru Fab.",
+        "agirlik": 0.4519,
+        "degisim": 7.1823,
+        "katki": 0.0325
+      },
+      {
+        "ticker": "EKGYO",
+        "name": "Emlak Konut GYO",
+        "agirlik": 0.7867,
+        "degisim": 3.7968,
+        "katki": 0.0299
+      },
+      {
+        "ticker": "KRDMD",
+        "name": "Kardemir (D)",
+        "agirlik": 0.7303,
+        "degisim": 4.0455,
+        "katki": 0.0295
+      },
+      {
+        "ticker": "ISCTR",
+        "name": "İş Bankası (C)",
+        "agirlik": 2.2866,
+        "degisim": 1.2116,
+        "katki": 0.0277
+      },
+      {
+        "ticker": "SISE",
+        "name": "Şişecam",
+        "agirlik": 1.2633,
+        "degisim": 1.8888,
+        "katki": 0.0239
+      },
+      {
+        "ticker": "ENKAI",
+        "name": "Enka İnşaat",
+        "agirlik": 0.9115,
+        "degisim": 2.5926,
+        "katki": 0.0236
+      },
+      {
+        "ticker": "ULKER",
+        "name": "Ülker Bisküvi",
+        "agirlik": 0.3439,
+        "degisim": 6.8306,
+        "katki": 0.0235
+      },
+      {
+        "ticker": "RALYH",
+        "name": "Ral Yatırım Holding",
+        "agirlik": 0.6956,
+        "degisim": 3.0132,
+        "katki": 0.021
+      },
+      {
+        "ticker": "EFOR",
+        "name": "Efor Yat. San.",
+        "agirlik": 0.2774,
+        "degisim": 7.5676,
+        "katki": 0.021
       },
       {
         "ticker": "TAVHL",
@@ -177,29 +191,22 @@
         "ticker": "ALARK",
         "name": "Alarko Holding",
         "agirlik": 0.3501,
-        "degisim": 5.7944,
-        "katki": 0.0203
+        "degisim": 5.7009,
+        "katki": 0.02
       },
       {
-        "ticker": "EFOR",
-        "name": "Efor Yat. San.",
-        "agirlik": 0.2774,
-        "degisim": 6.4324,
-        "katki": 0.0178
-      },
-      {
-        "ticker": "SARKY",
-        "name": "Sarkuysan",
-        "agirlik": 0.5002,
-        "degisim": 3.4938,
-        "katki": 0.0175
+        "ticker": "PASEU",
+        "name": "Pasifik Eurasia",
+        "agirlik": 0.562,
+        "degisim": 3.276,
+        "katki": 0.0184
       },
       {
         "ticker": "TRMET",
         "name": "TR Anadolu Metal",
         "agirlik": 0.46,
-        "degisim": 3.7272,
-        "katki": 0.0171
+        "degisim": 3.9651,
+        "katki": 0.0182
       },
       {
         "ticker": "TURSG",
@@ -216,32 +223,11 @@
         "katki": 0.0165
       },
       {
-        "ticker": "TCELL",
-        "name": "Turkcell",
-        "agirlik": 2.1197,
-        "degisim": 0.7729,
-        "katki": 0.0164
-      },
-      {
-        "ticker": "SASA",
-        "name": "Sasa Polyester Sanayi A.Ş.",
-        "agirlik": 1.2213,
-        "degisim": 1.3333,
-        "katki": 0.0163
-      },
-      {
-        "ticker": "THYAO",
-        "name": "Türk Hava Yolları",
-        "agirlik": 4.771,
-        "degisim": 0.3328,
-        "katki": 0.0159
-      },
-      {
-        "ticker": "TOASO",
-        "name": "Tofaş Fabrika",
-        "agirlik": 0.7318,
-        "degisim": 1.9774,
-        "katki": 0.0145
+        "ticker": "SARKY",
+        "name": "Sarkuysan",
+        "agirlik": 0.5002,
+        "degisim": 2.7174,
+        "katki": 0.0136
       },
       {
         "ticker": "ALTNY",
@@ -251,60 +237,53 @@
         "katki": 0.0132
       },
       {
+        "ticker": "TOASO",
+        "name": "Tofaş Fabrika",
+        "agirlik": 0.7318,
+        "degisim": 1.6949,
+        "katki": 0.0124
+      },
+      {
         "ticker": "AEFES",
         "name": "Anadolu Efes",
         "agirlik": 0.8368,
-        "degisim": 1.5682,
-        "katki": 0.0131
+        "degisim": 1.4637,
+        "katki": 0.0122
       },
       {
-        "ticker": "RALYH",
-        "name": "Ral Yatırım Holding",
-        "agirlik": 0.6956,
-        "degisim": 1.6008,
-        "katki": 0.0111
+        "ticker": "THYAO",
+        "name": "Türk Hava Yolları",
+        "agirlik": 4.771,
+        "degisim": 0.2496,
+        "katki": 0.0119
       },
       {
-        "ticker": "DAPGM",
-        "name": "Dap Gayrimenkul",
-        "agirlik": 0.1685,
-        "degisim": 6.4356,
-        "katki": 0.0108
-      },
-      {
-        "ticker": "PETKM",
-        "name": "Petkim",
-        "agirlik": 0.5515,
-        "degisim": 1.8164,
-        "katki": 0.01
+        "ticker": "SASA",
+        "name": "Sasa Polyester Sanayi A.Ş.",
+        "agirlik": 1.2213,
+        "degisim": 0.8889,
+        "katki": 0.0109
       },
       {
         "ticker": "MGROS",
         "name": "Migros",
         "agirlik": 1.1926,
-        "degisim": 0.7923,
-        "katki": 0.0094
+        "degisim": 0.8803,
+        "katki": 0.0105
       },
       {
-        "ticker": "DOHOL",
-        "name": "Doğan Holding",
-        "agirlik": 0.4449,
-        "degisim": 2.1134,
-        "katki": 0.0094
+        "ticker": "TCELL",
+        "name": "Turkcell",
+        "agirlik": 2.1197,
+        "degisim": 0.4831,
+        "katki": 0.0102
       },
       {
-        "ticker": "OYAKC",
-        "name": "Oyak Çimento",
-        "agirlik": 0.4747,
-        "degisim": 1.9481,
-        "katki": 0.0092
-      },
-      {
-        "ticker": "ISMEN",
-        "name": "İş Yatırım",
-        "agirlik": 0.3214,
-        "degisim": 2.8678,
-        "katki": 0.0092
+        "ticker": "DAPGM",
+        "name": "Dap Gayrimenkul",
+        "agirlik": 0.1685,
+        "degisim": 5.8168,
+        "katki": 0.0098
       },
       {
         "ticker": "VAKBN",
@@ -314,10 +293,10 @@
         "katki": 0.0091
       },
       {
-        "ticker": "ANSGR",
-        "name": "Anadolu Sigorta",
-        "agirlik": 0.4461,
-        "degisim": 1.9929,
+        "ticker": "ENERY",
+        "name": "Enerya Enerji",
+        "agirlik": 0.3647,
+        "degisim": 2.4419,
         "katki": 0.0089
       },
       {
@@ -331,49 +310,77 @@
         "ticker": "MPARK",
         "name": "MLP Sağlık Hizmetleri",
         "agirlik": 0.798,
-        "degisim": 1.0274,
-        "katki": 0.0082
+        "degisim": 1.0845,
+        "katki": 0.0087
       },
       {
-        "ticker": "BALSU",
-        "name": "Balsu Gıda",
-        "agirlik": 0.1481,
-        "degisim": 5.4027,
-        "katki": 0.008
+        "ticker": "ISMEN",
+        "name": "İş Yatırım",
+        "agirlik": 0.3214,
+        "degisim": 2.6808,
+        "katki": 0.0086
       },
       {
-        "ticker": "EREGL",
-        "name": "Ereğli Demir Çelik",
-        "agirlik": 2.8129,
-        "degisim": 0.2652,
-        "katki": 0.0075
+        "ticker": "PETKM",
+        "name": "Petkim",
+        "agirlik": 0.5515,
+        "degisim": 1.5136,
+        "katki": 0.0083
       },
       {
         "ticker": "TRENJ",
         "name": "TR Doğal Enerji Kaynakları",
         "agirlik": 0.1836,
-        "degisim": 4.0948,
-        "katki": 0.0075
+        "degisim": 4.4181,
+        "katki": 0.0081
       },
       {
-        "ticker": "ENERY",
-        "name": "Enerya Enerji",
-        "agirlik": 0.3647,
-        "degisim": 1.9767,
-        "katki": 0.0072
+        "ticker": "BALSU",
+        "name": "Balsu Gıda",
+        "agirlik": 0.1481,
+        "degisim": 5.501,
+        "katki": 0.0081
       },
       {
-        "ticker": "PGSUS",
-        "name": "Pegasus Hava Taşımacılığı",
-        "agirlik": 0.7906,
-        "degisim": 0.8707,
+        "ticker": "HALKB",
+        "name": "Halkbank",
+        "agirlik": 0.466,
+        "degisim": 1.718,
+        "katki": 0.008
+      },
+      {
+        "ticker": "KUYAS",
+        "name": "Kuyas Yatırım AŞ",
+        "agirlik": 0.5083,
+        "degisim": 1.5323,
+        "katki": 0.0078
+      },
+      {
+        "ticker": "DOHOL",
+        "name": "Doğan Holding",
+        "agirlik": 0.4449,
+        "degisim": 1.633,
+        "katki": 0.0073
+      },
+      {
+        "ticker": "OYAKC",
+        "name": "Oyak Çimento",
+        "agirlik": 0.4747,
+        "degisim": 1.4842,
+        "katki": 0.007
+      },
+      {
+        "ticker": "ECILC",
+        "name": "Eczacıbaşı İlaç",
+        "agirlik": 0.2559,
+        "degisim": 2.6954,
         "katki": 0.0069
       },
       {
-        "ticker": "MAVI",
-        "name": "Mavi Giyim Sanayi Tic.A.S",
-        "agirlik": 0.4969,
-        "degisim": 1.3277,
+        "ticker": "BTCIM",
+        "name": "Batıçim",
+        "agirlik": 0.3876,
+        "degisim": 1.6913,
         "katki": 0.0066
       },
       {
@@ -384,46 +391,25 @@
         "katki": 0.0064
       },
       {
-        "ticker": "TTKOM",
-        "name": "Türk Telekom",
-        "agirlik": 0.5675,
-        "degisim": 1.1173,
-        "katki": 0.0063
+        "ticker": "ANSGR",
+        "name": "Anadolu Sigorta",
+        "agirlik": 0.4461,
+        "degisim": 1.4235,
+        "katki": 0.0064
       },
       {
-        "ticker": "HALKB",
-        "name": "Halkbank",
-        "agirlik": 0.466,
-        "degisim": 1.3033,
+        "ticker": "MAVI",
+        "name": "Mavi Giyim Sanayi Tic.A.S",
+        "agirlik": 0.4969,
+        "degisim": 1.2215,
         "katki": 0.0061
       },
       {
-        "ticker": "GESAN",
-        "name": "Girişim Elektrik",
-        "agirlik": 0.3298,
-        "degisim": 1.7672,
-        "katki": 0.0058
-      },
-      {
-        "ticker": "ECILC",
-        "name": "Eczacıbaşı İlaç",
-        "agirlik": 0.2559,
-        "degisim": 2.2237,
-        "katki": 0.0057
-      },
-      {
-        "ticker": "PAHOL",
-        "name": "Pasifik Holding",
-        "agirlik": 0.118,
-        "degisim": 4.6512,
-        "katki": 0.0055
-      },
-      {
-        "ticker": "BRYAT",
-        "name": "Borusan Yatırım",
-        "agirlik": 0.1663,
-        "degisim": 3.0375,
-        "katki": 0.0051
+        "ticker": "CVKMD",
+        "name": "Cvk Maden",
+        "agirlik": 0.3366,
+        "degisim": 1.4797,
+        "katki": 0.005
       },
       {
         "ticker": "CANTE",
@@ -433,95 +419,116 @@
         "katki": 0.0048
       },
       {
-        "ticker": "CIMSA",
-        "name": "Çimsa",
-        "agirlik": 0.4413,
-        "degisim": 1.0168,
+        "ticker": "EREGL",
+        "name": "Ereğli Demir Çelik",
+        "agirlik": 2.8129,
+        "degisim": 0.1591,
         "katki": 0.0045
       },
       {
-        "ticker": "TSKB",
-        "name": "TSKB",
-        "agirlik": 0.2858,
-        "degisim": 1.5582,
-        "katki": 0.0045
+        "ticker": "GESAN",
+        "name": "Girişim Elektrik",
+        "agirlik": 0.3298,
+        "degisim": 1.3406,
+        "katki": 0.0044
       },
       {
-        "ticker": "PSGYO",
-        "name": "Pasifik GYO",
-        "agirlik": 0.2155,
-        "degisim": 2.071,
-        "katki": 0.0045
+        "ticker": "BRYAT",
+        "name": "Borusan Yatırım",
+        "agirlik": 0.1663,
+        "degisim": 2.561,
+        "katki": 0.0043
       },
       {
-        "ticker": "CVKMD",
-        "name": "Cvk Maden",
-        "agirlik": 0.3366,
-        "degisim": 1.2331,
+        "ticker": "PGSUS",
+        "name": "Pegasus Hava Taşımacılığı",
+        "agirlik": 0.7906,
+        "degisim": 0.5358,
         "katki": 0.0042
       },
       {
-        "ticker": "HEKTS",
-        "name": "Hektaş",
-        "agirlik": 0.2835,
-        "degisim": 1.4337,
+        "ticker": "TTKOM",
+        "name": "Türk Telekom",
+        "agirlik": 0.5675,
+        "degisim": 0.7449,
+        "katki": 0.0042
+      },
+      {
+        "ticker": "CIMSA",
+        "name": "Çimsa",
+        "agirlik": 0.4413,
+        "degisim": 0.9284,
         "katki": 0.0041
       },
       {
         "ticker": "PATEK",
         "name": "Pasifik Teknoloji",
         "agirlik": 0.1277,
-        "degisim": 2.9381,
-        "katki": 0.0038
-      },
-      {
-        "ticker": "OTKAR",
-        "name": "Otokar",
-        "agirlik": 0.2396,
-        "degisim": 1.5576,
-        "katki": 0.0037
-      },
-      {
-        "ticker": "BERA",
-        "name": "Bera Holding",
-        "agirlik": 0.1397,
-        "degisim": 2.047,
-        "katki": 0.0029
-      },
-      {
-        "ticker": "IEYHO",
-        "name": "Işıklar Enerji ve Yapı Holding",
-        "agirlik": 0.8127,
-        "degisim": 0.3277,
-        "katki": 0.0027
-      },
-      {
-        "ticker": "ENJSA",
-        "name": "Enerjisa Enerji",
-        "agirlik": 0.597,
-        "degisim": 0.362,
-        "katki": 0.0022
+        "degisim": 3.148,
+        "katki": 0.004
       },
       {
         "ticker": "AKSEN",
         "name": "Aksa Enerji",
         "agirlik": 0.4644,
-        "degisim": 0.4122,
+        "degisim": 0.8245,
+        "katki": 0.0038
+      },
+      {
+        "ticker": "TSKB",
+        "name": "TSKB",
+        "agirlik": 0.2858,
+        "degisim": 1.2832,
+        "katki": 0.0037
+      },
+      {
+        "ticker": "PAHOL",
+        "name": "Pasifik Holding",
+        "agirlik": 0.118,
+        "degisim": 3.1008,
+        "katki": 0.0037
+      },
+      {
+        "ticker": "PSGYO",
+        "name": "Pasifik GYO",
+        "agirlik": 0.2155,
+        "degisim": 1.4793,
+        "katki": 0.0032
+      },
+      {
+        "ticker": "HEKTS",
+        "name": "Hektaş",
+        "agirlik": 0.2835,
+        "degisim": 1.0753,
+        "katki": 0.003
+      },
+      {
+        "ticker": "ENJSA",
+        "name": "Enerjisa Enerji",
+        "agirlik": 0.597,
+        "degisim": 0.4525,
+        "katki": 0.0027
+      },
+      {
+        "ticker": "BERA",
+        "name": "Bera Holding",
+        "agirlik": 0.1397,
+        "degisim": 1.7437,
+        "katki": 0.0024
+      },
+      {
+        "ticker": "ESEN",
+        "name": "Esenboğa Elektrik",
+        "agirlik": 0.0652,
+        "degisim": 2.8653,
         "katki": 0.0019
       },
       {
-        "ticker": "EUREN",
-        "name": "Europen Endüstri",
-        "agirlik": 0.0892,
-        "degisim": 2.1333,
-        "katki": 0.0019
-      },
-      {
-        "ticker": "REEDR",
-        "name": "Reeder",
-        "agirlik": 0.0804,
-        "degisim": 2.1959,
-        "katki": 0.0018
+        "ticker": "OTKAR",
+        "name": "Otokar",
+        "agirlik": 0.2396,
+        "degisim": 0.7009,
+        "katki": 0.0017
       },
       {
         "ticker": "TUKAS",
@@ -531,24 +538,17 @@
         "katki": 0.0017
       },
       {
-        "ticker": "ESEN",
-        "name": "Esenboğa Elektrik",
-        "agirlik": 0.0652,
-        "degisim": 2.5788,
-        "katki": 0.0017
-      },
-      {
-        "ticker": "BTCIM",
-        "name": "Batıçim",
-        "agirlik": 0.3876,
-        "degisim": 0.4228,
+        "ticker": "REEDR",
+        "name": "Reeder",
+        "agirlik": 0.0804,
+        "degisim": 2.027,
         "katki": 0.0016
       },
       {
-        "ticker": "DOAS",
-        "name": "Doğuş Otomotiv",
-        "agirlik": 0.3353,
-        "degisim": 0.4149,
+        "ticker": "EUREN",
+        "name": "Europen Endüstri",
+        "agirlik": 0.0892,
+        "degisim": 1.6,
         "katki": 0.0014
       },
       {
@@ -559,81 +559,95 @@
         "katki": 0.0013
       },
       {
-        "ticker": "GSRAY",
-        "name": "Galatasaray Sportif A.Ş",
-        "agirlik": 0.1309,
-        "degisim": 0.9434,
-        "katki": 0.0012
+        "ticker": "DOAS",
+        "name": "Doğuş Otomotiv",
+        "agirlik": 0.3353,
+        "degisim": 0.2964,
+        "katki": 0.001
       },
       {
-        "ticker": "IZENR",
-        "name": "İzdemir Enerji",
-        "agirlik": 0.1223,
-        "degisim": 0.9547,
-        "katki": 0.0012
-      },
-      {
-        "ticker": "GRTHO",
-        "name": "GrainTurk Tarım",
-        "agirlik": 0.1278,
-        "degisim": 0.3704,
-        "katki": 0.0005
+        "ticker": "IEYHO",
+        "name": "Işıklar Enerji ve Yapı Holding",
+        "agirlik": 0.8127,
+        "degisim": 0.1092,
+        "katki": 0.0009
       },
       {
         "ticker": "GLRMK",
         "name": "Gülermak Ağır Sanayi",
         "agirlik": 0.3384,
-        "degisim": 0.0576,
-        "katki": 0.0002
+        "degisim": 0.1727,
+        "katki": 0.0006
       },
       {
-        "ticker": "CWENE",
-        "name": "Cw Enerji",
-        "agirlik": 0.2815,
-        "degisim": 0.0,
-        "katki": 0.0
+        "ticker": "GRTHO",
+        "name": "GrainTurk Tarım",
+        "agirlik": 0.1278,
+        "degisim": 0.2315,
+        "katki": 0.0003
+      },
+      {
+        "ticker": "IZENR",
+        "name": "İzdemir Enerji",
+        "agirlik": 0.1223,
+        "degisim": 0.2387,
+        "katki": 0.0003
       },
       {
         "ticker": "SKBNK",
         "name": "Şekerbank",
         "agirlik": 0.176,
-        "degisim": -0.1618,
-        "katki": -0.0003
+        "degisim": 0.0,
+        "katki": 0.0
+      },
+      {
+        "ticker": "GSRAY",
+        "name": "Galatasaray Sportif A.Ş",
+        "agirlik": 0.1309,
+        "degisim": 0.0,
+        "katki": 0.0
       },
       {
         "ticker": "MIATK",
         "name": "Mia Teknoloji",
         "agirlik": 0.2087,
-        "degisim": -0.2572,
-        "katki": -0.0005
+        "degisim": -0.3215,
+        "katki": -0.0007
+      },
+      {
+        "ticker": "TKFEN",
+        "name": "Tekfen Holding",
+        "agirlik": 0.4193,
+        "degisim": -0.216,
+        "katki": -0.0009
       },
       {
         "ticker": "KLRHO",
         "name": "Kiler Holding",
         "agirlik": 0.2348,
-        "degisim": -0.4464,
-        "katki": -0.001
+        "degisim": -0.6696,
+        "katki": -0.0016
       },
       {
-        "ticker": "VESTL",
-        "name": "Vestel Elektronik",
-        "agirlik": 0.0802,
-        "degisim": -1.7163,
-        "katki": -0.0014
+        "ticker": "BSOKE",
+        "name": "Batıçim Çimento",
+        "agirlik": 0.3102,
+        "degisim": -0.5373,
+        "katki": -0.0017
       },
       {
         "ticker": "ARCLK",
         "name": "Arçelik",
         "agirlik": 0.2502,
-        "degisim": -0.5911,
-        "katki": -0.0015
+        "degisim": -0.6986,
+        "katki": -0.0017
       },
       {
-        "ticker": "CCOLA",
-        "name": "Coca-Cola İçecek A.Ş",
-        "agirlik": 1.5424,
-        "degisim": -0.1216,
-        "katki": -0.0019
+        "ticker": "VESTL",
+        "name": "Vestel Elektronik",
+        "agirlik": 0.0802,
+        "degisim": -2.2584,
+        "katki": -0.0018
       },
       {
         "ticker": "MAGEN",
@@ -643,88 +657,74 @@
         "katki": -0.0019
       },
       {
+        "ticker": "CWENE",
+        "name": "Cw Enerji",
+        "agirlik": 0.2815,
+        "degisim": -0.8043,
+        "katki": -0.0023
+      },
+      {
         "ticker": "FENER",
         "name": "Fenerbahce Futbol A.Ş.",
         "agirlik": 0.1699,
-        "degisim": -1.5823,
-        "katki": -0.0027
+        "degisim": -1.8987,
+        "katki": -0.0032
       },
       {
         "ticker": "AKSA",
         "name": "Aksa",
         "agirlik": 0.3121,
-        "degisim": -0.9615,
-        "katki": -0.003
+        "degisim": -1.049,
+        "katki": -0.0033
       },
       {
         "ticker": "OBAMS",
         "name": "Oba Makarnacılık",
         "agirlik": 0.0932,
-        "degisim": -3.3149,
-        "katki": -0.0031
-      },
-      {
-        "ticker": "GENIL",
-        "name": "Gen İlaç",
-        "agirlik": 0.2799,
-        "degisim": -1.1474,
-        "katki": -0.0032
-      },
-      {
-        "ticker": "BSOKE",
-        "name": "Batıçim Çimento",
-        "agirlik": 0.3102,
-        "degisim": -1.2537,
+        "degisim": -4.2357,
         "katki": -0.0039
       },
       {
         "ticker": "ODAS",
         "name": "Odaş Elektrik Üretim",
         "agirlik": 0.1856,
-        "degisim": -2.1419,
-        "katki": -0.004
+        "degisim": -2.4096,
+        "katki": -0.0045
+      },
+      {
+        "ticker": "CCOLA",
+        "name": "Coca-Cola İçecek A.Ş",
+        "agirlik": 1.5424,
+        "degisim": -0.304,
+        "katki": -0.0047
+      },
+      {
+        "ticker": "GENIL",
+        "name": "Gen İlaç",
+        "agirlik": 0.2799,
+        "degisim": -1.677,
+        "katki": -0.0047
       },
       {
         "ticker": "GRSEL",
         "name": "Gürsel Taşımacılık",
         "agirlik": 0.1753,
-        "degisim": -2.2895,
-        "katki": -0.004
-      },
-      {
-        "ticker": "KUYAS",
-        "name": "Kuyas Yatırım AŞ",
-        "agirlik": 0.5083,
-        "degisim": -0.8065,
-        "katki": -0.0041
-      },
-      {
-        "ticker": "TKFEN",
-        "name": "Tekfen Holding",
-        "agirlik": 0.4193,
-        "degisim": -1.0367,
-        "katki": -0.0043
+        "degisim": -2.9542,
+        "katki": -0.0052
       },
       {
         "ticker": "EUPWR",
         "name": "Europower Enerji",
         "agirlik": 0.5412,
-        "degisim": -0.959,
-        "katki": -0.0052
-      },
-      {
-        "ticker": "PASEU",
-        "name": "Pasifik Eurasia",
-        "agirlik": 0.562,
-        "degisim": -1.2216,
-        "katki": -0.0069
+        "degisim": -1.0655,
+        "katki": -0.0058
       },
       {
         "ticker": "ODINE",
         "name": "Odine Solutions",
         "agirlik": 3.0872,
-        "degisim": -6.8081,
-        "katki": -0.2102
+        "degisim": -9.9912,
+        "katki": -0.3084
       }
     ],
     "weekly": [
@@ -732,43 +732,43 @@
         "ticker": "TUPRS",
         "name": "Tüpraş",
         "agirlik": 8.0106,
-        "degisim": 13.3096,
-        "katki": 1.0662
+        "degisim": 12.5979,
+        "katki": 1.0092
       },
       {
         "ticker": "BIMAS",
         "name": "Bim Birleşik Mağazalar A.Ş",
         "agirlik": 7.648,
-        "degisim": 8.6589,
-        "katki": 0.6622
+        "degisim": 8.4635,
+        "katki": 0.6473
       },
       {
         "ticker": "ASELS",
         "name": "Aselsan",
         "agirlik": 10.0,
-        "degisim": 5.9055,
-        "katki": 0.5906
+        "degisim": 5.7743,
+        "katki": 0.5774
       },
       {
         "ticker": "DSTKF",
         "name": "Destek Finans Faktoring",
         "agirlik": 3.9409,
-        "degisim": 11.212,
-        "katki": 0.4419
+        "degisim": 11.5857,
+        "katki": 0.4566
       },
       {
         "ticker": "KTLEV",
         "name": "Katılımevim",
         "agirlik": 2.0244,
-        "degisim": 11.7143,
-        "katki": 0.2371
+        "degisim": 12.381,
+        "katki": 0.2506
       },
       {
         "ticker": "PASEU",
         "name": "Pasifik Eurasia",
         "agirlik": 0.562,
-        "degisim": 25.4584,
-        "katki": 0.1431
+        "degisim": 31.1707,
+        "katki": 0.1752
       },
       {
         "ticker": "KCHOL",
@@ -781,22 +781,22 @@
         "ticker": "RALYH",
         "name": "Ral Yatırım Holding",
         "agirlik": 0.6956,
-        "degisim": 14.885,
-        "katki": 0.1035
+        "degisim": 16.4821,
+        "katki": 0.1146
       },
       {
         "ticker": "AKBNK",
         "name": "Akbank",
         "agirlik": 4.2726,
-        "degisim": 2.2529,
-        "katki": 0.0963
+        "degisim": 2.1802,
+        "katki": 0.0932
       },
       {
         "ticker": "KRDMD",
         "name": "Kardemir (D)",
         "agirlik": 0.7303,
-        "degisim": 11.4802,
-        "katki": 0.0838
+        "degisim": 11.8222,
+        "katki": 0.0863
       },
       {
         "ticker": "GUBRF",
@@ -809,57 +809,57 @@
         "ticker": "TRALT",
         "name": "Türk Altın",
         "agirlik": 1.0282,
-        "degisim": 5.9748,
-        "katki": 0.0614
+        "degisim": 5.87,
+        "katki": 0.0604
       },
       {
         "ticker": "SAHOL",
         "name": "Sabancı Holding",
         "agirlik": 2.2264,
-        "degisim": 2.4363,
-        "katki": 0.0542
-      },
-      {
-        "ticker": "EREGL",
-        "name": "Ereğli Demir Çelik",
-        "agirlik": 2.8129,
-        "degisim": 1.6676,
-        "katki": 0.0469
+        "degisim": 2.3796,
+        "katki": 0.053
       },
       {
         "ticker": "PETKM",
         "name": "Petkim",
         "agirlik": 0.5515,
-        "degisim": 8.4363,
-        "katki": 0.0465
+        "degisim": 8.1139,
+        "katki": 0.0447
+      },
+      {
+        "ticker": "EREGL",
+        "name": "Ereğli Demir Çelik",
+        "agirlik": 2.8129,
+        "degisim": 1.56,
+        "katki": 0.0439
       },
       {
         "ticker": "ULKER",
         "name": "Ülker Bisküvi",
         "agirlik": 0.3439,
-        "degisim": 12.6358,
-        "katki": 0.0435
-      },
-      {
-        "ticker": "EKGYO",
-        "name": "Emlak Konut GYO",
-        "agirlik": 0.7867,
-        "degisim": 5.1324,
-        "katki": 0.0404
+        "degisim": 11.7782,
+        "katki": 0.0405
       },
       {
         "ticker": "ALARK",
         "name": "Alarko Holding",
         "agirlik": 0.3501,
-        "degisim": 11.5271,
-        "katki": 0.0404
+        "degisim": 11.4286,
+        "katki": 0.04
+      },
+      {
+        "ticker": "EKGYO",
+        "name": "Emlak Konut GYO",
+        "agirlik": 0.7867,
+        "degisim": 4.8622,
+        "katki": 0.0383
       },
       {
         "ticker": "BRSAN",
         "name": "Borusan Birleşik Boru Fab.",
         "agirlik": 0.4519,
-        "degisim": 8.0286,
-        "katki": 0.0363
+        "degisim": 7.9491,
+        "katki": 0.0359
       },
       {
         "ticker": "SOKM",
@@ -879,71 +879,57 @@
         "ticker": "ENJSA",
         "name": "Enerjisa Enerji",
         "agirlik": 0.597,
-        "degisim": 3.6449,
-        "katki": 0.0218
+        "degisim": 3.7383,
+        "katki": 0.0223
       },
       {
         "ticker": "IEYHO",
         "name": "Işıklar Enerji ve Yapı Holding",
         "agirlik": 0.8127,
-        "degisim": 2.6257,
-        "katki": 0.0213
+        "degisim": 2.4022,
+        "katki": 0.0195
       },
       {
         "ticker": "MPARK",
         "name": "MLP Sağlık Hizmetleri",
         "agirlik": 0.798,
-        "degisim": 2.3713,
-        "katki": 0.0189
+        "degisim": 2.4291,
+        "katki": 0.0194
       },
       {
         "ticker": "AKSEN",
         "name": "Aksa Enerji",
         "agirlik": 0.4644,
-        "degisim": 3.5844,
-        "katki": 0.0166
-      },
-      {
-        "ticker": "GARAN",
-        "name": "Garanti Bankası",
-        "agirlik": 1.739,
-        "degisim": 0.8397,
-        "katki": 0.0146
+        "degisim": 4.0097,
+        "katki": 0.0186
       },
       {
         "ticker": "CVKMD",
         "name": "Cvk Maden",
         "agirlik": 0.3366,
-        "degisim": 3.9899,
-        "katki": 0.0134
+        "degisim": 4.2432,
+        "katki": 0.0143
+      },
+      {
+        "ticker": "GARAN",
+        "name": "Garanti Bankası",
+        "agirlik": 1.739,
+        "degisim": 0.7634,
+        "katki": 0.0133
       },
       {
         "ticker": "ENERY",
         "name": "Enerya Enerji",
         "agirlik": 0.3647,
-        "degisim": 2.8136,
-        "katki": 0.0103
-      },
-      {
-        "ticker": "OYAKC",
-        "name": "Oyak Çimento",
-        "agirlik": 0.4747,
-        "degisim": 2.1375,
-        "katki": 0.0101
+        "degisim": 3.2825,
+        "katki": 0.012
       },
       {
         "ticker": "TRMET",
         "name": "TR Anadolu Metal",
         "agirlik": 0.46,
-        "degisim": 2.1077,
-        "katki": 0.0097
-      },
-      {
-        "ticker": "SARKY",
-        "name": "Sarkuysan",
-        "agirlik": 0.5002,
-        "degisim": 1.9113,
-        "katki": 0.0096
+        "degisim": 2.3419,
+        "katki": 0.0108
       },
       {
         "ticker": "TAVHL",
@@ -953,18 +939,11 @@
         "katki": 0.0092
       },
       {
-        "ticker": "OBAMS",
-        "name": "Oba Makarnacılık",
-        "agirlik": 0.0932,
-        "degisim": 9.1476,
-        "katki": 0.0085
-      },
-      {
-        "ticker": "MIATK",
-        "name": "Mia Teknoloji",
-        "agirlik": 0.2087,
-        "degisim": 3.8153,
-        "katki": 0.008
+        "ticker": "OYAKC",
+        "name": "Oyak Çimento",
+        "agirlik": 0.4747,
+        "degisim": 1.6729,
+        "katki": 0.0079
       },
       {
         "ticker": "QUAGR",
@@ -974,25 +953,18 @@
         "katki": 0.0079
       },
       {
-        "ticker": "GESAN",
-        "name": "Girişim Elektrik",
-        "agirlik": 0.3298,
-        "degisim": 2.0782,
-        "katki": 0.0069
+        "ticker": "MIATK",
+        "name": "Mia Teknoloji",
+        "agirlik": 0.2087,
+        "degisim": 3.7483,
+        "katki": 0.0078
       },
       {
-        "ticker": "TOASO",
-        "name": "Tofaş Fabrika",
-        "agirlik": 0.7318,
-        "degisim": 0.932,
-        "katki": 0.0068
-      },
-      {
-        "ticker": "GSRAY",
-        "name": "Galatasaray Sportif A.Ş",
-        "agirlik": 0.1309,
-        "degisim": 4.902,
-        "katki": 0.0064
+        "ticker": "OBAMS",
+        "name": "Oba Makarnacılık",
+        "agirlik": 0.0932,
+        "degisim": 8.1081,
+        "katki": 0.0076
       },
       {
         "ticker": "ALTNY",
@@ -1002,11 +974,32 @@
         "katki": 0.006
       },
       {
-        "ticker": "BERA",
-        "name": "Bera Holding",
-        "agirlik": 0.1397,
-        "degisim": 3.5385,
-        "katki": 0.0049
+        "ticker": "SARKY",
+        "name": "Sarkuysan",
+        "agirlik": 0.5002,
+        "degisim": 1.1468,
+        "katki": 0.0057
+      },
+      {
+        "ticker": "GESAN",
+        "name": "Girişim Elektrik",
+        "agirlik": 0.3298,
+        "degisim": 1.6504,
+        "katki": 0.0054
+      },
+      {
+        "ticker": "GSRAY",
+        "name": "Galatasaray Sportif A.Ş",
+        "agirlik": 0.1309,
+        "degisim": 3.9216,
+        "katki": 0.0051
+      },
+      {
+        "ticker": "TOASO",
+        "name": "Tofaş Fabrika",
+        "agirlik": 0.7318,
+        "degisim": 0.6524,
+        "katki": 0.0048
       },
       {
         "ticker": "CANTE",
@@ -1016,39 +1009,32 @@
         "katki": 0.0048
       },
       {
-        "ticker": "PAHOL",
-        "name": "Pasifik Holding",
-        "agirlik": 0.118,
-        "degisim": 3.8462,
+        "ticker": "BERA",
+        "name": "Bera Holding",
+        "agirlik": 0.1397,
+        "degisim": 3.2308,
         "katki": 0.0045
-      },
-      {
-        "ticker": "OTKAR",
-        "name": "Otokar",
-        "agirlik": 0.2396,
-        "degisim": 1.7955,
-        "katki": 0.0043
-      },
-      {
-        "ticker": "TCELL",
-        "name": "Turkcell",
-        "agirlik": 2.1197,
-        "degisim": 0.1921,
-        "katki": 0.0041
       },
       {
         "ticker": "ESEN",
         "name": "Esenboğa Elektrik",
         "agirlik": 0.0652,
-        "degisim": 6.2315,
-        "katki": 0.0041
+        "degisim": 6.5282,
+        "katki": 0.0043
       },
       {
         "ticker": "SKBNK",
         "name": "Şekerbank",
         "agirlik": 0.176,
-        "degisim": 1.8152,
-        "katki": 0.0032
+        "degisim": 1.9802,
+        "katki": 0.0035
+      },
+      {
+        "ticker": "TRENJ",
+        "name": "TR Doğal Enerji Kaynakları",
+        "agirlik": 0.1836,
+        "degisim": 1.7857,
+        "katki": 0.0033
       },
       {
         "ticker": "TURSG",
@@ -1058,39 +1044,39 @@
         "katki": 0.0031
       },
       {
-        "ticker": "CIMSA",
-        "name": "Çimsa",
-        "agirlik": 0.4413,
-        "degisim": 0.6165,
-        "katki": 0.0027
-      },
-      {
-        "ticker": "TRENJ",
-        "name": "TR Doğal Enerji Kaynakları",
-        "agirlik": 0.1836,
-        "degisim": 1.4706,
+        "ticker": "PAHOL",
+        "name": "Pasifik Holding",
+        "agirlik": 0.118,
+        "degisim": 2.3077,
         "katki": 0.0027
       },
       {
         "ticker": "PATEK",
         "name": "Pasifik Teknoloji",
         "agirlik": 0.1277,
-        "degisim": 1.7107,
+        "degisim": 1.9181,
+        "katki": 0.0024
+      },
+      {
+        "ticker": "CIMSA",
+        "name": "Çimsa",
+        "agirlik": 0.4413,
+        "degisim": 0.5284,
+        "katki": 0.0023
+      },
+      {
+        "ticker": "OTKAR",
+        "name": "Otokar",
+        "agirlik": 0.2396,
+        "degisim": 0.9368,
         "katki": 0.0022
       },
       {
-        "ticker": "ISCTR",
-        "name": "İş Bankası (C)",
-        "agirlik": 2.2866,
-        "degisim": 0.0796,
-        "katki": 0.0018
-      },
-      {
-        "ticker": "REEDR",
-        "name": "Reeder",
-        "agirlik": 0.0804,
-        "degisim": 1.6807,
-        "katki": 0.0014
+        "ticker": "MGROS",
+        "name": "Migros",
+        "agirlik": 1.1926,
+        "degisim": 0.1748,
+        "katki": 0.0021
       },
       {
         "ticker": "VAKBN",
@@ -1100,39 +1086,32 @@
         "katki": 0.0013
       },
       {
+        "ticker": "REEDR",
+        "name": "Reeder",
+        "agirlik": 0.0804,
+        "degisim": 1.5126,
+        "katki": 0.0012
+      },
+      {
+        "ticker": "ECILC",
+        "name": "Eczacıbaşı İlaç",
+        "agirlik": 0.2559,
+        "degisim": 0.2632,
+        "katki": 0.0007
+      },
+      {
         "ticker": "EUREN",
         "name": "Europen Endüstri",
         "agirlik": 0.0892,
-        "degisim": 1.3228,
-        "katki": 0.0012
+        "degisim": 0.7937,
+        "katki": 0.0007
       },
       {
         "ticker": "FENER",
         "name": "Fenerbahce Futbol A.Ş.",
         "agirlik": 0.1699,
-        "degisim": 0.6472,
-        "katki": 0.0011
-      },
-      {
-        "ticker": "MGROS",
-        "name": "Migros",
-        "agirlik": 1.1926,
-        "degisim": 0.0874,
-        "katki": 0.001
-      },
-      {
-        "ticker": "TSKB",
-        "name": "TSKB",
-        "agirlik": 0.2858,
-        "degisim": 0.2715,
-        "katki": 0.0008
-      },
-      {
-        "ticker": "PSGYO",
-        "name": "Pasifik GYO",
-        "agirlik": 0.2155,
-        "degisim": 0.2907,
-        "katki": 0.0006
+        "degisim": 0.3236,
+        "katki": 0.0005
       },
       {
         "ticker": "ZOREN",
@@ -1142,23 +1121,9 @@
         "katki": 0.0004
       },
       {
-        "ticker": "ASTOR",
-        "name": "Astor Enerji",
-        "agirlik": 3.124,
-        "degisim": 0.0,
-        "katki": 0.0
-      },
-      {
-        "ticker": "ODAS",
-        "name": "Odaş Elektrik Üretim",
-        "agirlik": 0.1856,
-        "degisim": 0.0,
-        "katki": 0.0
-      },
-      {
-        "ticker": "DAPGM",
-        "name": "Dap Gayrimenkul",
-        "agirlik": 0.1685,
+        "ticker": "TSKB",
+        "name": "TSKB",
+        "agirlik": 0.2858,
         "degisim": 0.0,
         "katki": 0.0
       },
@@ -1170,81 +1135,109 @@
         "katki": 0.0
       },
       {
-        "ticker": "ECILC",
-        "name": "Eczacıbaşı İlaç",
-        "agirlik": 0.2559,
-        "degisim": -0.1974,
+        "ticker": "ODAS",
+        "name": "Odaş Elektrik Üretim",
+        "agirlik": 0.1856,
+        "degisim": -0.2736,
         "katki": -0.0005
       },
       {
-        "ticker": "BRYAT",
-        "name": "Borusan Yatırım",
-        "agirlik": 0.1663,
-        "degisim": -0.6318,
-        "katki": -0.0011
+        "ticker": "PSGYO",
+        "name": "Pasifik GYO",
+        "agirlik": 0.2155,
+        "degisim": -0.2907,
+        "katki": -0.0006
+      },
+      {
+        "ticker": "BTCIM",
+        "name": "Batıçim",
+        "agirlik": 0.3876,
+        "degisim": -0.2075,
+        "katki": -0.0008
+      },
+      {
+        "ticker": "DAPGM",
+        "name": "Dap Gayrimenkul",
+        "agirlik": 0.1685,
+        "degisim": -0.5814,
+        "katki": -0.001
       },
       {
         "ticker": "VESTL",
         "name": "Vestel Elektronik",
         "agirlik": 0.0802,
-        "degisim": -1.3599,
-        "katki": -0.0011
+        "degisim": -1.9039,
+        "katki": -0.0015
       },
       {
-        "ticker": "HEKTS",
-        "name": "Hektaş",
-        "agirlik": 0.2835,
-        "degisim": -0.7018,
-        "katki": -0.002
-      },
-      {
-        "ticker": "IZENR",
-        "name": "İzdemir Enerji",
-        "agirlik": 0.1223,
-        "degisim": -2.0833,
-        "katki": -0.0025
-      },
-      {
-        "ticker": "EUPWR",
-        "name": "Europower Enerji",
-        "agirlik": 0.5412,
-        "degisim": -0.6944,
-        "katki": -0.0038
+        "ticker": "BRYAT",
+        "name": "Borusan Yatırım",
+        "agirlik": 0.1663,
+        "degisim": -1.0913,
+        "katki": -0.0018
       },
       {
         "ticker": "HALKB",
         "name": "Halkbank",
         "agirlik": 0.466,
-        "degisim": -0.8121,
-        "katki": -0.0038
+        "degisim": -0.406,
+        "katki": -0.0019
+      },
+      {
+        "ticker": "TCELL",
+        "name": "Turkcell",
+        "agirlik": 2.1197,
+        "degisim": -0.0961,
+        "katki": -0.002
+      },
+      {
+        "ticker": "ASTOR",
+        "name": "Astor Enerji",
+        "agirlik": 3.124,
+        "degisim": -0.0754,
+        "katki": -0.0024
+      },
+      {
+        "ticker": "HEKTS",
+        "name": "Hektaş",
+        "agirlik": 0.2835,
+        "degisim": -1.0526,
+        "katki": -0.003
+      },
+      {
+        "ticker": "IZENR",
+        "name": "İzdemir Enerji",
+        "agirlik": 0.1223,
+        "degisim": -2.7778,
+        "katki": -0.0034
+      },
+      {
+        "ticker": "EUPWR",
+        "name": "Europower Enerji",
+        "agirlik": 0.5412,
+        "degisim": -0.8013,
+        "katki": -0.0043
       },
       {
         "ticker": "AEFES",
         "name": "Anadolu Efes",
         "agirlik": 0.8368,
-        "degisim": -0.4611,
-        "katki": -0.0039
-      },
-      {
-        "ticker": "ANSGR",
-        "name": "Anadolu Sigorta",
-        "agirlik": 0.4461,
-        "degisim": -0.9675,
-        "katki": -0.0043
-      },
-      {
-        "ticker": "GENIL",
-        "name": "Gen İlaç",
-        "agirlik": 0.2799,
-        "degisim": -1.6681,
+        "degisim": -0.5635,
         "katki": -0.0047
       },
       {
         "ticker": "BALSU",
         "name": "Balsu Gıda",
         "agirlik": 0.1481,
-        "degisim": -3.3333,
-        "katki": -0.0049
+        "degisim": -3.2432,
+        "katki": -0.0048
+      },
+      {
+        "ticker": "ISCTR",
+        "name": "İş Bankası (C)",
+        "agirlik": 2.2866,
+        "degisim": -0.2389,
+        "katki": -0.0055
       },
       {
         "ticker": "FROTO",
@@ -1254,11 +1247,11 @@
         "katki": -0.0056
       },
       {
-        "ticker": "BTCIM",
-        "name": "Batıçim",
-        "agirlik": 0.3876,
-        "degisim": -1.4523,
-        "katki": -0.0056
+        "ticker": "GLRMK",
+        "name": "Gülermak Ağır Sanayi",
+        "agirlik": 0.3384,
+        "degisim": -1.6949,
+        "katki": -0.0057
       },
       {
         "ticker": "YKBNK",
@@ -1268,165 +1261,172 @@
         "katki": -0.0059
       },
       {
-        "ticker": "GLRMK",
-        "name": "Gülermak Ağır Sanayi",
-        "agirlik": 0.3384,
-        "degisim": -1.8079,
+        "ticker": "GENIL",
+        "name": "Gen İlaç",
+        "agirlik": 0.2799,
+        "degisim": -2.1949,
         "katki": -0.0061
       },
       {
         "ticker": "ISMEN",
         "name": "İş Yatırım",
         "agirlik": 0.3214,
-        "degisim": -1.9025,
-        "katki": -0.0061
+        "degisim": -2.0809,
+        "katki": -0.0067
       },
       {
-        "ticker": "DOHOL",
-        "name": "Doğan Holding",
-        "agirlik": 0.4449,
-        "degisim": -1.3915,
-        "katki": -0.0062
-      },
-      {
-        "ticker": "PGSUS",
-        "name": "Pegasus Hava Taşımacılığı",
-        "agirlik": 0.7906,
-        "degisim": -0.8558,
+        "ticker": "ANSGR",
+        "name": "Anadolu Sigorta",
+        "agirlik": 0.4461,
+        "degisim": -1.5204,
         "katki": -0.0068
       },
       {
         "ticker": "GRTHO",
         "name": "GrainTurk Tarım",
         "agirlik": 0.1278,
-        "degisim": -5.6571,
-        "katki": -0.0072
+        "degisim": -5.7876,
+        "katki": -0.0074
       },
       {
-        "ticker": "GRSEL",
-        "name": "Gürsel Taşımacılık",
-        "agirlik": 0.1753,
-        "degisim": -5.8363,
-        "katki": -0.0102
+        "ticker": "DOHOL",
+        "name": "Doğan Holding",
+        "agirlik": 0.4449,
+        "degisim": -1.8553,
+        "katki": -0.0083
+      },
+      {
+        "ticker": "PGSUS",
+        "name": "Pegasus Hava Taşımacılığı",
+        "agirlik": 0.7906,
+        "degisim": -1.185,
+        "katki": -0.0094
       },
       {
         "ticker": "MAVI",
         "name": "Mavi Giyim Sanayi Tic.A.S",
         "agirlik": 0.4969,
-        "degisim": -2.1538,
-        "katki": -0.0107
+        "degisim": -2.2564,
+        "katki": -0.0112
+      },
+      {
+        "ticker": "GRSEL",
+        "name": "Gürsel Taşımacılık",
+        "agirlik": 0.1753,
+        "degisim": -6.4769,
+        "katki": -0.0114
       },
       {
         "ticker": "ARCLK",
         "name": "Arçelik",
         "agirlik": 0.2502,
-        "degisim": -4.7864,
-        "katki": -0.012
+        "degisim": -4.8893,
+        "katki": -0.0122
       },
       {
         "ticker": "AKSA",
         "name": "Aksa",
         "agirlik": 0.3121,
-        "degisim": -5.2676,
-        "katki": -0.0164
-      },
-      {
-        "ticker": "CWENE",
-        "name": "Cw Enerji",
-        "agirlik": 0.2815,
-        "degisim": -6.5163,
-        "katki": -0.0183
+        "degisim": -5.3512,
+        "katki": -0.0167
       },
       {
         "ticker": "DOAS",
         "name": "Doğuş Otomotiv",
         "agirlik": 0.3353,
-        "degisim": -5.5741,
-        "katki": -0.0187
-      },
-      {
-        "ticker": "CCOLA",
-        "name": "Coca-Cola İçecek A.Ş",
-        "agirlik": 1.5424,
-        "degisim": -1.3213,
-        "katki": -0.0204
-      },
-      {
-        "ticker": "TTKOM",
-        "name": "Türk Telekom",
-        "agirlik": 0.5675,
-        "degisim": -3.638,
-        "katki": -0.0206
-      },
-      {
-        "ticker": "KLRHO",
-        "name": "Kiler Holding",
-        "agirlik": 0.2348,
-        "degisim": -9.411,
-        "katki": -0.0221
+        "degisim": -5.6856,
+        "katki": -0.0191
       },
       {
         "ticker": "EFOR",
         "name": "Efor Yat. San.",
         "agirlik": 0.2774,
-        "degisim": -8.0766,
-        "katki": -0.0224
+        "degisim": -7.0962,
+        "katki": -0.0197
+      },
+      {
+        "ticker": "CWENE",
+        "name": "Cw Enerji",
+        "agirlik": 0.2815,
+        "degisim": -7.2682,
+        "katki": -0.0205
       },
       {
         "ticker": "TKFEN",
         "name": "Tekfen Holding",
         "agirlik": 0.4193,
-        "degisim": -5.7202,
-        "katki": -0.024
+        "degisim": -4.9383,
+        "katki": -0.0207
+      },
+      {
+        "ticker": "KLRHO",
+        "name": "Kiler Holding",
+        "agirlik": 0.2348,
+        "degisim": -9.6141,
+        "katki": -0.0226
+      },
+      {
+        "ticker": "TTKOM",
+        "name": "Türk Telekom",
+        "agirlik": 0.5675,
+        "degisim": -3.9929,
+        "katki": -0.0227
+      },
+      {
+        "ticker": "CCOLA",
+        "name": "Coca-Cola İçecek A.Ş",
+        "agirlik": 1.5424,
+        "degisim": -1.5015,
+        "katki": -0.0232
       },
       {
         "ticker": "BSOKE",
         "name": "Batıçim Çimento",
         "agirlik": 0.3102,
-        "degisim": -9.0709,
-        "katki": -0.0281
-      },
-      {
-        "ticker": "ENKAI",
-        "name": "Enka İnşaat",
-        "agirlik": 0.9115,
-        "degisim": -3.5199,
-        "katki": -0.0321
+        "degisim": -8.4112,
+        "katki": -0.0261
       },
       {
         "ticker": "KUYAS",
         "name": "Kuyas Yatırım AŞ",
         "agirlik": 0.5083,
-        "degisim": -9.3589,
-        "katki": -0.0476
+        "degisim": -7.2218,
+        "katki": -0.0367
+      },
+      {
+        "ticker": "ENKAI",
+        "name": "Enka İnşaat",
+        "agirlik": 0.9115,
+        "degisim": -4.0969,
+        "katki": -0.0373
       },
       {
         "ticker": "SISE",
         "name": "Şişecam",
         "agirlik": 1.2633,
-        "degisim": -4.8828,
-        "katki": -0.0617
+        "degisim": -5.1758,
+        "katki": -0.0654
       },
       {
         "ticker": "SASA",
         "name": "Sasa Polyester Sanayi A.Ş.",
         "agirlik": 1.2213,
-        "degisim": -8.4337,
-        "katki": -0.103
+        "degisim": -8.8353,
+        "katki": -0.1079
       },
       {
         "ticker": "THYAO",
         "name": "Türk Hava Yolları",
         "agirlik": 4.771,
-        "degisim": -2.3482,
-        "katki": -0.112
+        "degisim": -2.4291,
+        "katki": -0.1159
       },
       {
         "ticker": "ODINE",
         "name": "Odine Solutions",
         "agirlik": 3.0872,
-        "degisim": -20.3927,
-        "katki": -0.6296
+        "degisim": -23.1118,
+        "katki": -0.7135
       }
     ],
     "monthly": [
@@ -1434,350 +1434,329 @@
         "ticker": "TUPRS",
         "name": "Tüpraş",
         "agirlik": 8.0106,
-        "degisim": 37.5972,
-        "katki": 3.0118
+        "degisim": 28.6179,
+        "katki": 2.2925
       },
       {
         "ticker": "ASELS",
         "name": "Aselsan",
         "agirlik": 10.0,
-        "degisim": 14.7937,
-        "katki": 1.4794
+        "degisim": 13.6812,
+        "katki": 1.3681
       },
       {
         "ticker": "ODINE",
         "name": "Odine Solutions",
         "agirlik": 3.0872,
-        "degisim": 25.4762,
-        "katki": 0.7865
-      },
-      {
-        "ticker": "BIMAS",
-        "name": "Bim Birleşik Mağazalar A.Ş",
-        "agirlik": 7.648,
-        "degisim": 8.0959,
-        "katki": 0.6192
+        "degisim": 17.2811,
+        "katki": 0.5335
       },
       {
         "ticker": "PASEU",
         "name": "Pasifik Eurasia",
         "agirlik": 0.562,
-        "degisim": 89.6588,
-        "katki": 0.5039
+        "degisim": 80.4074,
+        "katki": 0.4519
       },
       {
         "ticker": "ASTOR",
         "name": "Astor Enerji",
         "agirlik": 3.124,
-        "degisim": 15.7941,
-        "katki": 0.4934
+        "degisim": 11.8987,
+        "katki": 0.3717
       },
       {
-        "ticker": "KCHOL",
-        "name": "Koç Holding",
-        "agirlik": 3.1715,
-        "degisim": 8.934,
-        "katki": 0.2833
-      },
-      {
-        "ticker": "AKBNK",
-        "name": "Akbank",
-        "agirlik": 4.2726,
-        "degisim": 5.7895,
-        "katki": 0.2474
+        "ticker": "BIMAS",
+        "name": "Bim Birleşik Mağazalar A.Ş",
+        "agirlik": 7.648,
+        "degisim": 4.125,
+        "katki": 0.3155
       },
       {
         "ticker": "TKFEN",
         "name": "Tekfen Holding",
         "agirlik": 0.4193,
-        "degisim": 58.0,
-        "katki": 0.2432
+        "degisim": 58.545,
+        "katki": 0.2455
       },
       {
-        "ticker": "KTLEV",
-        "name": "Katılımevim",
-        "agirlik": 2.0244,
-        "degisim": 9.8779,
-        "katki": 0.2
+        "ticker": "KCHOL",
+        "name": "Koç Holding",
+        "agirlik": 3.1715,
+        "degisim": 7.4074,
+        "katki": 0.2349
+      },
+      {
+        "ticker": "AKBNK",
+        "name": "Akbank",
+        "agirlik": 4.2726,
+        "degisim": 5.1608,
+        "katki": 0.2205
       },
       {
         "ticker": "YKBNK",
         "name": "Yapı Kredi Bankası",
         "agirlik": 2.6133,
-        "degisim": 7.2246,
-        "katki": 0.1888
+        "degisim": 8.2675,
+        "katki": 0.2161
+      },
+      {
+        "ticker": "KTLEV",
+        "name": "Katılımevim",
+        "agirlik": 2.0244,
+        "degisim": 10.5336,
+        "katki": 0.2132
       },
       {
         "ticker": "IEYHO",
         "name": "Işıklar Enerji ve Yapı Holding",
         "agirlik": 0.8127,
-        "degisim": 16.5609,
-        "katki": 0.1346
-      },
-      {
-        "ticker": "BRSAN",
-        "name": "Borusan Birleşik Boru Fab.",
-        "agirlik": 0.4519,
-        "degisim": 23.6579,
-        "katki": 0.1069
-      },
-      {
-        "ticker": "GUBRF",
-        "name": "Gübre Fabrikaları",
-        "agirlik": 0.6817,
-        "degisim": 14.2252,
-        "katki": 0.097
-      },
-      {
-        "ticker": "RALYH",
-        "name": "Ral Yatırım Holding",
-        "agirlik": 0.6956,
-        "degisim": 10.9169,
-        "katki": 0.0759
+        "degisim": 13.4985,
+        "katki": 0.1097
       },
       {
         "ticker": "GARAN",
         "name": "Garanti Bankası",
         "agirlik": 1.739,
-        "degisim": 4.1798,
-        "katki": 0.0727
+        "degisim": 6.1947,
+        "katki": 0.1077
       },
       {
-        "ticker": "TAVHL",
-        "name": "TAV Holding",
-        "agirlik": 1.1408,
-        "degisim": 5.9322,
-        "katki": 0.0677
+        "ticker": "BRSAN",
+        "name": "Borusan Birleşik Boru Fab.",
+        "agirlik": 0.4519,
+        "degisim": 23.4545,
+        "katki": 0.106
+      },
+      {
+        "ticker": "GUBRF",
+        "name": "Gübre Fabrikaları",
+        "agirlik": 0.6817,
+        "degisim": 14.9909,
+        "katki": 0.1022
+      },
+      {
+        "ticker": "RALYH",
+        "name": "Ral Yatırım Holding",
+        "agirlik": 0.6956,
+        "degisim": 12.6906,
+        "katki": 0.0883
       },
       {
         "ticker": "GENIL",
         "name": "Gen İlaç",
         "agirlik": 0.2799,
-        "degisim": 21.421,
-        "katki": 0.06
-      },
-      {
-        "ticker": "MPARK",
-        "name": "MLP Sağlık Hizmetleri",
-        "agirlik": 0.798,
-        "degisim": 6.4982,
-        "katki": 0.0519
-      },
-      {
-        "ticker": "SAHOL",
-        "name": "Sabancı Holding",
-        "agirlik": 2.2264,
-        "degisim": 2.2624,
-        "katki": 0.0504
-      },
-      {
-        "ticker": "KRDMD",
-        "name": "Kardemir (D)",
-        "agirlik": 0.7303,
-        "degisim": 6.7353,
-        "katki": 0.0492
-      },
-      {
-        "ticker": "ENJSA",
-        "name": "Enerjisa Enerji",
-        "agirlik": 0.597,
-        "degisim": 8.1951,
-        "katki": 0.0489
+        "degisim": 22.8986,
+        "katki": 0.0641
       },
       {
         "ticker": "TRMET",
         "name": "TR Anadolu Metal",
         "agirlik": 0.46,
-        "degisim": 9.2732,
-        "katki": 0.0427
+        "degisim": 13.5065,
+        "katki": 0.0621
+      },
+      {
+        "ticker": "TAVHL",
+        "name": "TAV Holding",
+        "agirlik": 1.1408,
+        "degisim": 3.8992,
+        "katki": 0.0445
       },
       {
         "ticker": "OYAKC",
         "name": "Oyak Çimento",
         "agirlik": 0.4747,
-        "degisim": 8.8119,
-        "katki": 0.0418
+        "degisim": 7.996,
+        "katki": 0.038
       },
       {
-        "ticker": "SOKM",
-        "name": "Şok Marketler",
-        "agirlik": 0.3105,
-        "degisim": 11.4341,
-        "katki": 0.0355
-      },
-      {
-        "ticker": "EUPWR",
-        "name": "Europower Enerji",
-        "agirlik": 0.5412,
-        "degisim": 6.4719,
-        "katki": 0.035
-      },
-      {
-        "ticker": "SARKY",
-        "name": "Sarkuysan",
-        "agirlik": 0.5002,
-        "degisim": 5.7936,
-        "katki": 0.029
-      },
-      {
-        "ticker": "ALARK",
-        "name": "Alarko Holding",
-        "agirlik": 0.3501,
-        "degisim": 8.2218,
-        "katki": 0.0288
+        "ticker": "SAHOL",
+        "name": "Sabancı Holding",
+        "agirlik": 2.2264,
+        "degisim": 1.5169,
+        "katki": 0.0338
       },
       {
         "ticker": "EFOR",
         "name": "Efor Yat. San.",
         "agirlik": 0.2774,
-        "degisim": 10.2464,
-        "katki": 0.0284
+        "degisim": 12.0495,
+        "katki": 0.0334
       },
       {
         "ticker": "GLRMK",
         "name": "Gülermak Ağır Sanayi",
         "agirlik": 0.3384,
-        "degisim": 7.9503,
-        "katki": 0.0269
+        "degisim": 8.8861,
+        "katki": 0.0301
       },
       {
-        "ticker": "ALTNY",
-        "name": "Altınay Savunma",
-        "agirlik": 0.1321,
-        "degisim": 11.8954,
-        "katki": 0.0157
+        "ticker": "MPARK",
+        "name": "MLP Sağlık Hizmetleri",
+        "agirlik": 0.798,
+        "degisim": 3.3256,
+        "katki": 0.0265
       },
       {
-        "ticker": "GESAN",
-        "name": "Girişim Elektrik",
-        "agirlik": 0.3298,
-        "degisim": 3.9851,
-        "katki": 0.0131
+        "ticker": "SOKM",
+        "name": "Şok Marketler",
+        "agirlik": 0.3105,
+        "degisim": 7.8799,
+        "katki": 0.0245
       },
       {
-        "ticker": "ANSGR",
-        "name": "Anadolu Sigorta",
-        "agirlik": 0.4461,
-        "degisim": 2.6504,
-        "katki": 0.0118
+        "ticker": "ENJSA",
+        "name": "Enerjisa Enerji",
+        "agirlik": 0.597,
+        "degisim": 3.9326,
+        "katki": 0.0235
       },
       {
-        "ticker": "PSGYO",
-        "name": "Pasifik GYO",
-        "agirlik": 0.2155,
-        "degisim": 4.8632,
-        "katki": 0.0105
+        "ticker": "SARKY",
+        "name": "Sarkuysan",
+        "agirlik": 0.5002,
+        "degisim": 4.5024,
+        "katki": 0.0225
+      },
+      {
+        "ticker": "KRDMD",
+        "name": "Kardemir (D)",
+        "agirlik": 0.7303,
+        "degisim": 2.1875,
+        "katki": 0.016
+      },
+      {
+        "ticker": "KUYAS",
+        "name": "Kuyas Yatırım AŞ",
+        "agirlik": 0.5083,
+        "degisim": 2.8595,
+        "katki": 0.0145
       },
       {
         "ticker": "TRENJ",
         "name": "TR Doğal Enerji Kaynakları",
         "agirlik": 0.1836,
-        "degisim": 5.1143,
-        "katki": 0.0094
-      },
-      {
-        "ticker": "GSRAY",
-        "name": "Galatasaray Sportif A.Ş",
-        "agirlik": 0.1309,
-        "degisim": 7.0,
-        "katki": 0.0092
-      },
-      {
-        "ticker": "GRSEL",
-        "name": "Gürsel Taşımacılık",
-        "agirlik": 0.1753,
-        "degisim": 4.7506,
-        "katki": 0.0083
+        "degisim": 7.3684,
+        "katki": 0.0135
       },
       {
         "ticker": "ECILC",
         "name": "Eczacıbaşı İlaç",
         "agirlik": 0.2559,
-        "degisim": 3.1973,
-        "katki": 0.0082
+        "degisim": 4.3836,
+        "katki": 0.0112
       },
       {
         "ticker": "TRALT",
         "name": "Türk Altın",
         "agirlik": 1.0282,
-        "degisim": 0.597,
-        "katki": 0.0061
+        "degisim": 1.0809,
+        "katki": 0.0111
       },
       {
-        "ticker": "QUAGR",
-        "name": "QUA Granite",
-        "agirlik": 0.0907,
-        "degisim": 2.6393,
-        "katki": 0.0024
-      },
-      {
-        "ticker": "ULKER",
-        "name": "Ülker Bisküvi",
-        "agirlik": 0.3439,
-        "degisim": 0.5615,
-        "katki": 0.0019
-      },
-      {
-        "ticker": "ESEN",
-        "name": "Esenboğa Elektrik",
-        "agirlik": 0.0652,
-        "degisim": 1.9943,
-        "katki": 0.0013
+        "ticker": "ANSGR",
+        "name": "Anadolu Sigorta",
+        "agirlik": 0.4461,
+        "degisim": 2.0774,
+        "katki": 0.0093
       },
       {
         "ticker": "VAKBN",
         "name": "Vakıfbank",
         "agirlik": 0.5112,
-        "degisim": 0.0,
-        "katki": 0.0
+        "degisim": 1.706,
+        "katki": 0.0087
+      },
+      {
+        "ticker": "ALARK",
+        "name": "Alarko Holding",
+        "agirlik": 0.3501,
+        "degisim": 2.3529,
+        "katki": 0.0082
+      },
+      {
+        "ticker": "PSGYO",
+        "name": "Pasifik GYO",
+        "agirlik": 0.2155,
+        "degisim": 3.6254,
+        "katki": 0.0078
+      },
+      {
+        "ticker": "GRSEL",
+        "name": "Gürsel Taşımacılık",
+        "agirlik": 0.1753,
+        "degisim": 2.9781,
+        "katki": 0.0052
+      },
+      {
+        "ticker": "GSRAY",
+        "name": "Galatasaray Sportif A.Ş",
+        "agirlik": 0.1309,
+        "degisim": 3.9216,
+        "katki": 0.0051
+      },
+      {
+        "ticker": "QUAGR",
+        "name": "QUA Granite",
+        "agirlik": 0.0907,
+        "degisim": 3.5503,
+        "katki": 0.0032
+      },
+      {
+        "ticker": "ALTNY",
+        "name": "Altınay Savunma",
+        "agirlik": 0.1321,
+        "degisim": 1.7231,
+        "katki": 0.0023
+      },
+      {
+        "ticker": "ESEN",
+        "name": "Esenboğa Elektrik",
+        "agirlik": 0.0652,
+        "degisim": 1.9886,
+        "katki": 0.0013
+      },
+      {
+        "ticker": "ULKER",
+        "name": "Ülker Bisküvi",
+        "agirlik": 0.3439,
+        "degisim": 0.205,
+        "katki": 0.0007
       },
       {
         "ticker": "OBAMS",
         "name": "Oba Makarnacılık",
         "agirlik": 0.0932,
-        "degisim": -0.3795,
-        "katki": -0.0004
-      },
-      {
-        "ticker": "DOHOL",
-        "name": "Doğan Holding",
-        "agirlik": 0.4449,
-        "degisim": -0.1878,
-        "katki": -0.0008
-      },
-      {
-        "ticker": "OTKAR",
-        "name": "Otokar",
-        "agirlik": 0.2396,
-        "degisim": -0.6855,
-        "katki": -0.0016
+        "degisim": -2.2556,
+        "katki": -0.0021
       },
       {
         "ticker": "DOAS",
         "name": "Doğuş Otomotiv",
         "agirlik": 0.3353,
-        "degisim": -0.7763,
-        "katki": -0.0026
+        "degisim": -0.8934,
+        "katki": -0.003
       },
       {
-        "ticker": "FENER",
-        "name": "Fenerbahce Futbol A.Ş.",
-        "agirlik": 0.1699,
-        "degisim": -1.5823,
-        "katki": -0.0027
+        "ticker": "OTKAR",
+        "name": "Otokar",
+        "agirlik": 0.2396,
+        "degisim": -2.0455,
+        "katki": -0.0049
       },
       {
-        "ticker": "PAHOL",
-        "name": "Pasifik Holding",
-        "agirlik": 0.118,
-        "degisim": -4.2553,
-        "katki": -0.005
+        "ticker": "BERA",
+        "name": "Bera Holding",
+        "agirlik": 0.1397,
+        "degisim": -4.1429,
+        "katki": -0.0058
       },
       {
         "ticker": "EUREN",
         "name": "Europen Endüstri",
         "agirlik": 0.0892,
-        "degisim": -6.8127,
+        "degisim": -6.846,
         "katki": -0.0061
       },
       {
@@ -1788,380 +1767,493 @@
         "katki": -0.007
       },
       {
+        "ticker": "FENER",
+        "name": "Fenerbahce Futbol A.Ş.",
+        "agirlik": 0.1699,
+        "degisim": -4.321,
+        "katki": -0.0073
+      },
+      {
+        "ticker": "PAHOL",
+        "name": "Pasifik Holding",
+        "agirlik": 0.118,
+        "degisim": -6.338,
+        "katki": -0.0075
+      },
+      {
         "ticker": "BRYAT",
         "name": "Borusan Yatırım",
         "agirlik": 0.1663,
-        "degisim": -4.4199,
-        "katki": -0.0074
+        "degisim": -4.8619,
+        "katki": -0.0081
       },
       {
         "ticker": "CANTE",
         "name": "Çan2 Termik A.S",
         "agirlik": 0.1938,
-        "degisim": -3.9062,
-        "katki": -0.0076
-      },
-      {
-        "ticker": "IZENR",
-        "name": "İzdemir Enerji",
-        "agirlik": 0.1223,
-        "degisim": -6.5193,
-        "katki": -0.008
+        "degisim": -4.6512,
+        "katki": -0.009
       },
       {
         "ticker": "PATEK",
         "name": "Pasifik Teknoloji",
         "agirlik": 0.1277,
-        "degisim": -6.926,
-        "katki": -0.0088
-      },
-      {
-        "ticker": "VESTL",
-        "name": "Vestel Elektronik",
-        "agirlik": 0.0802,
-        "degisim": -12.2581,
-        "katki": -0.0098
-      },
-      {
-        "ticker": "REEDR",
-        "name": "Reeder",
-        "agirlik": 0.0804,
-        "degisim": -13.0747,
-        "katki": -0.0105
-      },
-      {
-        "ticker": "GRTHO",
-        "name": "GrainTurk Tarım",
-        "agirlik": 0.1278,
-        "degisim": -9.8684,
-        "katki": -0.0126
-      },
-      {
-        "ticker": "ARCLK",
-        "name": "Arçelik",
-        "agirlik": 0.2502,
-        "degisim": -5.2254,
-        "katki": -0.0131
-      },
-      {
-        "ticker": "BERA",
-        "name": "Bera Holding",
-        "agirlik": 0.1397,
-        "degisim": -9.4822,
-        "katki": -0.0132
+        "degisim": -8.1308,
+        "katki": -0.0104
       },
       {
         "ticker": "MIATK",
         "name": "Mia Teknoloji",
         "agirlik": 0.2087,
-        "degisim": -6.5099,
-        "katki": -0.0136
+        "degisim": -5.0245,
+        "katki": -0.0105
       },
       {
-        "ticker": "ZOREN",
-        "name": "Zorlu Enerji",
-        "agirlik": 0.0956,
-        "degisim": -14.6617,
-        "katki": -0.014
-      },
-      {
-        "ticker": "DAPGM",
-        "name": "Dap Gayrimenkul",
-        "agirlik": 0.1685,
-        "degisim": -8.8983,
-        "katki": -0.015
-      },
-      {
-        "ticker": "CWENE",
-        "name": "Cw Enerji",
-        "agirlik": 0.2815,
-        "degisim": -6.5631,
-        "katki": -0.0185
-      },
-      {
-        "ticker": "HEKTS",
-        "name": "Hektaş",
-        "agirlik": 0.2835,
-        "degisim": -6.6007,
-        "katki": -0.0187
+        "ticker": "DOHOL",
+        "name": "Doğan Holding",
+        "agirlik": 0.4449,
+        "degisim": -2.3985,
+        "katki": -0.0107
       },
       {
         "ticker": "TSKB",
         "name": "TSKB",
         "agirlik": 0.2858,
-        "degisim": -6.734,
+        "degisim": -3.913,
+        "katki": -0.0112
+      },
+      {
+        "ticker": "VESTL",
+        "name": "Vestel Elektronik",
+        "agirlik": 0.0802,
+        "degisim": -13.9905,
+        "katki": -0.0112
+      },
+      {
+        "ticker": "GRTHO",
+        "name": "GrainTurk Tarım",
+        "agirlik": 0.1278,
+        "degisim": -8.9352,
+        "katki": -0.0114
+      },
+      {
+        "ticker": "IZENR",
+        "name": "İzdemir Enerji",
+        "agirlik": 0.1223,
+        "degisim": -10.1604,
+        "katki": -0.0124
+      },
+      {
+        "ticker": "ZOREN",
+        "name": "Zorlu Enerji",
+        "agirlik": 0.0956,
+        "degisim": -13.0268,
+        "katki": -0.0125
+      },
+      {
+        "ticker": "REEDR",
+        "name": "Reeder",
+        "agirlik": 0.0804,
+        "degisim": -18.7079,
+        "katki": -0.015
+      },
+      {
+        "ticker": "ARCLK",
+        "name": "Arçelik",
+        "agirlik": 0.2502,
+        "degisim": -6.1452,
+        "katki": -0.0154
+      },
+      {
+        "ticker": "EUPWR",
+        "name": "Europower Enerji",
+        "agirlik": 0.5412,
+        "degisim": -3.2813,
+        "katki": -0.0178
+      },
+      {
+        "ticker": "HEKTS",
+        "name": "Hektaş",
+        "agirlik": 0.2835,
+        "degisim": -6.6225,
+        "katki": -0.0188
+      },
+      {
+        "ticker": "GESAN",
+        "name": "Girişim Elektrik",
+        "agirlik": 0.3298,
+        "degisim": -5.8324,
         "katki": -0.0192
       },
       {
-        "ticker": "PETKM",
-        "name": "Petkim",
-        "agirlik": 0.5515,
-        "degisim": -3.6294,
-        "katki": -0.02
+        "ticker": "DAPGM",
+        "name": "Dap Gayrimenkul",
+        "agirlik": 0.1685,
+        "degisim": -12.666,
+        "katki": -0.0213
       },
       {
-        "ticker": "TURSG",
-        "name": "Türkiye Sigorta",
-        "agirlik": 0.6559,
-        "degisim": -3.3537,
-        "katki": -0.022
+        "ticker": "CWENE",
+        "name": "Cw Enerji",
+        "agirlik": 0.2815,
+        "degisim": -7.7767,
+        "katki": -0.0219
       },
       {
         "ticker": "MAGEN",
         "name": "Margün Enerji",
         "agirlik": 0.2786,
-        "degisim": -8.2347,
-        "katki": -0.0229
+        "degisim": -8.0928,
+        "katki": -0.0225
       },
       {
         "ticker": "ODAS",
         "name": "Odaş Elektrik Üretim",
         "agirlik": 0.1856,
-        "degisim": -13.6954,
-        "katki": -0.0254
+        "degisim": -13.0072,
+        "katki": -0.0241
       },
       {
         "ticker": "ENERY",
         "name": "Enerya Enerji",
         "agirlik": 0.3647,
-        "degisim": -7.1958,
-        "katki": -0.0262
-      },
-      {
-        "ticker": "AKSA",
-        "name": "Aksa",
-        "agirlik": 0.3121,
-        "degisim": -8.4074,
-        "katki": -0.0262
-      },
-      {
-        "ticker": "CIMSA",
-        "name": "Çimsa",
-        "agirlik": 0.4413,
-        "degisim": -6.4675,
-        "katki": -0.0285
-      },
-      {
-        "ticker": "ISMEN",
-        "name": "İş Yatırım",
-        "agirlik": 0.3214,
-        "degisim": -9.8361,
-        "katki": -0.0316
-      },
-      {
-        "ticker": "MAVI",
-        "name": "Mavi Giyim Sanayi Tic.A.S",
-        "agirlik": 0.4969,
-        "degisim": -6.9722,
-        "katki": -0.0346
+        "degisim": -6.871,
+        "katki": -0.0251
       },
       {
         "ticker": "BSOKE",
         "name": "Batıçim Çimento",
         "agirlik": 0.3102,
-        "degisim": -11.1708,
-        "katki": -0.0347
+        "degisim": -9.5057,
+        "katki": -0.0295
+      },
+      {
+        "ticker": "TURSG",
+        "name": "Türkiye Sigorta",
+        "agirlik": 0.6559,
+        "degisim": -4.6617,
+        "katki": -0.0306
       },
       {
         "ticker": "EKGYO",
         "name": "Emlak Konut GYO",
         "agirlik": 0.7867,
-        "degisim": -4.5142,
-        "katki": -0.0355
+        "degisim": -3.9109,
+        "katki": -0.0308
       },
       {
-        "ticker": "TTKOM",
-        "name": "Türk Telekom",
-        "agirlik": 0.5675,
-        "degisim": -6.6208,
-        "katki": -0.0376
+        "ticker": "AKSA",
+        "name": "Aksa",
+        "agirlik": 0.3121,
+        "degisim": -10.0874,
+        "katki": -0.0315
       },
       {
-        "ticker": "KUYAS",
-        "name": "Kuyas Yatırım AŞ",
-        "agirlik": 0.5083,
-        "degisim": -9.5588,
-        "katki": -0.0486
+        "ticker": "MAVI",
+        "name": "Mavi Giyim Sanayi Tic.A.S",
+        "agirlik": 0.4969,
+        "degisim": -6.6144,
+        "katki": -0.0329
       },
       {
-        "ticker": "KLRHO",
-        "name": "Kiler Holding",
-        "agirlik": 0.2348,
-        "degisim": -20.8284,
-        "katki": -0.0489
+        "ticker": "ISMEN",
+        "name": "İş Yatırım",
+        "agirlik": 0.3214,
+        "degisim": -10.2452,
+        "katki": -0.0329
+      },
+      {
+        "ticker": "CIMSA",
+        "name": "Çimsa",
+        "agirlik": 0.4413,
+        "degisim": -8.4236,
+        "katki": -0.0372
       },
       {
         "ticker": "HALKB",
         "name": "Halkbank",
         "agirlik": 0.466,
-        "degisim": -10.5181,
-        "katki": -0.049
-      },
-      {
-        "ticker": "AEFES",
-        "name": "Anadolu Efes",
-        "agirlik": 0.8368,
-        "degisim": -6.5865,
-        "katki": -0.0551
+        "degisim": -8.4267,
+        "katki": -0.0393
       },
       {
         "ticker": "BTCIM",
         "name": "Batıçim",
         "agirlik": 0.3876,
-        "degisim": -14.2599,
-        "katki": -0.0553
+        "degisim": -10.5948,
+        "katki": -0.0411
       },
       {
         "ticker": "FROTO",
         "name": "Ford Otosan",
         "agirlik": 1.1209,
-        "degisim": -5.0837,
-        "katki": -0.057
+        "degisim": -3.9927,
+        "katki": -0.0448
+      },
+      {
+        "ticker": "KLRHO",
+        "name": "Kiler Holding",
+        "agirlik": 0.2348,
+        "degisim": -19.6751,
+        "katki": -0.0462
+      },
+      {
+        "ticker": "TTKOM",
+        "name": "Türk Telekom",
+        "agirlik": 0.5675,
+        "degisim": -8.3051,
+        "katki": -0.0471
       },
       {
         "ticker": "BALSU",
         "name": "Balsu Gıda",
         "agirlik": 0.1481,
-        "degisim": -38.6857,
-        "katki": -0.0573
+        "degisim": -33.7037,
+        "katki": -0.0499
+      },
+      {
+        "ticker": "PETKM",
+        "name": "Petkim",
+        "agirlik": 0.5515,
+        "degisim": -11.3656,
+        "katki": -0.0627
       },
       {
         "ticker": "ENKAI",
         "name": "Enka İnşaat",
         "agirlik": 0.9115,
-        "degisim": -7.828,
-        "katki": -0.0714
+        "degisim": -7.3579,
+        "katki": -0.0671
       },
       {
-        "ticker": "SASA",
-        "name": "Sasa Polyester Sanayi A.Ş.",
-        "agirlik": 1.2213,
-        "degisim": -6.1728,
-        "katki": -0.0754
+        "ticker": "AEFES",
+        "name": "Anadolu Efes",
+        "agirlik": 0.8368,
+        "degisim": -8.2703,
+        "katki": -0.0692
       },
       {
         "ticker": "PGSUS",
         "name": "Pegasus Hava Taşımacılığı",
         "agirlik": 0.7906,
-        "degisim": -9.5495,
-        "katki": -0.0755
-      },
-      {
-        "ticker": "TCELL",
-        "name": "Turkcell",
-        "agirlik": 2.1197,
-        "degisim": -3.871,
-        "katki": -0.0821
+        "degisim": -8.8646,
+        "katki": -0.0701
       },
       {
         "ticker": "TOASO",
         "name": "Tofaş Fabrika",
         "agirlik": 0.7318,
-        "degisim": -12.0227,
-        "katki": -0.088
+        "degisim": -10.522,
+        "katki": -0.077
       },
       {
         "ticker": "AKSEN",
         "name": "Aksa Enerji",
         "agirlik": 0.4644,
-        "degisim": -19.5755,
-        "katki": -0.0909
+        "degisim": -19.2453,
+        "katki": -0.0894
       },
       {
-        "ticker": "CCOLA",
-        "name": "Coca-Cola İçecek A.Ş",
-        "agirlik": 1.5424,
-        "degisim": -6.1679,
-        "katki": -0.0951
-      },
-      {
-        "ticker": "MGROS",
-        "name": "Migros",
-        "agirlik": 1.1926,
-        "degisim": -9.9135,
-        "katki": -0.1182
-      },
-      {
-        "ticker": "SKBNK",
-        "name": "Şekerbank",
-        "agirlik": 0.176,
-        "degisim": -68.5685,
-        "katki": -0.1207
-      },
-      {
-        "ticker": "SISE",
-        "name": "Şişecam",
-        "agirlik": 1.2633,
-        "degisim": -11.8552,
-        "katki": -0.1498
+        "ticker": "TCELL",
+        "name": "Turkcell",
+        "agirlik": 2.1197,
+        "degisim": -5.1095,
+        "katki": -0.1083
       },
       {
         "ticker": "ISCTR",
         "name": "İş Bankası (C)",
         "agirlik": 2.2866,
-        "degisim": -8.114,
-        "katki": -0.1855
+        "degisim": -4.9317,
+        "katki": -0.1128
+      },
+      {
+        "ticker": "SKBNK",
+        "name": "Şekerbank",
+        "agirlik": 0.176,
+        "degisim": -65.4941,
+        "katki": -0.1153
+      },
+      {
+        "ticker": "SASA",
+        "name": "Sasa Polyester Sanayi A.Ş.",
+        "agirlik": 1.2213,
+        "degisim": -10.6299,
+        "katki": -0.1298
+      },
+      {
+        "ticker": "MGROS",
+        "name": "Migros",
+        "agirlik": 1.1926,
+        "degisim": -11.7783,
+        "katki": -0.1405
+      },
+      {
+        "ticker": "CCOLA",
+        "name": "Coca-Cola İçecek A.Ş",
+        "agirlik": 1.5424,
+        "degisim": -9.7413,
+        "katki": -0.1503
+      },
+      {
+        "ticker": "SISE",
+        "name": "Şişecam",
+        "agirlik": 1.2633,
+        "degisim": -12.7191,
+        "katki": -0.1607
       },
       {
         "ticker": "CVKMD",
         "name": "Cvk Maden",
         "agirlik": 0.3366,
-        "degisim": -57.417,
-        "katki": -0.1933
-      },
-      {
-        "ticker": "EREGL",
-        "name": "Ereğli Demir Çelik",
-        "agirlik": 2.8129,
-        "degisim": -10.7227,
-        "katki": -0.3016
-      },
-      {
-        "ticker": "THYAO",
-        "name": "Türk Hava Yolları",
-        "agirlik": 4.771,
-        "degisim": -8.4977,
-        "katki": -0.4054
+        "degisim": -54.9041,
+        "katki": -0.1848
       },
       {
         "ticker": "DSTKF",
         "name": "Destek Finans Faktoring",
         "agirlik": 3.9409,
-        "degisim": -17.4232,
-        "katki": -0.6866
+        "degisim": -7.9701,
+        "katki": -0.3141
+      },
+      {
+        "ticker": "EREGL",
+        "name": "Ereğli Demir Çelik",
+        "agirlik": 2.8129,
+        "degisim": -13.3945,
+        "katki": -0.3768
+      },
+      {
+        "ticker": "THYAO",
+        "name": "Türk Hava Yolları",
+        "agirlik": 4.771,
+        "degisim": -8.1555,
+        "katki": -0.3891
       }
     ]
   },
   "sektor_katki": {
     "daily": [
       {
-        "sektor": "Enerji",
-        "katki": 0.6562,
-        "hisse_sayisi": 16,
-        "eksik": 0
-      },
-      {
         "sektor": "Finans",
-        "katki": 0.6312,
+        "katki": 0.6219,
         "hisse_sayisi": 21,
         "eksik": 0
       },
       {
-        "sektor": "Teknoloji",
-        "katki": 0.3899,
-        "hisse_sayisi": 5,
+        "sektor": "Enerji",
+        "katki": 0.5977,
+        "hisse_sayisi": 16,
         "eksik": 0
       },
       {
         "sektor": "Sanayi",
-        "katki": 0.3073,
+        "katki": 0.3002,
         "hisse_sayisi": 31,
         "eksik": 0
       },
       {
+        "sektor": "Teknoloji",
+        "katki": 0.2786,
+        "hisse_sayisi": 5,
+        "eksik": 0
+      },
+      {
         "sektor": "Hizmetler",
-        "katki": 0.2453,
+        "katki": 0.2545,
         "hisse_sayisi": 8,
+        "eksik": 0
+      },
+      {
+        "sektor": "Madencilik",
+        "katki": 0.0863,
+        "hisse_sayisi": 3,
+        "eksik": 0
+      },
+      {
+        "sektor": "İnşaat ve Bayındırlık",
+        "katki": 0.0535,
+        "hisse_sayisi": 6,
+        "eksik": 0
+      },
+      {
+        "sektor": "Gayrimenkul",
+        "katki": 0.0429,
+        "hisse_sayisi": 3,
+        "eksik": 0
+      },
+      {
+        "sektor": "Havayolları ve Hizm.",
+        "katki": 0.0367,
+        "hisse_sayisi": 3,
+        "eksik": 0
+      },
+      {
+        "sektor": "Diğer",
+        "katki": 0.0349,
+        "hisse_sayisi": 1,
+        "eksik": 0
+      },
+      {
+        "sektor": "İletişim",
+        "katki": 0.0144,
+        "hisse_sayisi": 2,
+        "eksik": 0
+      },
+      {
+        "sektor": "İletişim Cihazları",
+        "katki": 0.0016,
+        "hisse_sayisi": 1,
+        "eksik": 0
+      }
+    ],
+    "weekly": [
+      {
+        "sektor": "Enerji",
+        "katki": 1.1254,
+        "hisse_sayisi": 16,
+        "eksik": 0
+      },
+      {
+        "sektor": "Hizmetler",
+        "katki": 0.8429,
+        "hisse_sayisi": 8,
+        "eksik": 0
+      },
+      {
+        "sektor": "Finans",
+        "katki": 0.7668,
+        "hisse_sayisi": 21,
+        "eksik": 0
+      },
+      {
+        "sektor": "Diğer",
+        "katki": 0.2506,
+        "hisse_sayisi": 1,
+        "eksik": 0
+      },
+      {
+        "sektor": "Teknoloji",
+        "katki": -0.1199,
+        "hisse_sayisi": 5,
+        "eksik": 0
+      },
+      {
+        "sektor": "Havayolları ve Hizm.",
+        "katki": -0.1161,
+        "hisse_sayisi": 3,
+        "eksik": 0
+      },
+      {
+        "sektor": "Sanayi",
+        "katki": 0.1102,
+        "hisse_sayisi": 31,
+        "eksik": 0
+      },
+      {
+        "sektor": "İnşaat ve Bayındırlık",
+        "katki": -0.0868,
+        "hisse_sayisi": 6,
         "eksik": 0
       },
       {
@@ -2171,112 +2263,20 @@
         "eksik": 0
       },
       {
-        "sektor": "İnşaat ve Bayındırlık",
-        "katki": 0.0474,
-        "hisse_sayisi": 6,
-        "eksik": 0
-      },
-      {
         "sektor": "Gayrimenkul",
-        "katki": 0.0473,
+        "katki": 0.0367,
         "hisse_sayisi": 3,
-        "eksik": 0
-      },
-      {
-        "sektor": "Havayolları ve Hizm.",
-        "katki": 0.0434,
-        "hisse_sayisi": 3,
-        "eksik": 0
-      },
-      {
-        "sektor": "Diğer",
-        "katki": 0.0227,
-        "hisse_sayisi": 1,
         "eksik": 0
       },
       {
         "sektor": "İletişim",
-        "katki": 0.0227,
+        "katki": -0.0247,
         "hisse_sayisi": 2,
         "eksik": 0
       },
       {
         "sektor": "İletişim Cihazları",
-        "katki": 0.0018,
-        "hisse_sayisi": 1,
-        "eksik": 0
-      }
-    ],
-    "weekly": [
-      {
-        "sektor": "Enerji",
-        "katki": 1.1872,
-        "hisse_sayisi": 16,
-        "eksik": 0
-      },
-      {
-        "sektor": "Hizmetler",
-        "katki": 0.8279,
-        "hisse_sayisi": 8,
-        "eksik": 0
-      },
-      {
-        "sektor": "Finans",
-        "katki": 0.7744,
-        "hisse_sayisi": 21,
-        "eksik": 0
-      },
-      {
-        "sektor": "Diğer",
-        "katki": 0.2371,
-        "hisse_sayisi": 1,
-        "eksik": 0
-      },
-      {
-        "sektor": "Sanayi",
-        "katki": 0.1162,
-        "hisse_sayisi": 31,
-        "eksik": 0
-      },
-      {
-        "sektor": "Havayolları ve Hizm.",
-        "katki": -0.1096,
-        "hisse_sayisi": 3,
-        "eksik": 0
-      },
-      {
-        "sektor": "İnşaat ve Bayındırlık",
-        "katki": -0.0923,
-        "hisse_sayisi": 6,
-        "eksik": 0
-      },
-      {
-        "sektor": "Madencilik",
-        "katki": 0.0845,
-        "hisse_sayisi": 3,
-        "eksik": 0
-      },
-      {
-        "sektor": "Gayrimenkul",
-        "katki": 0.041,
-        "hisse_sayisi": 3,
-        "eksik": 0
-      },
-      {
-        "sektor": "Teknoloji",
-        "katki": -0.0228,
-        "hisse_sayisi": 5,
-        "eksik": 0
-      },
-      {
-        "sektor": "İletişim",
-        "katki": -0.0165,
-        "hisse_sayisi": 2,
-        "eksik": 0
-      },
-      {
-        "sektor": "İletişim Cihazları",
-        "katki": 0.0014,
+        "katki": 0.0012,
         "hisse_sayisi": 1,
         "eksik": 0
       }
@@ -2284,73 +2284,73 @@
     "monthly": [
       {
         "sektor": "Enerji",
-        "katki": 3.3794,
+        "katki": 2.3859,
         "hisse_sayisi": 16,
         "eksik": 0
       },
       {
         "sektor": "Teknoloji",
-        "katki": 2.2592,
+        "katki": 1.883,
         "hisse_sayisi": 5,
         "eksik": 0
       },
       {
-        "sektor": "Hizmetler",
-        "katki": 1.0426,
-        "hisse_sayisi": 8,
-        "eksik": 0
-      },
-      {
         "sektor": "Sanayi",
-        "katki": -0.5967,
+        "katki": -0.8128,
         "hisse_sayisi": 31,
         "eksik": 0
       },
       {
+        "sektor": "Hizmetler",
+        "katki": 0.643,
+        "hisse_sayisi": 8,
+        "eksik": 0
+      },
+      {
         "sektor": "Havayolları ve Hizm.",
-        "katki": -0.4132,
+        "katki": -0.4147,
         "hisse_sayisi": 3,
         "eksik": 0
       },
       {
-        "sektor": "Diğer",
-        "katki": 0.2,
-        "hisse_sayisi": 1,
-        "eksik": 0
-      },
-      {
         "sektor": "İnşaat ve Bayındırlık",
-        "katki": 0.1815,
+        "katki": 0.2487,
         "hisse_sayisi": 6,
         "eksik": 0
       },
       {
         "sektor": "Finans",
-        "katki": -0.1721,
+        "katki": 0.2144,
         "hisse_sayisi": 21,
         "eksik": 0
       },
       {
-        "sektor": "Madencilik",
-        "katki": -0.1445,
-        "hisse_sayisi": 3,
+        "sektor": "Diğer",
+        "katki": 0.2132,
+        "hisse_sayisi": 1,
         "eksik": 0
       },
       {
         "sektor": "İletişim",
-        "katki": -0.1197,
+        "katki": -0.1554,
         "hisse_sayisi": 2,
         "eksik": 0
       },
       {
+        "sektor": "Madencilik",
+        "katki": -0.1116,
+        "hisse_sayisi": 3,
+        "eksik": 0
+      },
+      {
         "sektor": "Gayrimenkul",
-        "katki": -0.04,
+        "katki": -0.0443,
         "hisse_sayisi": 3,
         "eksik": 0
       },
       {
         "sektor": "İletişim Cihazları",
-        "katki": -0.0105,
+        "katki": -0.015,
         "hisse_sayisi": 1,
         "eksik": 0
       }
