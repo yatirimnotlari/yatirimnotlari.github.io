@@ -190,12 +190,11 @@ def download_batch(symbols: list[str], attempts: int = 3) -> pd.DataFrame:
                 period=HISTORY_PERIOD,
                 interval="1d",
                 # Yahoo'nun ham OHLC serisi bölünmeleri fiyat geçmişine uygular.
-                # Adj Close oranını kullanan auto_adjust ise nakit temettüleri de
+                # Adj Close oranını kullanan auto_adjust nakit temettüleri de
                 # geçmiş OHLC'ye taşır. TradingView'ın temettü düzeltmesi kapalı
-                # standart grafiğiyle eşleşmek için ham OHLC kullanılır; repair,
-                # Yahoo'daki eksik/hatalı bölünme düzeltmelerini onarır.
+                # standart grafiğiyle eşleşmek için Yahoo'nun bölünme uyumlu ham
+                # OHLC serisi kullanılır.
                 auto_adjust=False,
-                repair=True,
                 actions=True,
                 progress=False,
                 threads=True,
