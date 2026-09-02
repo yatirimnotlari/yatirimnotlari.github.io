@@ -44,6 +44,7 @@ def calculate(auto_adjust: bool) -> list[dict]:
         period="10y",
         interval="1d",
         auto_adjust=auto_adjust,
+        repair=True,
         actions=True,
         progress=False,
         threads=False,
