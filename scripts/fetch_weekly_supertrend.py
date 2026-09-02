@@ -33,7 +33,7 @@ OUTPUT_PATH = ROOT / "public" / "data" / "bist-weekly-supertrend.json"
 
 ATR_PERIOD = 10
 ATR_MULTIPLIER = 3.0
-HISTORY_PERIOD = "3y"
+HISTORY_PERIOD = "10y"
 BATCH_SIZE = 80
 BATCH_DELAY_SECONDS = 1.0
 
@@ -189,7 +189,14 @@ def download_batch(symbols: list[str], attempts: int = 3) -> pd.DataFrame:
                 tickers=symbols,
                 period=HISTORY_PERIOD,
                 interval="1d",
-                auto_adjust=True,
+                # Yahoo'nun ham OHLC serisi bölünmeleri fiyat geçmişine uygular.
+                # Adj Close oranını kullanan auto_adjust ise nakit temettüleri de
+                # geçmiş OHLC'ye taşır. TradingView'ın temettü düzeltmesi kapalı
+                # standart grafiğiyle eşleşmek için ham OHLC kullanılır; repair,
+                # Yahoo'daki eksik/hatalı bölünme düzeltmelerini onarır.
+                auto_adjust=False,
+                repair=True,
+                actions=True,
                 progress=False,
                 threads=True,
                 group_by="column",
@@ -286,6 +293,9 @@ def main() -> None:
             "atr_period": ATR_PERIOD,
             "atr_multiplier": ATR_MULTIPLIER,
             "source": "HL2",
+            "history_period": HISTORY_PERIOD,
+            "price_adjustment": "splits_only",
+            "dividend_adjusted": False,
             "current_week_excluded": True,
         },
         "total_tickers": len(symbols),
