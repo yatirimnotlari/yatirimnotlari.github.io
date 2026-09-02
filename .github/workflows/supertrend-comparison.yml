@@ -64,8 +64,7 @@ jobs:
               "added_to_candidate": sorted(set(new_signals) - set(old_signals)),
           }
           Path("public/data/supertrend-comparison.json").write_text(
-              json.dumps(report, ensure_ascii=False, indent=2) + "
-",
+              json.dumps(report, ensure_ascii=False, indent=2) + chr(10),
               encoding="utf-8",
           )
           print(json.dumps(report, ensure_ascii=False, indent=2))
