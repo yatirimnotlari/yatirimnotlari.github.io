@@ -189,12 +189,10 @@ def download_batch(symbols: list[str], attempts: int = 3) -> pd.DataFrame:
                 tickers=symbols,
                 period=HISTORY_PERIOD,
                 interval="1d",
-                # Yahoo'nun ham OHLC serisi bölünmeleri fiyat geçmişine uygular.
-                # Adj Close oranını kullanan auto_adjust nakit temettüleri de
-                # geçmiş OHLC'ye taşır. TradingView'ın temettü düzeltmesi kapalı
-                # standart grafiğiyle eşleşmek için Yahoo'nun bölünme uyumlu ham
-                # OHLC serisi kullanılır.
-                auto_adjust=False,
+                # TradingView'da kullanıcının doğruladığı temettü-düzeltilmiş
+                # haftalık grafikle eşleşmesi için OHLC serisini bölünme ve nakit
+                # temettülere göre düzelt. repair eksik/bozuk Yahoo olaylarını onarır.
+                auto_adjust=True,
                 repair=True,
                 actions=True,
                 progress=False,
@@ -294,8 +292,9 @@ def main() -> None:
             "atr_multiplier": ATR_MULTIPLIER,
             "source": "HL2",
             "history_period": HISTORY_PERIOD,
-            "price_adjustment": "splits_only",
-            "dividend_adjusted": False,
+            "price_adjustment": "splits_and_dividends",
+            "dividend_adjusted": True,
+            "price_repair": True,
             "current_week_excluded": True,
         },
         "total_tickers": len(symbols),
