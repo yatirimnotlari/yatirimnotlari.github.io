@@ -195,6 +195,7 @@ def download_batch(symbols: list[str], attempts: int = 3) -> pd.DataFrame:
                 # standart grafiğiyle eşleşmek için Yahoo'nun bölünme uyumlu ham
                 # OHLC serisi kullanılır.
                 auto_adjust=False,
+                repair=True,
                 actions=True,
                 progress=False,
                 threads=True,
