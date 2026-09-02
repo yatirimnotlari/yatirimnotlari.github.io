@@ -34,6 +34,7 @@ OUTPUT_PATH = ROOT / "public" / "data" / "bist-weekly-supertrend.json"
 ATR_PERIOD = 10
 ATR_MULTIPLIER = 3.0
 HISTORY_PERIOD = "10y"
+HISTORY_WEEKS = 12
 BATCH_SIZE = 80
 BATCH_DELAY_SECONDS = 1.0
 
@@ -218,36 +219,60 @@ def extract_daily(raw: pd.DataFrame, symbol: str, requested: list[str]) -> pd.Da
     return pd.DataFrame(columns).dropna(how="all")
 
 
-def stock_result(info: dict, daily: pd.DataFrame, target: date) -> dict | None:
+def stock_results(
+    info: dict,
+    daily: pd.DataFrame,
+    target: date,
+    history_targets: list[date],
+) -> tuple[dict | None, dict[str, dict]]:
     if daily.empty:
-        return None
+        return None, {}
 
     calculated = calculate_supertrend(weekly_ohlc(daily))
-    rows = calculated[calculated.index.date == target]
-    if rows.empty:
-        return None
 
-    row = rows.iloc[-1]
-    if pd.isna(row["ATR"]) or pd.isna(row["SuperTrend"]):
-        return None
+    def result_for(week_end: date) -> dict | None:
+        rows = calculated[calculated.index.date == week_end]
+        if rows.empty:
+            return None
+        row = rows.iloc[-1]
+        if pd.isna(row["ATR"]) or pd.isna(row["SuperTrend"]):
+            return None
+        return {
+            "ticker": info["ticker"],
+            "name": info.get("name", ""),
+            "sector": info.get("sector", "Diğer"),
+            "indices": info.get("indices", []),
+            "week_end": week_end.isoformat(),
+            "close": round(float(row["Close"]), 2),
+            "supertrend": round(float(row["SuperTrend"]), 2),
+            "trend": int(row["Trend"]),
+            "buy_signal": bool(row["BuySignal"]),
+        }
 
-    return {
-        "ticker": info["ticker"],
-        "name": info.get("name", ""),
-        "sector": info.get("sector", "Diğer"),
-        "indices": info.get("indices", []),
-        "week_end": target.isoformat(),
-        "close": round(float(row["Close"]), 2),
-        "supertrend": round(float(row["SuperTrend"]), 2),
-        "trend": int(row["Trend"]),
-        "buy_signal": bool(row["BuySignal"]),
-    }
+    current = result_for(target)
+    historical_signals: dict[str, dict] = {}
+    for week_end in history_targets:
+        historical = result_for(week_end)
+        if historical is not None and historical["buy_signal"]:
+            historical_signals[week_end.isoformat()] = historical
+    return current, historical_signals
 
 
 def main() -> None:
     started = time.time()
     tickers, tickers_updated_at = load_tickers()
     target = target_week_end()
+    history_targets = [target - timedelta(days=7 * offset) for offset in range(1, HISTORY_WEEKS + 1)]
+    history = [
+        {
+            "scan_date": (week_end + timedelta(days=3)).isoformat(),
+            "week_end": week_end.isoformat(),
+            "signal_count": 0,
+            "stocks": [],
+        }
+        for week_end in history_targets
+    ]
+    history_by_week = {item["week_end"]: item for item in history}
     ticker_map = {f"{item['ticker']}.IS": item for item in tickers}
     symbols = list(ticker_map)
 
@@ -267,7 +292,14 @@ def main() -> None:
             continue
 
         for symbol in batch:
-            result = stock_result(ticker_map[symbol], extract_daily(raw, symbol, batch), target)
+            result, historical_signals = stock_results(
+                ticker_map[symbol],
+                extract_daily(raw, symbol, batch),
+                target,
+                history_targets,
+            )
+            for week_end, historical in historical_signals.items():
+                history_by_week[week_end]["stocks"].append(historical)
             if result is None:
                 failed.append(symbol.replace(".IS", ""))
             else:
@@ -277,6 +309,9 @@ def main() -> None:
             time.sleep(BATCH_DELAY_SECONDS)
 
     results.sort(key=lambda item: item["ticker"])
+    for week in history:
+        week["stocks"].sort(key=lambda item: item["ticker"])
+        week["signal_count"] = len(week["stocks"])
     signals = sum(1 for item in results if item["buy_signal"])
     elapsed = round(time.time() - started, 1)
 
@@ -296,12 +331,14 @@ def main() -> None:
             "dividend_adjusted": True,
             "price_repair": True,
             "current_week_excluded": True,
+            "history_weeks": HISTORY_WEEKS,
         },
         "total_tickers": len(symbols),
         "scanned": len(results),
         "failed": len(failed),
         "failed_tickers": failed,
         "signal_count": signals,
+        "history": history,
         "elapsed_seconds": elapsed,
         "stocks": results,
     }
