@@ -5,7 +5,7 @@ on:
     branches:
       - codex/supertrend-split-only-20260902
     paths:
-      - ".github/workflows/supertrend-comparison.yml"
+      - ".github/workflows/supertrend-comparison.yml"\n      - "scripts/fetch_weekly_supertrend.py"
 
 permissions:
   contents: write
