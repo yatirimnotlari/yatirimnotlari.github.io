@@ -33,7 +33,7 @@ OUTPUT_PATH = ROOT / "public" / "data" / "bist-weekly-supertrend.json"
 
 ATR_PERIOD = 10
 ATR_MULTIPLIER = 3.0
-HISTORY_PERIOD = "3y"
+HISTORY_PERIOD = "10y"
 BATCH_SIZE = 80
 BATCH_DELAY_SECONDS = 1.0
 
@@ -189,7 +189,12 @@ def download_batch(symbols: list[str], attempts: int = 3) -> pd.DataFrame:
                 tickers=symbols,
                 period=HISTORY_PERIOD,
                 interval="1d",
+                # TradingView'da kullanıcının doğruladığı temettü-düzeltilmiş
+                # haftalık grafikle eşleşmesi için OHLC serisini bölünme ve nakit
+                # temettülere göre düzelt. repair eksik/bozuk Yahoo olaylarını onarır.
                 auto_adjust=True,
+                repair=True,
+                actions=True,
                 progress=False,
                 threads=True,
                 group_by="column",
@@ -286,6 +291,10 @@ def main() -> None:
             "atr_period": ATR_PERIOD,
             "atr_multiplier": ATR_MULTIPLIER,
             "source": "HL2",
+            "history_period": HISTORY_PERIOD,
+            "price_adjustment": "splits_and_dividends",
+            "dividend_adjusted": True,
+            "price_repair": True,
             "current_week_excluded": True,
         },
         "total_tickers": len(symbols),
