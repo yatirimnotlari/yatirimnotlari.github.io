@@ -1,0 +1,60 @@
+name: SuperTrend 12 Hafta Doğrulama
+
+on:
+  push:
+    branches:
+      - codex/supertrend-12-week-history-20260902
+    paths:
+      - ".github/workflows/supertrend-history-validation.yml"
+      - "scripts/fetch_weekly_supertrend.py"
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Bağımlılıkları yükle
+        run: pip install -r requirements.txt
+
+      - name: On iki haftalık taramayı çalıştır
+        run: python scripts/fetch_weekly_supertrend.py
+
+      - name: Veri yapısını doğrula
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import date, timedelta
+          from pathlib import Path
+
+          data = json.loads(Path("public/data/bist-weekly-supertrend.json").read_text(encoding="utf-8"))
+          history = data.get("history", [])
+          assert len(history) == 12, f"12 hafta bekleniyordu, {len(history)} geldi"
+          current = date.fromisoformat(data["target_week_end"])
+          for offset, week in enumerate(history, start=1):
+              week_end = date.fromisoformat(week["week_end"])
+              scan_date = date.fromisoformat(week["scan_date"])
+              assert week_end == current - timedelta(days=7 * offset)
+              assert scan_date == week_end + timedelta(days=3)
+              assert week["signal_count"] == len(week["stocks"])
+              assert all(stock["buy_signal"] for stock in week["stocks"])
+          print("12 haftalık tarih ve sinyal yapısı doğrulandı.")
+          PY
+
+      - name: Doğrulanmış veriyi kaydet
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/bist-weekly-supertrend.json
+          git commit -m "12 haftalık SuperTrend geçmişini üret"
+          git push
