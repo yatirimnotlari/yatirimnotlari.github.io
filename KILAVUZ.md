@@ -141,7 +141,9 @@ scripts/                ← Otomatik veri toplama scriptleri
 
 Tüm BIST hisselerinde SuperTrend (ATR 10, çarpan 3, kaynak HL2) hesaplar.
 Güncel haftalık mum taramaya alınmaz; yalnızca bir önceki haftalık mumda
-satış trendinden alış trendine dönen hisseler listelenir.
+satış trendinden alış trendine dönen hisseler listelenir. Yahoo Finance OHLC
+verisi bölünme ve nakit temettülere göre düzeltilir; eksik şirket işlemleri
+fiyat onarım özelliğiyle tamamlanır.
 
 Veri her pazartesi 10:15 TRT'de otomatik yenilenir. Elle yenilemek için:
 
