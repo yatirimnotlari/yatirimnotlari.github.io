@@ -14,6 +14,51 @@ import Base from '../../layouts/Base.astro';
 
     <div style="display: flex; flex-direction: column; gap: 1rem;">
 
+      <a href="/araclar/haftalik-supertrend-taramasi/" style="
+        display: flex;
+        align-items: flex-start;
+        gap: 1.25rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 2rem;
+        text-decoration: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      " onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 1px var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+        <div style="
+          width: 3rem;
+          height: 3rem;
+          background: var(--accent);
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        ">
+          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 18V9m5 9V5m5 13v-7m5 7V3" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="m4 7 4-3 5 3 6-5" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <h2 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 600; margin: 0 0 0.4rem; color: var(--text);">
+            Haftalık SuperTrend Taraması
+          </h2>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 0.75rem; line-height: 1.6;">
+            Tüm BIST hisselerinde güncel haftayı dışarıda bırak; bir önceki haftalık mumda SuperTrend AL sinyali verenleri listele.
+          </p>
+          <span style="
+            display: inline-block;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 6px;
+          ">Aracı Aç →</span>
+        </div>
+      </a>
+
       <a href="/araclar/bist-isi-haritasi/" style="
         display: flex;
         align-items: flex-start;
