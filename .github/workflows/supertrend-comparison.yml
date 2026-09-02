@@ -28,8 +28,10 @@ jobs:
       - name: Bağımlılıkları yükle
         run: pip install -r requirements.txt
 
-      - name: Mevcut sonucu sakla
-        run: cp public/data/bist-weekly-supertrend.json /tmp/supertrend-baseline.json
+      - name: Mevcut sonucu ana yayından sakla
+        run: |
+          git fetch origin main --depth=1
+          git show origin/main:public/data/bist-weekly-supertrend.json > /tmp/supertrend-baseline.json
 
       - name: Bölünme uyumlu, temettüsüz taramayı çalıştır
         run: python scripts/fetch_weekly_supertrend.py
