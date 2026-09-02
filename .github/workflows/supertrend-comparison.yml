@@ -1,0 +1,78 @@
+name: SuperTrend Karşılaştırma
+
+on:
+  push:
+    branches:
+      - codex/supertrend-split-only-20260902
+    paths:
+      - ".github/workflows/supertrend-comparison.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  compare:
+    name: Temettülü ve temettüsüz sonuçları karşılaştır
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Bağımlılıkları yükle
+        run: pip install -r requirements.txt
+
+      - name: Mevcut sonucu sakla
+        run: cp public/data/bist-weekly-supertrend.json /tmp/supertrend-baseline.json
+
+      - name: Bölünme uyumlu, temettüsüz taramayı çalıştır
+        run: python scripts/fetch_weekly_supertrend.py
+
+      - name: Sonuç farkını çıkar
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          old = json.loads(Path("/tmp/supertrend-baseline.json").read_text(encoding="utf-8"))
+          new_path = Path("public/data/bist-weekly-supertrend.json")
+          new = json.loads(new_path.read_text(encoding="utf-8"))
+
+          old_signals = sorted(item["ticker"] for item in old["stocks"] if item["buy_signal"])
+          new_signals = sorted(item["ticker"] for item in new["stocks"] if item["buy_signal"])
+          report = {
+              "target_week_end": new["target_week_end"],
+              "baseline": {
+                  "adjustment": "splits_and_dividends",
+                  "signal_count": len(old_signals),
+                  "signals": old_signals,
+              },
+              "candidate": {
+                  "adjustment": "splits_only",
+                  "signal_count": len(new_signals),
+                  "signals": new_signals,
+                  "scanned": new["scanned"],
+                  "failed": new["failed"],
+              },
+              "removed_from_candidate": sorted(set(old_signals) - set(new_signals)),
+              "added_to_candidate": sorted(set(new_signals) - set(old_signals)),
+          }
+          Path("public/data/supertrend-comparison.json").write_text(
+              json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Karşılaştırma sonucunu kaydet
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/bist-weekly-supertrend.json public/data/supertrend-comparison.json
+          git commit -m "SuperTrend temettü karşılaştırmasını kaydet"
+          git push
