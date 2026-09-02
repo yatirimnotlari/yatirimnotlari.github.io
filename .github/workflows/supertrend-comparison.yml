@@ -36,6 +36,9 @@ jobs:
       - name: Bölünme uyumlu, temettüsüz taramayı çalıştır
         run: python scripts/fetch_weekly_supertrend.py
 
+      - name: ALARK hesap zincirini çıkar
+        run: python scripts/diagnose_alark_supertrend.py
+
       - name: Sonuç farkını çıkar
         run: |
           python - <<'PY'
@@ -76,6 +79,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/bist-weekly-supertrend.json public/data/supertrend-comparison.json
+          git add public/data/bist-weekly-supertrend.json public/data/supertrend-comparison.json public/data/alark-supertrend-diagnostic.json
           git commit -m "SuperTrend temettü karşılaştırmasını kaydet"
           git push
