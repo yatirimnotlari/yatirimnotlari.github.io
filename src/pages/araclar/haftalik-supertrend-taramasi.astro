@@ -15,7 +15,7 @@ import Base from '../../layouts/Base.astro';
         <h1>Haftalık SuperTrend Taraması</h1>
         <p class="intro">
           Güncel haftalık mumu dışarıda bırakır; yalnızca bir önceki haftalık mumda
-          satış trendinden alış trendine dönen hisseleri bulur.
+          satış trendinden alış trendine dönen hisseleri bulur ve önceki 12 haftayı tarihleriyle gösterir.
         </p>
       </div>
       <div class="parameter-card" aria-label="Tarama ayarları">
@@ -91,13 +91,25 @@ import Base from '../../layouts/Base.astro';
       </div>
     </section>
 
+    <section id="history-results" class="history-results" hidden aria-labelledby="history-title">
+      <div class="history-heading">
+        <div>
+          <p class="eyebrow">SON 12 HAFTA</p>
+          <h2 id="history-title">Geçmiş haftaların AL sinyalleri</h2>
+        </div>
+        <p>Her tarih, taramanın yapıldığı pazartesiyi; altındaki tarih ise değerlendirilen cuma kapanışını gösterir.</p>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </section>
+
     <aside class="method-note">
       <strong>Nasıl çalışır?</strong>
       <p>
         Günlük fiyatlar cuma kapanışlı haftalık mumlara çevrilir. Pine Script'teki
         SuperTrend (ATR 10, çarpan 3) hesabı uygulanır ve güncel hafta değerlendirme dışı bırakılır.
         Fiyatlar bölünme ve nakit temettülere göre düzeltilir; eksik şirket işlemleri otomatik onarılır.
-        Piyasa verisi her pazartesi otomatik yenilenir.
+        Güncel sonuçla birlikte önceki 12 haftanın sinyalleri tutulur. Piyasa verisi her pazartesi
+        otomatik yenilendiğinde tarih listesi de bir hafta ileri kayar.
       </p>
     </aside>
 
@@ -162,6 +174,18 @@ import Base from '../../layouts/Base.astro';
   .empty-icon { display: grid; place-items: center; width: 44px; height: 44px; margin: 0 auto 0.8rem; border-radius: 50%; background: color-mix(in srgb, #22c55e 13%, transparent); color: #15803d; font-size: 1.25rem; font-weight: 700; }
   .empty-result h3 { margin: 0 0 0.35rem; font-size: 1.08rem; }
   .empty-result p { max-width: 500px; margin: 0 auto; color: var(--text-muted); font-size: 0.88rem; line-height: 1.55; }
+  .history-results { margin-top: 1.25rem; }
+  .history-heading { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; margin-bottom: 0.85rem; }
+  .history-heading h2 { margin: 0; font-size: 1.35rem; }
+  .history-heading p:last-child { max-width: 520px; margin: 0; color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
+  .history-list { display: grid; gap: 0.7rem; }
+  .history-week { display: grid; grid-template-columns: minmax(190px, 0.42fr) 1fr; gap: 1rem; padding: 1rem 1.15rem; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); }
+  .history-date strong { display: block; font-size: 0.95rem; }
+  .history-date span { display: block; margin-top: 0.2rem; color: var(--text-muted); font-size: 0.76rem; }
+  .history-signals { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; }
+  .history-ticker { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.58rem; border-radius: 7px; background: color-mix(in srgb, #22c55e 11%, var(--bg-secondary)); color: #15803d; font-size: 0.8rem; font-weight: 700; }
+  [data-theme="dark"] .history-ticker { color: #4ade80; }
+  .history-empty { color: var(--text-muted); font-size: 0.82rem; }
   .method-note { margin-top: 1.25rem; padding: 1rem 1.15rem; border-left: 3px solid var(--warm-accent); background: var(--bg-secondary); color: var(--text); font-size: 0.86rem; line-height: 1.6; }
   .method-note p { margin: 0.3rem 0 0; color: var(--text-muted); }
   .legal-note { margin: 1rem 0 0; color: var(--text-muted); font-size: 0.75rem; line-height: 1.5; }
@@ -174,6 +198,9 @@ import Base from '../../layouts/Base.astro';
     .summary-grid div:nth-child(2) { border-right: 0; }
     .summary-grid div:last-child { grid-column: 1 / -1; border-bottom: 0; }
     .results-heading { align-items: flex-end; }
+    .history-heading { display: block; }
+    .history-heading p:last-child { margin-top: 0.5rem; }
+    .history-week { grid-template-columns: 1fr; gap: 0.65rem; }
   }
 </style>
 
@@ -187,6 +214,13 @@ import Base from '../../layouts/Base.astro';
     buy_signal: boolean;
   }
 
+  interface HistoryWeek {
+    scan_date: string;
+    week_end: string;
+    signal_count: number;
+    stocks: ScanStock[];
+  }
+
   interface ScanData {
     ready: boolean;
     message?: string;
@@ -196,6 +230,7 @@ import Base from '../../layouts/Base.astro';
     total_tickers: number;
     failed?: number;
     stocks: ScanStock[];
+    history?: HistoryWeek[];
   }
 
   const dataUrl = '/data/bist-weekly-supertrend.json';
@@ -211,6 +246,8 @@ import Base from '../../layouts/Base.astro';
   const tableWrap = document.querySelector('#table-wrap');
   const emptyResult = document.querySelector('#empty-result');
   const resultBody = document.querySelector('#result-body');
+  const historyResults = document.querySelector('#history-results');
+  const historyList = document.querySelector('#history-list');
 
   const setProgress = (current: number, total: number, label: string) => {
     const percent = total > 0 ? Math.round((current / total) * 100) : 0;
@@ -229,6 +266,43 @@ import Base from '../../layouts/Base.astro';
 
   const formatPrice = (value: number) =>
     new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + ' ₺';
+
+  const renderHistory = (history: HistoryWeek[]) => {
+    if (!historyList) return;
+    historyList.innerHTML = '';
+    for (const week of history.slice(0, 12)) {
+      const article = document.createElement('article');
+      article.className = 'history-week';
+
+      const dateBlock = document.createElement('div');
+      dateBlock.className = 'history-date';
+      const scanDate = document.createElement('strong');
+      scanDate.textContent = formatDate(week.scan_date);
+      const weekEnd = document.createElement('span');
+      weekEnd.textContent = `${formatDate(week.week_end)} kapanışı`;
+      dateBlock.append(scanDate, weekEnd);
+
+      const signals = document.createElement('div');
+      signals.className = 'history-signals';
+      if (!Array.isArray(week.stocks) || week.stocks.length === 0) {
+        const empty = document.createElement('span');
+        empty.className = 'history-empty';
+        empty.textContent = 'Yeni AL sinyali yok';
+        signals.appendChild(empty);
+      } else {
+        for (const stock of week.stocks) {
+          const ticker = document.createElement('span');
+          ticker.className = 'history-ticker';
+          ticker.textContent = stock.ticker;
+          ticker.title = stock.name || stock.ticker;
+          signals.appendChild(ticker);
+        }
+      }
+      article.append(dateBlock, signals);
+      historyList.appendChild(article);
+    }
+    if (historyResults instanceof HTMLElement) historyResults.hidden = history.length === 0;
+  };
 
   const renderResults = (data: ScanData, signals: ScanStock[]) => {
     const targetWeek = document.querySelector('#target-week');
@@ -273,6 +347,7 @@ import Base from '../../layouts/Base.astro';
     if (tableWrap instanceof HTMLElement) tableWrap.hidden = signals.length === 0;
     if (emptyResult instanceof HTMLElement) emptyResult.hidden = signals.length !== 0;
     if (results instanceof HTMLElement) results.hidden = false;
+    renderHistory(Array.isArray(data.history) ? data.history : []);
     results?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -284,6 +359,7 @@ import Base from '../../layouts/Base.astro';
     if (status instanceof HTMLElement) status.hidden = false;
     if (errorPanel instanceof HTMLElement) errorPanel.hidden = true;
     if (results instanceof HTMLElement) results.hidden = true;
+    if (historyResults instanceof HTMLElement) historyResults.hidden = true;
     setProgress(0, 1, 'Haftalık tarama verileri yükleniyor…');
 
     try {
