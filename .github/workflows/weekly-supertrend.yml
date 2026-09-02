@@ -5,13 +5,6 @@ on:
     # Her Pazartesi 10:15 TRT — yeni haftalık mum başladıktan sonra
     - cron: "15 7 * * 1"
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "scripts/fetch_weekly_supertrend.py"
-      - "data/bist-tickers.json"
-      - ".github/workflows/weekly-supertrend.yml"
-
 permissions:
   contents: write
   pages: write
