@@ -118,7 +118,8 @@ public/
 ├── images/             ← Görseller buraya (yazıdan /images/x.png ile erişilir)
 └── data/               ← Araçların okuduğu JSON dosyaları (otomatik güncellenir)
     ├── bist-heatmap.json         ← Isı haritası verisi
-    └── bist-endeks-etkisi.json   ← Endeks etkisi verisi
+    ├── bist-endeks-etkisi.json   ← Endeks etkisi verisi
+    └── bist-weekly-supertrend.json ← Haftalık SuperTrend tarama verisi
 
 data/                   ← Script girdileri (GitHub'da saklanır, deploy edilmez)
 ├── bist-tickers.json             ← Tüm BIST hisseleri, sektörler
@@ -127,9 +128,28 @@ data/                   ← Script girdileri (GitHub'da saklanır, deploy edilme
 scripts/                ← Otomatik veri toplama scriptleri
 ├── fetch_bist_tickers.py         ← Hisse + sektör listesi (GitHub Action: güncelle-tickerlar)
 ├── fetch_bist_data.py            ← Isı haritası fiyatları (GitHub Action: 15 dak.)
+├── fetch_weekly_supertrend.py     ← Haftalık SuperTrend taraması (pazartesi)
 ├── fetch_endeks_agirliklari.py   ← BIST 100 ağırlıkları (GitHub Action: sabah günlük)
 └── calculate_endeks_etki.py      ← Endeks etkisi hesabı (GitHub Action: 15 dak.)
 ```
+
+---
+
+## Araç: Haftalık SuperTrend Taraması
+
+**Sayfa:** `/araclar/haftalik-supertrend-taramasi/`
+
+Tüm BIST hisselerinde SuperTrend (ATR 10, çarpan 3, kaynak HL2) hesaplar.
+Güncel haftalık mum taramaya alınmaz; yalnızca bir önceki haftalık mumda
+satış trendinden alış trendine dönen hisseler listelenir.
+
+Veri her pazartesi 10:15 TRT'de otomatik yenilenir. Elle yenilemek için:
+
+1. GitHub'da **Actions** sekmesini aç.
+2. **Haftalık SuperTrend Taraması** iş akışını seç.
+3. **Run workflow** düğmesine bas.
+
+Tarama tamamlanınca site de otomatik olarak yeniden yayınlanır.
 
 ---
 

@@ -1,0 +1,83 @@
+name: Haftalık SuperTrend Taraması
+
+on:
+  schedule:
+    # Her Pazartesi 10:15 TRT — yeni haftalık mum başladıktan sonra
+    - cron: "15 7 * * 1"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/fetch_weekly_supertrend.py"
+      - "data/bist-tickers.json"
+      - ".github/workflows/weekly-supertrend.yml"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  scan-and-build:
+    name: Tara ve siteyi hazırla
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Python bağımlılıklarını yükle
+        run: pip install -r requirements.txt
+
+      - name: Haftalık SuperTrend taramasını çalıştır
+        run: python scripts/fetch_weekly_supertrend.py
+
+      - name: Tarama verisini kaydet
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/bist-weekly-supertrend.json
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok"
+          else
+            git commit -m "Haftalık SuperTrend taraması güncellendi"
+            git push
+          fi
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Site bağımlılıklarını yükle
+        run: npm ci
+
+      - name: Siteyi derle
+        run: npm run build
+
+      - name: Pages paketini yükle
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+  deploy:
+    name: Yayınla
+    needs: scan-and-build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages'a yayınla
+        id: deployment
+        uses: actions/deploy-pages@v4
