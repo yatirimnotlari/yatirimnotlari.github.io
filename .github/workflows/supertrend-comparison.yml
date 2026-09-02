@@ -5,7 +5,8 @@ on:
     branches:
       - codex/supertrend-split-only-20260902
     paths:
-      - ".github/workflows/supertrend-comparison.yml"\n      - "scripts/fetch_weekly_supertrend.py"
+      - ".github/workflows/supertrend-comparison.yml"
+      - "scripts/fetch_weekly_supertrend.py"
 
 permissions:
   contents: write
@@ -63,7 +64,8 @@ jobs:
               "added_to_candidate": sorted(set(new_signals) - set(old_signals)),
           }
           Path("public/data/supertrend-comparison.json").write_text(
-              json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+              json.dumps(report, ensure_ascii=False, indent=2) + "
+",
               encoding="utf-8",
           )
           print(json.dumps(report, ensure_ascii=False, indent=2))
