@@ -145,6 +145,11 @@ satış trendinden alış trendine dönen hisseler listelenir. Yahoo Finance OHL
 verisi bölünme ve nakit temettülere göre düzeltilir; eksik şirket işlemleri
 fiyat onarım özelliğiyle tamamlanır.
 
+Sayfa güncel sonucun altında önceki 12 tarama haftasını da gösterir. Her geçmiş
+haftada pazartesi tarama tarihi, değerlendirilen cuma kapanışı ve o kapanışta
+AL veren hisseler yer alır. Pazartesi güncellemesinde liste otomatik olarak bir
+hafta ileri kayar.
+
 Veri her pazartesi 10:15 TRT'de otomatik yenilenir. Elle yenilemek için:
 
 1. GitHub'da **Actions** sekmesini aç.
