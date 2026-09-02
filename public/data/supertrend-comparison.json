@@ -2,8 +2,15 @@
   "target_week_end": "2026-08-28",
   "baseline": {
     "adjustment": "splits_and_dividends",
-    "signal_count": 0,
-    "signals": []
+    "signal_count": 6,
+    "signals": [
+      "ALARK",
+      "HALKB",
+      "KGYO",
+      "KRGYO",
+      "OFSYM",
+      "TSPOR"
+    ]
   },
   "candidate": {
     "adjustment": "splits_only",
@@ -20,12 +27,5 @@
     "failed": 20
   },
   "removed_from_candidate": [],
-  "added_to_candidate": [
-    "ALARK",
-    "HALKB",
-    "KGYO",
-    "KRGYO",
-    "OFSYM",
-    "TSPOR"
-  ]
+  "added_to_candidate": []
 }
