@@ -119,19 +119,90 @@ public/
 └── data/               ← Araçların okuduğu JSON dosyaları (otomatik güncellenir)
     ├── bist-heatmap.json         ← Isı haritası verisi
     ├── bist-endeks-etkisi.json   ← Endeks etkisi verisi
-    └── bist-weekly-supertrend.json ← Haftalık SuperTrend tarama verisi
+    ├── bist-weekly-supertrend.json ← Haftalık SuperTrend tarama verisi
+    └── magic-formula.json        ← Magic Formula haritası verisi
 
 data/                   ← Script girdileri (GitHub'da saklanır, deploy edilmez)
 ├── bist-tickers.json             ← Tüm BIST hisseleri, sektörler
-└── bist100-agirliklari.json      ← BIST 100 ağırlıkları (halka açıklık bazlı)
+├── bist100-agirliklari.json      ← BIST 100 ağırlıkları (halka açıklık bazlı)
+└── magic-formula/                ← Magic Formula girdileri (mali tablolar, TÜFE, arşiv)
 
 scripts/                ← Otomatik veri toplama scriptleri
 ├── fetch_bist_tickers.py         ← Hisse + sektör listesi (GitHub Action: güncelle-tickerlar)
 ├── fetch_bist_data.py            ← Isı haritası fiyatları (GitHub Action: 15 dak.)
 ├── fetch_weekly_supertrend.py     ← Haftalık SuperTrend taraması (pazartesi)
 ├── fetch_endeks_agirliklari.py   ← BIST 100 ağırlıkları (GitHub Action: sabah günlük)
-└── calculate_endeks_etki.py      ← Endeks etkisi hesabı (GitHub Action: 15 dak.)
+├── calculate_endeks_etki.py      ← Endeks etkisi hesabı (GitHub Action: 15 dak.)
+├── mf_lib.py                     ← Magic Formula hesap çekirdeği (formüller burada)
+├── fetch_mali_tablolar.py        ← Magic Formula: şirket listesi + mali tablolar (günlük)
+├── fetch_tufe.py                 ← Magic Formula: TÜFE aylık değişimleri (günlük)
+├── calculate_magic_formula.py    ← Magic Formula: ucuzluk/kalite hesabı (günlük)
+└── tests/test_mf_lib.py          ← Magic Formula hesap testleri
 ```
+
+---
+
+## Araç: Magic Formula Haritası
+
+**Sayfa:** `/araclar/magic-formula-haritasi/`
+
+Joel Greenblatt'ın Magic Formula yöntemini BIST'e uygular. Her şirket için iki
+oran hesaplanır ve haritada gösterilir:
+
+| Ölçü | Formül |
+|------|--------|
+| Ucuzluk (yatay eksen) | FVÖK / Firma değeri |
+| Kalite (dikey eksen) | FVÖK / (net işletme sermayesi + maddi duran varlıklar + kullanım hakkı varlıkları) |
+
+- **FVÖK:** son 12 ayın net faaliyet kârı (brüt kâr − pazarlama − genel yönetim − Ar-Ge).
+  Kur farkı / vade farkı gibi diğer faaliyet gelir-giderleri dahil değildir.
+- **Firma değeri:** piyasa değeri + finansal borçlar − nakit − KV finansal yatırımlar + azınlık payları.
+- **Kesikli çizgiler:** seçili evrenin (BIST 30/50/100/Tümü) medyanları. Sağ-üst köşe = ikisinde de medyanın üstü.
+- **Magic Formula sırası:** ucuzluk sırası + kalite sırası (en düşük toplam en iyi).
+- Bankalar, sigorta, aracı kurumlar, finansal kiralama/faktoring, yatırım ortaklıkları,
+  GYO'lar ve spor kulüpleri kapsam dışıdır. Holdingler sayfada bir anahtarla açılır.
+- Formüllerin kodu: `scripts/mf_lib.py` (testleri `scripts/tests/test_mf_lib.py`).
+
+### Veri kaynakları
+
+| Kaynak | Ne sağlar? | Dosya |
+|--------|-----------|-------|
+| BilancoVeri açık API (KAP / Borsa İstanbul verisi) | Şirket listesi, fiyat, piyasa değeri, mali tablolar | `data/magic-formula/sirketler.json`, `data/magic-formula/mali-tablolar/*.json` |
+| Borsa İstanbul endeks CSV | BIST 30 / 50 / 100 üyelikleri | `data/magic-formula/endeksler.json` |
+| TCMB (TÜİK verisi) | TÜFE aylık değişimleri | `data/magic-formula/tufe.json` |
+| Hesap sonucu | Sayfanın okuduğu dosya | `public/data/magic-formula.json` |
+| Çeyreklik arşiv | "Kadran değiştirenler" karşılaştırması | `data/magic-formula/arsiv.json` |
+
+BilancoVeri'nin ücretsiz geliştirici planı kaynak gösterilmesini şart koşar; sayfanın
+altındaki "Veri: KAP/Borsa İstanbul, derleyen BilancoVeri.com" satırı bu yüzden var,
+silinmemeli. Site ileride ticari kullanıma (ör. reklam) geçerse BilancoVeri'nin
+ücretli lisansı gerekir.
+
+**Enflasyon muhasebesi (TMS 29):** BilancoVeri geçmiş dönemleri son bilançonun satın
+alma gücüyle tutar (ör. 6A/2025 rakamı, 6A/2026 raporundaki düzeltilmiş karşılaştırmalı
+rakamdır). Bu yüzden son 12 ay = cari dönem + önceki yıl − önceki yılın aynı dönemi.
+TÜFE yalnızca FVÖK'ü bilanço tarihinden fiyat tarihine taşımak için kullanılır.
+
+### Güncelleme
+
+İş akışı: **Magic Formula Verisi Güncelle** (`.github/workflows/magic-formula.yml`)
+
+- Her gün 22:40 TRT'de çalışır (GitHub zamanlanmış işleri bazen gecikmeli başlatır).
+- Yalnızca yeni bilanço açıklayan şirketlerin tablolarını indirir; diğerlerini ayda bir kontrol eder.
+- Sonuç değiştiyse siteyi kendisi yeniden yayınlar (`deploy.yml`'yi tetikler).
+- Baskın bilanço dönemi değişince (ör. 2026/6 → 2026/9) önceki dönemin son hali
+  arşivde kalır; sayfadaki "kadran değiştirenler" listesi buna göre kurulur.
+
+Elle yenilemek için: GitHub → **Actions** → **Magic Formula Verisi Güncelle** → **Run workflow**.
+
+### Sorun giderme
+
+| Sorun | Muhtemel neden | Çözüm |
+|-------|---------------|-------|
+| Sayfada "Veri henüz hazır değil" | `public/data/magic-formula.json` yok | İş akışını elle çalıştır |
+| Bir şirket haritada yok | Finansal şirket ya da "Haritada olmayan şirketler" listesindeki neden | Sayfadaki listeye bak |
+| İş akışı kırmızı (başarısız) | BilancoVeri / Borsa İstanbul geçici olarak erişilemez | Ertesi gün kendiliğinden düzelir; önceki veri sayfada kalır |
+| Testler başarısız | `scripts/mf_lib.py` değiştirilmiş | Değişikliği geri al ya da testi güncelle |
 
 ---
 
@@ -198,7 +269,7 @@ Hangi hisselerin BIST 100'ü ne kadar etkilediğini gösterir.
 | Workflow | Dosya | Ne zaman çalışır? |
 |----------|-------|-------------------|
 | BIST 100 Endeks Ağırlıkları | `fetch-endeks-agirliklari.yml` | Pzt–Cuma 09:00 TRT |
-| BIST Fiyat Verisi | `fetch-prices.yml` | Pzt–Cuma 09:30–18:30 TRT (15 dk.) |
+| BIST Fiyat Verisi | `fetch-prices.yml` | Pzt–Cuma 09:30–18:30 TRT (15 dk.); veri değişince siteyi yeniden yayınlar |
 
 ### `agirlik_kaynagi` alanı nasıl kontrol edilir?
 

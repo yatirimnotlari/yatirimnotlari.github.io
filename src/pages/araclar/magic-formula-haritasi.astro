@@ -1,0 +1,1035 @@
+---
+import Base from '../../layouts/Base.astro';
+import { readFileSync, existsSync } from 'fs';
+import { resolve } from 'path';
+import {
+  hesapla,
+  VARSAYILAN_FILTRE,
+  EVREN_ADI,
+  KADRAN_ADI,
+  yuzde,
+  sira,
+  tarihTr,
+  donemTr,
+  type MfVeri,
+} from '../../lib/magicFormula';
+
+// Veri build sırasında okunur; GitHub Actions veriyi güncelleyince site yeniden derlenir.
+const jsonPath = resolve('public/data/magic-formula.json');
+const veri: MfVeri | null = existsSync(jsonPath) ? JSON.parse(readFileSync(jsonPath, 'utf-8')) : null;
+const sonuc = veri ? hesapla(veri.hisseler, VARSAYILAN_FILTRE) : null;
+const tabloIlk = sonuc ? sonuc.liste.slice(0, 30) : [];
+const idealler = sonuc ? sonuc.liste.filter((h) => h.kadran === 'ideal') : [];
+const sektorler = veri
+  ? [...new Set(veri.hisseler.map((h) => h.sektor))].sort((a, b) => a.localeCompare(b, 'tr'))
+  : [];
+const tickerlar = veri ? veri.hisseler.map((h) => h.ticker).sort() : [];
+// </script> kaçışı: JSON içinde "<" karakteri < olarak yazılır
+const veriJson = veri ? JSON.stringify(veri).replace(/</g, '\\u003c') : 'null';
+const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
+---
+
+<Base
+  title="BIST Magic Formula Haritası"
+  description="Joel Greenblatt'ın Magic Formula yöntemi Borsa İstanbul'da: ucuzluk (FVÖK / firma değeri) ve kalite (ROIC) haritası, sıralama tablosu. Her gün güncellenir."
+>
+  <div class="mf-page">
+    <a class="back-link" href="/araclar/">← Araçlar</a>
+
+    <header class="mf-header">
+      <p class="eyebrow">Greenblatt Magic Formula · BIST</p>
+      <h1>Magic Formula Haritası</h1>
+      <p class="intro">
+        Joel Greenblatt'ın formülü iki soruyu birlikte sorar: şirket <strong>ucuz</strong> mu, işi
+        <strong>kaliteli</strong> mi? Yatay eksen ucuzluğu (FVÖK / firma değeri), dikey eksen kaliteyi
+        (yatırılan sermaye getirisi) gösterir. Sağ-üst köşedekiler ikisinde de evrenin ortasının üzerinde.
+      </p>
+      {veri && (
+        <p class="meta-line" id="meta-line">
+          Fiyatlar: {tarihTr(veri.fiyat_tarihi)} · Bilançolar: {donemTr(veri.baskin_donem)} (son 12 ay) ·
+          {' '}{veri.ozet.hesaplanan} şirket hesaplandı
+        </p>
+      )}
+    </header>
+
+    {!veri || !sonuc ? (
+      <div class="empty-card">
+        <p><strong>Veri henüz hazır değil.</strong></p>
+        <p>GitHub Actions'taki "Magic Formula Verisi Güncelle" iş akışı ilk kez çalıştığında harita burada görünecek.</p>
+      </div>
+    ) : (
+      <>
+        <!-- Filtreler: tek satır, aşağıdaki her şeyi etkiler -->
+        <section class="filter-bar" aria-label="Filtreler">
+          <div class="segmented" role="group" aria-label="Evren">
+            {(['XU030', 'XU050', 'XU100', 'TUM'] as const).map((e) => (
+              <button type="button" class:list={['seg-btn', { active: e === VARSAYILAN_FILTRE.evren }]} data-evren={e} aria-pressed={e === VARSAYILAN_FILTRE.evren ? 'true' : 'false'}>
+                {EVREN_ADI[e]}
+              </button>
+            ))}
+          </div>
+          <label class="select-wrap">
+            <span class="sr-only">Sektör</span>
+            <select id="sektor-sec" aria-label="Sektör">
+              <option value="">Tüm sektörler</option>
+              {sektorler.map((s) => <option value={s}>{s}</option>)}
+            </select>
+          </label>
+          <label class="check"><input type="checkbox" id="holding-sec" /> Holdingler</label>
+          <label class="check"><input type="checkbox" id="zarar-sec" /> Zarar edenler</label>
+          <div class="search-wrap">
+            <label for="hisse-ara" class="sr-only">Hisse ara</label>
+            <input id="hisse-ara" type="search" list="hisse-listesi" placeholder="Hisse ara (ör. FROTO)" autocomplete="off" spellcheck="false" />
+            <datalist id="hisse-listesi">
+              {tickerlar.map((t) => <option value={t} />)}
+            </datalist>
+          </div>
+        </section>
+        <p id="durum-notu" class="status-note" aria-live="polite" hidden></p>
+
+        <!-- Özet -->
+        <section class="summary-grid" aria-label="Özet">
+          <div><span>Sağ-üst köşede</span><strong id="ozet-ideal">{idealler.length} şirket</strong></div>
+          <div><span>Medyan ucuzluk</span><strong id="ozet-ey">{yuzde(sonuc.medyanEy)}</strong></div>
+          <div><span>Medyan kalite</span><strong id="ozet-roic">{yuzde(sonuc.medyanRoic)}</strong></div>
+          <div><span>Haritadaki şirket</span><strong id="ozet-n">{sonuc.liste.length}</strong></div>
+        </section>
+
+        <!-- Harita -->
+        <section class="chart-card" aria-labelledby="harita-baslik">
+          <div class="chart-head">
+            <h2 id="harita-baslik">Ucuzluk × kalite</h2>
+            <ul class="legend" aria-label="Gösterim">
+              <li><span class="key key-ideal"></span>Ucuz + kaliteli (sağ-üst)</li>
+              <li><span class="key key-diger"></span>Diğer şirketler</li>
+              <li><span class="key key-halka"></span>Magic Formula ilk 5</li>
+              <li><span class="key key-medyan"></span>Medyan</li>
+            </ul>
+            <button type="button" id="png-indir" class="ghost-btn small-btn" title="Haritayı paylaşılabilir PNG olarak indir">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              PNG indir
+            </button>
+          </div>
+          <div id="mf-chart" class="chart" role="img" aria-label="Magic Formula dağılım grafiği: yatay eksende ucuzluk, dikey eksende kalite. Değerler aşağıdaki tabloda da yer alır."></div>
+          <p class="chart-note">
+            Kesikli çizgiler seçili evrenin medyanlarıdır. Eksen dışında kalan uç değerler kenarda ◆ ile gösterilir;
+            gerçek değer üzerine gelince görünür. Noktaya tıklayınca hisse işaretlenir.
+          </p>
+        </section>
+
+        <!-- Sağ-üst köşedekiler -->
+        <section class="block" aria-labelledby="ideal-baslik">
+          <div class="block-head">
+            <h2 id="ideal-baslik">Sağ-üst köşedekiler</h2>
+            <p>Magic Formula sırasına göre. Tıklayınca haritada işaretlenir.</p>
+          </div>
+          <div id="ideal-liste" class="chip-list">
+            {idealler.map((h) => (
+              <button type="button" class="chip" data-ticker={h.ticker}>
+                <strong>{h.ticker}</strong><span>#{h.mf_sira}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <!-- Kadran değiştirenler (önceki çeyreğe göre) -->
+        <section id="degisim" class="block" aria-labelledby="degisim-baslik" hidden>
+          <div class="block-head">
+            <h2 id="degisim-baslik">Önceki çeyreğe göre kadran değiştirenler</h2>
+            <p id="degisim-aciklama"></p>
+          </div>
+          <div class="change-grid">
+            <div>
+              <h3>Sağ-üst köşeye girenler</h3>
+              <div id="girenler" class="chip-list"></div>
+            </div>
+            <div>
+              <h3>Sağ-üst köşeden çıkanlar</h3>
+              <div id="cikanlar" class="chip-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sıralama tablosu -->
+        <section class="block table-card" aria-labelledby="tablo-baslik">
+          <div class="block-head padded">
+            <h2 id="tablo-baslik">Magic Formula sıralaması</h2>
+            <p>Seçili evrende ucuzluk sırası + kalite sırası; en düşük toplam en iyisi.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="numeric">#</th>
+                  <th>Hisse</th>
+                  <th>Sektör</th>
+                  <th class="numeric">Ucuzluk</th>
+                  <th class="numeric">Kalite</th>
+                  <th class="numeric">Ucuzluk sırası</th>
+                  <th class="numeric">Kalite sırası</th>
+                  <th class="numeric">Skor</th>
+                  <th>Kadran</th>
+                </tr>
+              </thead>
+              <tbody id="tablo-govde">
+                {tabloIlk.map((h) => (
+                  <tr data-ticker={h.ticker} tabindex="0" class:list={[{ ideal: h.kadran === 'ideal' }]}>
+                    <td class="numeric">{h.mf_sira}</td>
+                    <td><span class="ticker">{h.ticker}</span><span class="company">{h.ad}</span></td>
+                    <td class="muted">{h.sektor}</td>
+                    <td class="numeric">{yuzde(h.ey)}</td>
+                    <td class="numeric">{yuzde(h.roic)}</td>
+                    <td class="numeric muted">{sira(h.ey_sira)}</td>
+                    <td class="numeric muted">{sira(h.roic_sira)}</td>
+                    <td class="numeric">{sira(h.mf_skor)}</td>
+                    <td><span class:list={['badge', `badge-${h.kadran}`]}>{KADRAN_ADI[h.kadran]}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="table-foot">
+            <button type="button" id="tumunu-goster" class="ghost-btn">Tümünü göster ({sonuc.liste.length})</button>
+          </div>
+        </section>
+
+        <!-- Yöntem -->
+        <section class="method" aria-labelledby="yontem-baslik">
+          <h2 id="yontem-baslik">Yöntem</h2>
+          <dl class="formula-list">
+            <div>
+              <dt>Ucuzluk</dt>
+              <dd><code>FVÖK / Firma değeri</code> — Greenblatt'ın "earnings yield" ölçüsü. Yüksek değer, şirketin kazancına göre ucuz olduğunu gösterir.</dd>
+            </div>
+            <div>
+              <dt>FVÖK</dt>
+              <dd>Son 12 ayın net faaliyet kârı: brüt kâr − pazarlama, satış ve dağıtım − genel yönetim − Ar-Ge giderleri. Kur farkı, vade farkı gibi esas faaliyetlerden diğer gelir/giderler ve parasal kazanç/kayıp dahil değildir. Ucuzluk hesabında FVÖK, bilanço tarihinden en son açıklanan TÜFE ayının parasına taşınır.</dd>
+            </div>
+            <div>
+              <dt>Firma değeri</dt>
+              <dd>Piyasa değeri + kısa ve uzun vadeli finansal borçlar − nakit ve kısa vadeli finansal yatırımlar + azınlık payları.</dd>
+            </div>
+            <div>
+              <dt>Kalite (ROIC)</dt>
+              <dd><code>FVÖK / (net işletme sermayesi + maddi duran varlıklar + kullanım hakkı varlıkları + yatırım amaçlı gayrimenkuller)</code>. Net işletme sermayesi = (dönen varlıklar − nakit − KV finansal yatırımlar) − (KV yükümlülükler − KV finansal borçlar); negatifse sıfır alınır.</dd>
+            </div>
+            <div>
+              <dt>Sıra ve kadranlar</dt>
+              <dd>Seçili evrendeki her şirket ucuzlukta ve kalitede ayrı ayrı sıralanır; iki sıranın toplamı Magic Formula skorudur. Kesikli çizgiler seçili evrenin medyanlarıdır, bu yüzden evren değişince kadranlar da değişir.</dd>
+            </div>
+            <div>
+              <dt>Enflasyon muhasebesi</dt>
+              <dd>Bilançolar TMS 29'a göre enflasyona göre düzeltilmiştir. Son 12 ay hesabındaki bütün rakamlar son bilançonun satın alma gücündedir (cari dönem + önceki yıl − önceki yılın aynı dönemi).</dd>
+            </div>
+            <div>
+              <dt>Kapsam dışı</dt>
+              <dd>Greenblatt'ın kuralıyla finansal şirketler (banka, sigorta, aracı kurum, finansal kiralama/faktoring, yatırım ortaklıkları, GYO) ve farklı mali yıl kullanan spor kulüpleri haritada yer almaz. Holdingler bağlı finans şirketleri nedeniyle varsayılan olarak gizlidir. Yöntemin anlamlı olmadığı şirketler de sıralamaya girmez: firma değeri ya da yatırılan sermayesi sıfırın altında olanlar, FVÖK'ü satışlarının %90'ını aşanlar (gelirin çoğu yatırım/değerleme geliri), yatırılan sermayesi toplam varlıklarının %2'sinden az olanlar ve bilançosu iki çeyrekten eski olanlar. Hepsi aşağıdaki listede nedenleriyle yer alır.</dd>
+            </div>
+          </dl>
+          <p class="method-foot">
+            Veri her gün 22:40 civarında otomatik yenilenir; yeni bilanço açıklayan şirketler kendiliğinden güncellenir.
+            Uç değerler (çok küçük sermayeli şirketler, tek seferlik kalemler) ve fonksiyonel para birimi TL olmayan
+            şirketler (ör. havayolları) için rakamları şirketin kendi raporuyla birlikte değerlendirin.
+            Magic Formula tek başına alım-satım sinyali değildir.
+          </p>
+        </section>
+
+        <!-- Haritada olmayanlar -->
+        <details class="excluded">
+          <summary>Haritada olmayan şirketler ({veri.disarida.length} + {kapsamDisi.reduce((a, [, n]) => a + n, 0)} kapsam dışı)</summary>
+          <p class="muted small">
+            Kapsam dışı: {kapsamDisi.map(([neden, n]) => `${neden} (${n})`).join(' · ')}.
+          </p>
+          {veri.disarida.length > 0 && (
+            <div class="table-wrap">
+              <table class="compact">
+                <thead><tr><th>Hisse</th><th>Şirket</th><th>Neden</th></tr></thead>
+                <tbody>
+                  {veri.disarida.map((d) => (
+                    <tr><td><span class="ticker">{d.ticker}</span></td><td class="muted">{d.ad}</td><td class="muted">{d.neden}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </details>
+
+        <p class="legal-note">
+          Veri: KAP/Borsa İstanbul, derleyen <a href="https://bilancoveri.com" rel="noopener" target="_blank">BilancoVeri.com</a> ·
+          Endeks üyelikleri: Borsa İstanbul · TÜFE: TCMB/TÜİK. Fiyatlar en az 15 dakika gecikmelidir.
+          Bu sayfa yalnızca bilgi amaçlıdır; yatırım tavsiyesi değildir. Ayrıntılar için <a href="/yasal-uyari/">Yasal Uyarı</a>.
+        </p>
+
+        <script type="application/json" id="mf-veri" is:inline set:html={veriJson}></script>
+      </>
+    )}
+  </div>
+</Base>
+
+<style is:global>
+  .mf-page {
+    --mf-ideal: #b5702f;
+    --mf-diger: #9ea6b3;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3.5rem;
+  }
+  [data-theme='dark'] .mf-page {
+    --mf-ideal: #c8823f;
+    --mf-diger: #687081;
+  }
+  .mf-page .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .mf-page .back-link { display: inline-block; margin-bottom: 1.25rem; color: var(--text-muted); font-size: 0.875rem; }
+  .mf-page .eyebrow { margin: 0 0 0.45rem; color: var(--warm-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .mf-page h1 { margin: 0 0 0.65rem; font-size: clamp(1.85rem, 4vw, 2.65rem); line-height: 1.15; }
+  .mf-page .intro { max-width: 720px; margin: 0; color: var(--text-muted); font-size: 1rem; line-height: 1.65; }
+  .mf-page .intro strong { color: var(--text); font-weight: 600; }
+  .mf-page .meta-line { margin: 0.75rem 0 0; color: var(--text-muted); font-size: 0.8rem; }
+  .mf-page .mf-header { margin-bottom: 1.5rem; }
+
+  .mf-page .empty-card { padding: 2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text-muted); text-align: center; }
+  .mf-page .empty-card p { margin: 0.3rem 0; }
+
+  /* Filtre satırı */
+  .mf-page .filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; }
+  .mf-page .segmented { display: inline-flex; padding: 3px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-secondary); }
+  .mf-page .seg-btn { min-height: 34px; padding: 0.3rem 0.8rem; border: 0; border-radius: 7px; background: transparent; color: var(--text-muted); font: 500 0.84rem var(--font-body); cursor: pointer; white-space: nowrap; }
+  .mf-page .seg-btn:hover { color: var(--text); }
+  .mf-page .seg-btn.active { background: var(--accent); color: var(--bg); }
+  .mf-page .seg-btn:focus-visible, .mf-page .ghost-btn:focus-visible, .mf-page .chip:focus-visible, .mf-page select:focus-visible, .mf-page input:focus-visible, .mf-page tbody tr:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent); outline-offset: 2px;
+  }
+  .mf-page select, .mf-page .search-wrap input {
+    min-height: 40px; padding: 0.35rem 0.7rem; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--card-bg); color: var(--text); font: 0.86rem var(--font-body);
+  }
+  .mf-page .search-wrap input { width: 190px; }
+  .mf-page .check { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 40px; padding: 0 0.3rem; color: var(--text-muted); font-size: 0.86rem; cursor: pointer; user-select: none; }
+  .mf-page .check input { width: 16px; height: 16px; accent-color: var(--accent); }
+  .mf-page .ghost-btn { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 40px; padding: 0.35rem 0.85rem; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); font: 500 0.84rem var(--font-body); cursor: pointer; }
+  .mf-page .ghost-btn:hover { border-color: var(--accent); }
+  .mf-page .small-btn { min-height: 32px; padding: 0.25rem 0.7rem; font-size: 0.8rem; }
+  .mf-page .status-note { margin: 0 0 0.75rem; padding: 0.55rem 0.8rem; border-left: 3px solid var(--accent); background: var(--bg-secondary); color: var(--text); font-size: 0.84rem; }
+
+  /* Özet */
+  .mf-page .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); overflow: hidden; }
+  .mf-page .summary-grid div { padding: 0.85rem 1.2rem; border-right: 1px solid var(--border); }
+  .mf-page .summary-grid div:last-child { border-right: 0; }
+  .mf-page .summary-grid span { display: block; margin-bottom: 0.2rem; color: var(--text-muted); font-size: 0.75rem; }
+  .mf-page .summary-grid strong { color: var(--text); font-size: 1.15rem; font-weight: 600; }
+
+  /* Harita kartı */
+  .mf-page .chart-card { padding: 1.1rem 1.1rem 0.9rem; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); box-shadow: 0 10px 32px rgba(28, 25, 23, 0.045); }
+  .mf-page .chart-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1.5rem; padding: 0 0.3rem 0.4rem; }
+  .mf-page .chart-head h2 { margin: 0; font-size: 1.05rem; }
+  .mf-page .legend { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin: 0; padding: 0; list-style: none; color: var(--text-muted); font-size: 0.78rem; }
+  .mf-page .legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .mf-page .key { display: inline-block; flex-shrink: 0; }
+  .mf-page .key-ideal, .mf-page .key-diger { width: 10px; height: 10px; border-radius: 50%; }
+  .mf-page .key-ideal { background: var(--mf-ideal); }
+  .mf-page .key-diger { background: var(--mf-diger); }
+  .mf-page .key-halka { width: 14px; height: 14px; border: 1.5px solid var(--text); border-radius: 50%; }
+  .mf-page .key-medyan { width: 18px; border-top: 1.5px dashed var(--text-muted); }
+  .mf-page .chart { width: 100%; height: min(72vh, 640px); min-height: 420px; }
+  .mf-page .chart-note { margin: 0.4rem 0.3rem 0; color: var(--text-muted); font-size: 0.76rem; line-height: 1.5; }
+
+  /* Bloklar */
+  .mf-page .block { margin-top: 1.5rem; }
+  .mf-page .block-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1rem; margin-bottom: 0.7rem; }
+  .mf-page .block-head h2 { margin: 0; font-size: 1.2rem; }
+  .mf-page .block-head p { margin: 0; color: var(--text-muted); font-size: 0.82rem; }
+  .mf-page .block-head.padded { padding: 1.2rem 1.4rem 0; }
+  .mf-page .chip-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .mf-page .chip { display: inline-flex; align-items: baseline; gap: 0.4rem; min-height: 34px; padding: 0.35rem 0.65rem; border: 1px solid color-mix(in srgb, var(--mf-ideal) 45%, var(--border)); border-radius: 8px; background: color-mix(in srgb, var(--mf-ideal) 9%, var(--card-bg)); color: var(--text); font: 0.82rem var(--font-body); cursor: pointer; }
+  .mf-page .chip strong { font-weight: 700; letter-spacing: 0.02em; }
+  .mf-page .chip span { color: var(--text-muted); font-size: 0.74rem; }
+  .mf-page .chip:hover, .mf-page .chip.selected { border-color: var(--accent); }
+  .mf-page .chip.neutral { border-color: var(--border); background: var(--bg-secondary); }
+  .mf-page .empty-chips { color: var(--text-muted); font-size: 0.84rem; }
+  .mf-page .change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .mf-page .change-grid > div { padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); }
+  .mf-page .change-grid h3 { margin: 0 0 0.6rem; font-size: 0.92rem; }
+
+  /* Tablo */
+  .mf-page .table-card { border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); overflow: hidden; }
+  .mf-page .table-wrap { overflow-x: auto; }
+  .mf-page table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .mf-page th, .mf-page td { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  .mf-page th { color: var(--text-muted); background: var(--bg-secondary); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
+  .mf-page tbody tr { cursor: pointer; }
+  .mf-page tbody tr:hover { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+  .mf-page tbody tr.selected { background: color-mix(in srgb, var(--accent) 11%, transparent); }
+  .mf-page .numeric { text-align: right; font-variant-numeric: tabular-nums; }
+  .mf-page .muted { color: var(--text-muted); }
+  .mf-page .small { font-size: 0.8rem; }
+  .mf-page .ticker { display: block; font-weight: 700; color: var(--text); letter-spacing: 0.025em; }
+  .mf-page .company { display: block; max-width: 220px; overflow: hidden; text-overflow: ellipsis; color: var(--text-muted); font-size: 0.74rem; }
+  .mf-page .badge { display: inline-flex; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; background: var(--bg-secondary); color: var(--text-muted); }
+  .mf-page .badge-ideal { background: color-mix(in srgb, var(--mf-ideal) 16%, transparent); color: var(--text); }
+  .mf-page .table-foot { padding: 0.75rem 1rem; border-top: 1px solid var(--border); background: var(--bg-secondary); }
+  .mf-page table.compact th, .mf-page table.compact td { padding: 0.45rem 0.8rem; white-space: normal; }
+
+  /* Yöntem */
+  .mf-page .method { margin-top: 1.75rem; padding: 1.2rem 1.4rem; border-left: 3px solid var(--warm-accent); background: var(--bg-secondary); border-radius: 0 10px 10px 0; }
+  .mf-page .method h2 { margin: 0 0 0.8rem; font-size: 1.15rem; }
+  .mf-page .formula-list { display: grid; gap: 0.7rem; margin: 0; }
+  .mf-page .formula-list div { display: grid; grid-template-columns: 150px 1fr; gap: 1rem; }
+  .mf-page .formula-list dt { color: var(--text); font-weight: 600; font-size: 0.86rem; }
+  .mf-page .formula-list dd { margin: 0; color: var(--text-muted); font-size: 0.86rem; line-height: 1.6; }
+  .mf-page .formula-list code { padding: 0.1em 0.35em; border: 1px solid var(--border); border-radius: 4px; background: var(--card-bg); color: var(--text); font-size: 0.82em; }
+  .mf-page .method-foot { margin: 0.9rem 0 0; color: var(--text-muted); font-size: 0.8rem; line-height: 1.6; }
+  .mf-page .excluded { margin-top: 1rem; padding: 0.8rem 1.1rem; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); }
+  .mf-page .excluded summary { cursor: pointer; color: var(--text); font-size: 0.88rem; font-weight: 600; }
+  .mf-page .excluded .table-wrap { max-height: 340px; overflow: auto; margin-top: 0.6rem; }
+  .mf-page .legal-note { margin: 1.1rem 0 0; color: var(--text-muted); font-size: 0.75rem; line-height: 1.6; }
+
+  @media (max-width: 760px) {
+    .mf-page .summary-grid { grid-template-columns: 1fr 1fr; }
+    .mf-page .summary-grid div:nth-child(2) { border-right: 0; }
+    .mf-page .summary-grid div:nth-child(-n + 2) { border-bottom: 1px solid var(--border); }
+    .mf-page .search-wrap, .mf-page .search-wrap input { width: 100%; }
+    .mf-page .search-wrap { flex: 1 1 100%; }
+    .mf-page .chart { height: 68vh; min-height: 380px; }
+    .mf-page .change-grid { grid-template-columns: 1fr; }
+    .mf-page .formula-list div { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+</style>
+
+<script>
+  import * as echarts from 'echarts/core';
+  import { ScatterChart } from 'echarts/charts';
+  import { GridComponent, TooltipComponent, MarkLineComponent, MarkAreaComponent } from 'echarts/components';
+  import { LabelLayout } from 'echarts/features';
+  import { CanvasRenderer } from 'echarts/renderers';
+  import {
+    hesapla,
+    kadranDegisimleri,
+    VARSAYILAN_FILTRE,
+    EVREN_ADI,
+    KADRAN_ADI,
+    yuzde,
+    tutar,
+    sira,
+    tarihTr,
+    donemTr,
+    type MfVeri,
+    type MfFiltre,
+    type MfSirali,
+    type MfSonuc,
+  } from '../../lib/magicFormula';
+
+  echarts.use([ScatterChart, GridComponent, TooltipComponent, MarkLineComponent, MarkAreaComponent, LabelLayout, CanvasRenderer]);
+
+  const veriEl = document.getElementById('mf-veri');
+  const veri: MfVeri | null = veriEl ? JSON.parse(veriEl.textContent || 'null') : null;
+
+  if (veri) baslat(veri);
+
+  function baslat(veri: MfVeri) {
+    const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+    const grafikEl = $('mf-chart')!;
+    const tabloGovde = $<HTMLTableSectionElement>('tablo-govde')!;
+    const tumunuBtn = $<HTMLButtonElement>('tumunu-goster')!;
+    const sektorSec = $<HTMLSelectElement>('sektor-sec')!;
+    const holdingSec = $<HTMLInputElement>('holding-sec')!;
+    const zararSec = $<HTMLInputElement>('zarar-sec')!;
+    const araInput = $<HTMLInputElement>('hisse-ara')!;
+    const durumNotu = $<HTMLParagraphElement>('durum-notu')!;
+    const idealListe = $('ideal-liste')!;
+
+    const filtre: MfFiltre = { ...VARSAYILAN_FILTRE };
+    let secili: string | null = null;
+    let tumu = false;
+    let sonuc: MfSonuc = hesapla(veri.hisseler, filtre);
+    const tumHisseler = new Map(veri.hisseler.map((h) => [h.ticker, h]));
+
+    // ─── Renkler (CSS değişkenlerinden; tema değişince yeniden okunur) ───────
+    function renkler() {
+      const kok = getComputedStyle(document.documentElement);
+      const sayfa = getComputedStyle(document.querySelector('.mf-page') as HTMLElement);
+      const v = (s: CSSStyleDeclaration, ad: string, yedek: string) => s.getPropertyValue(ad).trim() || yedek;
+      return {
+        metin: v(kok, '--text', '#1C1917'),
+        soluk: v(kok, '--text-muted', '#6B6459'),
+        cizgi: v(kok, '--border', '#E7E5E0'),
+        yuzey: v(kok, '--card-bg', '#FFFFFF'),
+        vurgu: v(kok, '--accent', '#4A5B7A'),
+        ideal: v(sayfa, '--mf-ideal', '#b5702f'),
+        diger: v(sayfa, '--mf-diger', '#9ea6b3'),
+        fontGovde: v(kok, '--font-body', 'Inter, system-ui, sans-serif'),
+      };
+    }
+
+    const esc = (s: unknown) =>
+      String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    // ─── Eksen sınırları (uç değerler kenara sabitlenir) ───────────────────
+    function yuzdelik(v: number[], p: number) {
+      const s = [...v].sort((a, b) => a - b);
+      if (!s.length) return 0;
+      const i = (s.length - 1) * p;
+      const a = Math.floor(i), b = Math.ceil(i);
+      return s[a] + (s[b] - s[a]) * (i - a);
+    }
+    function guzelYukari(x: number) {
+      const adim = x <= 20 ? 2 : x <= 60 ? 5 : x <= 150 ? 10 : 25;
+      return Math.ceil(x / adim) * adim;
+    }
+    function guzelAsagi(x: number) {
+      const adim = Math.abs(x) <= 20 ? 2 : Math.abs(x) <= 60 ? 5 : 10;
+      return Math.floor(x / adim) * adim;
+    }
+    // Üst sınır: en büyük değer; ancak tek tük uç değerler (ilk %10'un iki katından
+    // ve medyanın üç katından büyükler) eksen kenarına sabitlenir ki geri kalanı ezilmesin.
+    function ustSinir(v: number[], m: number | null) {
+      if (!v.length) return 1;
+      const enBuyuk = Math.max(...v);
+      if (v.length < 12) return enBuyuk * 1.1;
+      const tavan = Math.max(yuzdelik(v, 0.9) * 2, Math.abs(m ?? 0) * 3);
+      return Math.min(enBuyuk, tavan) * 1.07;
+    }
+    function altSinir(v: number[], m: number | null) {
+      if (!v.length) return 0;
+      const enKucuk = Math.min(...v);
+      if (enKucuk >= 0) return 0;
+      if (v.length < 12) return enKucuk * 1.1;
+      const taban = Math.min(yuzdelik(v, 0.1) * 2, -Math.abs(m ?? 0) * 3);
+      return Math.max(enKucuk, taban) * 1.07;
+    }
+    function sinirlar(liste: MfSirali[], mx: number | null, my: number | null) {
+      const xs = liste.map((h) => h.ey);
+      const ys = liste.map((h) => h.roic);
+      let xMax = ustSinir(xs, mx);
+      let yMax = ustSinir(ys, my);
+      const xMinHam = altSinir(xs, mx);
+      const yMinHam = altSinir(ys, my);
+      const xMin = xMinHam < 0 ? guzelAsagi(xMinHam) : 0;
+      const yMin = yMinHam < 0 ? guzelAsagi(yMinHam) : 0;
+      xMax = guzelYukari(Math.max(xMax, 1));
+      yMax = guzelYukari(Math.max(yMax, 1));
+      return { xMin, xMax, yMin, yMax };
+    }
+
+    // ─── Grafik ─────────────────────────────────────────────────────────────
+    let grafik: echarts.ECharts | null = null;
+
+    function etiketlenecekler(liste: MfSirali[]) {
+      const dar = grafikEl.clientWidth < 560;
+      const n = liste.length <= 25 && !dar ? liste.length : dar ? 5 : 10;
+      const set = new Set(liste.slice(0, n).map((h) => h.ticker));
+      if (secili) set.add(secili);
+      return set;
+    }
+
+    function secenekKur(r: ReturnType<typeof renkler>, genislik: number, disaAktarim = false): echarts.EChartsCoreOption {
+      const { liste, medyanEy: mx, medyanRoic: my } = sonuc;
+      const { xMin, xMax, yMin, yMax } = sinirlar(liste, mx, my);
+      const etiketli = etiketlenecekler(liste);
+      const ilk5 = new Set(liste.slice(0, 5).map((h) => h.ticker));
+      const dar = genislik < 560;
+      const yazi = disaAktarim ? 1.55 : 1;
+
+      const noktalar = liste.map((h) => {
+        const x = Math.min(Math.max(h.ey, xMin), xMax);
+        const y = Math.min(Math.max(h.roic, yMin), yMax);
+        const kirpik = x !== h.ey || y !== h.roic;
+        // Kenara sabitlenen noktaların etiketi grafiğin içine doğru yazılır
+        const konum = y >= yMax ? 'bottom' : x >= xMax ? 'left' : 'top';
+        const ideal = h.kadran === 'ideal';
+        const vurgulu = ilk5.has(h.ticker) || h.ticker === secili;
+        return {
+          value: [x, y],
+          name: h.ticker,
+          symbol: kirpik ? 'diamond' : 'circle',
+          symbolSize: (vurgulu ? 13 : ideal ? 11 : 9) * (disaAktarim ? 1.3 : 1),
+          itemStyle: { color: ideal ? r.ideal : r.diger, borderColor: r.yuzey, borderWidth: 2 },
+          label: {
+            show: etiketli.has(h.ticker),
+            formatter: h.ticker,
+            position: konum as 'top' | 'bottom' | 'left',
+            distance: vurgulu ? 9 : 6,
+            color: vurgulu || ideal ? r.metin : r.soluk,
+            fontWeight: (vurgulu ? 700 : 500) as 700 | 500,
+            fontSize: Math.round((vurgulu ? 12 : 11) * yazi),
+            fontFamily: r.fontGovde,
+          },
+          z: ideal ? 3 : 2,
+          h,
+        };
+      });
+
+      const halkalar = liste
+        .filter((h) => ilk5.has(h.ticker) || h.ticker === secili)
+        .map((h) => ({
+          value: [Math.min(Math.max(h.ey, xMin), xMax), Math.min(Math.max(h.roic, yMin), yMax)],
+          name: h.ticker,
+          symbolSize: (h.ticker === secili ? 30 : 24) * (disaAktarim ? 1.3 : 1),
+          itemStyle: {
+            color: 'rgba(0,0,0,0)',
+            borderColor: h.ticker === secili ? r.vurgu : r.metin,
+            borderWidth: h.ticker === secili ? 2.5 : 1.5,
+          },
+        }));
+
+      const kadranEtiket = (metin: string, konum: string, guclu = false) => ({
+        show: true,
+        position: konum,
+        formatter: metin,
+        color: guclu ? r.metin : r.soluk,
+        fontSize: Math.round((dar ? 10 : 11.5) * yazi),
+        fontWeight: (guclu ? 700 : 500) as 700 | 500,
+        fontFamily: r.fontGovde,
+        backgroundColor: r.yuzey,
+        opacity: 0.92,
+        borderRadius: 4,
+        padding: [3, 6],
+        distance: 6,
+      });
+      const kadranlar =
+        mx !== null && my !== null
+          ? [
+              [{ coord: [xMin, my], label: kadranEtiket(KADRAN_ADI.pahali, 'insideTopLeft') }, { coord: [mx, yMax] }],
+              [{ coord: [mx, my], itemStyle: { color: r.ideal, opacity: 0.09 }, label: kadranEtiket(KADRAN_ADI.ideal, 'insideTopRight', true) }, { coord: [xMax, yMax] }],
+              [{ coord: [xMin, yMin], label: kadranEtiket(KADRAN_ADI.zayif, 'insideBottomLeft') }, { coord: [mx, my] }],
+              [{ coord: [mx, yMin], label: kadranEtiket(KADRAN_ADI.vasat, 'insideBottomRight') }, { coord: [xMax, my] }],
+            ]
+          : [];
+
+      const eksenYazi = { color: r.soluk, fontSize: Math.round(11 * yazi), fontFamily: r.fontGovde };
+      return {
+        animation: !disaAktarim,
+        animationDurationUpdate: 300,
+        backgroundColor: disaAktarim ? r.yuzey : 'transparent',
+        textStyle: { fontFamily: r.fontGovde },
+        grid: disaAktarim
+          ? { left: 88, right: 30, top: 34, bottom: 86 }
+          : { left: dar ? 46 : 60, right: dar ? 14 : 24, top: 18, bottom: dar ? 52 : 58 },
+        xAxis: {
+          type: 'value',
+          min: xMin,
+          max: xMax,
+          name: 'Ucuzluk →  FVÖK / firma değeri (%)',
+          nameLocation: 'middle',
+          nameGap: disaAktarim ? 52 : dar ? 30 : 36,
+          nameTextStyle: { ...eksenYazi, color: r.metin, fontSize: Math.round(12 * yazi) },
+          axisLine: { lineStyle: { color: r.cizgi } },
+          axisTick: { show: false },
+          axisLabel: { ...eksenYazi, formatter: (v: number) => `%${v}` },
+          splitLine: { lineStyle: { color: r.cizgi, width: 1, type: 'solid' } },
+        },
+        yAxis: {
+          type: 'value',
+          min: yMin,
+          max: yMax,
+          name: 'Kalite →  ROIC (%)',
+          nameLocation: 'middle',
+          nameGap: disaAktarim ? 62 : dar ? 34 : 44,
+          nameTextStyle: { ...eksenYazi, color: r.metin, fontSize: Math.round(12 * yazi) },
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { ...eksenYazi, formatter: (v: number) => `%${v}` },
+          splitLine: { lineStyle: { color: r.cizgi, width: 1, type: 'solid' } },
+        },
+        tooltip: {
+          trigger: 'item',
+          confine: true,
+          backgroundColor: r.yuzey,
+          borderColor: r.cizgi,
+          borderWidth: 1,
+          padding: [10, 12],
+          textStyle: { color: r.metin, fontSize: 12, fontFamily: r.fontGovde },
+          extraCssText: 'border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);',
+          formatter: (p: any) => (p?.data?.h ? ipucu(p.data.h, r) : ''),
+        },
+        series: [
+          {
+            id: 'alanlar',
+            type: 'scatter',
+            data: [],
+            silent: true,
+            markArea: { silent: true, itemStyle: { color: 'rgba(0,0,0,0)' }, data: kadranlar },
+            markLine:
+              mx !== null && my !== null
+                ? {
+                    silent: true,
+                    symbol: 'none',
+                    lineStyle: { color: r.soluk, type: [5, 4], width: 1.2 },
+                    label: { color: r.soluk, fontSize: Math.round(10.5 * yazi), fontFamily: r.fontGovde, formatter: (p: any) => `medyan ${yuzde(p.value)}` },
+                    data: [
+                      { xAxis: mx, label: { position: 'end' } },
+                      { yAxis: my, label: { position: 'insideEndTop' } },
+                    ],
+                  }
+                : undefined,
+          },
+          {
+            id: 'halkalar',
+            type: 'scatter',
+            data: halkalar,
+            silent: true,
+            z: 1,
+          },
+          {
+            id: 'noktalar',
+            type: 'scatter',
+            data: noktalar,
+            cursor: 'pointer',
+            emphasis: { scale: 1.35, itemStyle: { borderColor: r.metin, borderWidth: 1.5 }, label: { show: true } },
+            labelLayout: { hideOverlap: true },
+          },
+          // Görünmez geniş tıklama alanı (küçük noktaları yakalamak kolay olsun)
+          {
+            id: 'hedef',
+            type: 'scatter',
+            data: noktalar.map((n) => ({ value: n.value, name: n.name, h: n.h, symbolSize: 26 })),
+            itemStyle: { color: 'rgba(0,0,0,0)' },
+            emphasis: { disabled: true },
+            cursor: 'pointer',
+            z: 10,
+          },
+        ],
+      };
+    }
+
+    function ipucu(h: MfSirali, r: ReturnType<typeof renkler>) {
+      const satir = (ad: string, deger: string, ek = '') =>
+        `<tr><td style="padding:2px 14px 2px 0;color:${r.soluk}">${ad}</td><td style="padding:2px 0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums">${deger}</td><td style="padding:2px 0 2px 8px;color:${r.soluk};font-size:11px">${ek}</td></tr>`;
+      const notlar: string[] = [];
+      if (h.bayraklar.includes('yilliklandirilmis')) notlar.push('FVÖK yıllıklandırıldı (önceki yıl verisi yok)');
+      if (h.bayraklar.includes('onceki_donem')) notlar.push(`Bilanço bir çeyrek geride (${h.donem})`);
+      if (h.bayraklar.includes('zarar')) notlar.push('Son 12 ayda faaliyet zararı');
+      if (h.holding) notlar.push('Holding');
+      return `
+        <div style="min-width:230px;max-width:290px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+            <strong style="font-size:15px;letter-spacing:.02em">${esc(h.ticker)}</strong>
+            <span style="font-size:12px;color:${r.soluk}">MF sırası <strong style="color:${r.metin}">${h.mf_sira}</strong> / ${sonuc.liste.length}</span>
+          </div>
+          <div style="color:${r.soluk};font-size:11.5px;margin:2px 0 8px;white-space:normal">${esc(h.ad)} · ${esc(h.sektor)}</div>
+          <table style="border-collapse:collapse;font-size:12px;width:100%">
+            ${satir('Ucuzluk', yuzde(h.ey), `sıra ${sira(h.ey_sira)}`)}
+            ${satir('Kalite (ROIC)', yuzde(h.roic), `sıra ${sira(h.roic_sira)}`)}
+            ${satir('FVÖK (12 ay)', tutar(h.fvok))}
+            ${satir('Firma değeri', tutar(h.fd))}
+            ${satir('Piyasa değeri', tutar(h.piyasa_degeri))}
+            ${satir('Net borç', tutar(h.net_borc))}
+            ${satir('Yatırılan sermaye', tutar(h.sermaye))}
+            ${satir('Bilanço', esc(h.donem))}
+          </table>
+          <div style="margin-top:6px;font-size:11.5px;color:${r.soluk}">${esc(KADRAN_ADI[h.kadran])}${notlar.length ? ' · ' + notlar.map(esc).join(' · ') : ''}</div>
+        </div>`;
+    }
+
+    function grafigiCiz() {
+      if (!grafik) {
+        grafik = echarts.init(grafikEl, null, { renderer: 'canvas' });
+        grafik.on('click', (p: any) => {
+          const t = p?.data?.h?.ticker;
+          if (t) sec(secili === t ? null : t, false);
+        });
+        grafik.on('mouseover', { seriesId: 'hedef' }, (p: any) => {
+          grafik?.dispatchAction({ type: 'highlight', seriesId: 'noktalar', dataIndex: p.dataIndex });
+        });
+        grafik.on('mouseout', { seriesId: 'hedef' }, (p: any) => {
+          grafik?.dispatchAction({ type: 'downplay', seriesId: 'noktalar', dataIndex: p.dataIndex });
+        });
+        let zamanlayici: number | undefined;
+        window.addEventListener('resize', () => {
+          window.clearTimeout(zamanlayici);
+          zamanlayici = window.setTimeout(() => {
+            grafik?.resize();
+            grafigiCiz();
+          }, 150);
+        });
+      }
+      grafik.setOption(secenekKur(renkler(), grafikEl.clientWidth), { notMerge: true });
+    }
+
+    // ─── Diğer bölümler ──────────────────────────────────────────────────────
+    function yaz(id: string, metin: string) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = metin;
+    }
+
+    function ozetCiz() {
+      yaz('ozet-ideal', `${sonuc.liste.filter((h) => h.kadran === 'ideal').length} şirket`);
+      yaz('ozet-ey', yuzde(sonuc.medyanEy));
+      yaz('ozet-roic', yuzde(sonuc.medyanRoic));
+      yaz('ozet-n', String(sonuc.liste.length));
+    }
+
+    function chip(h: MfSirali, ek: string, notr = false) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip' + (notr ? ' neutral' : '') + (h.ticker === secili ? ' selected' : '');
+      b.dataset.ticker = h.ticker;
+      const s = document.createElement('strong');
+      s.textContent = h.ticker;
+      const e = document.createElement('span');
+      e.textContent = ek;
+      b.append(s, e);
+      return b;
+    }
+
+    function bosNot(metin: string) {
+      const p = document.createElement('span');
+      p.className = 'empty-chips';
+      p.textContent = metin;
+      return p;
+    }
+
+    function idealCiz() {
+      const idealler = sonuc.liste.filter((h) => h.kadran === 'ideal');
+      idealListe.replaceChildren(...(idealler.length ? idealler.map((h) => chip(h, `#${h.mf_sira}`)) : [bosNot('Bu seçimde sağ-üst köşede şirket yok.')]));
+    }
+
+    function degisimCiz() {
+      const kutu = document.getElementById('degisim');
+      if (!kutu) return;
+      const d = kadranDegisimleri(veri, sonuc);
+      if (!d) {
+        kutu.hidden = true;
+        return;
+      }
+      kutu.hidden = false;
+      yaz('degisim-aciklama', `${d.aciklama || donemTr(d.donem)} ile karşılaştırma · ${d.karsilastirilan} ortak şirket`);
+      const giren = document.getElementById('girenler')!;
+      const cikan = document.getElementById('cikanlar')!;
+      giren.replaceChildren(...(d.girenler.length ? d.girenler.map((h) => chip(h, `#${h.mf_sira}`)) : [bosNot('Yok')]));
+      cikan.replaceChildren(...(d.cikanlar.length ? d.cikanlar.map((h) => chip(h, KADRAN_ADI[h.kadran].toLocaleLowerCase('tr'), true)) : [bosNot('Yok')]));
+    }
+
+    function hucre(metin: string, sinif = '') {
+      const td = document.createElement('td');
+      if (sinif) td.className = sinif;
+      td.textContent = metin;
+      return td;
+    }
+
+    function tabloCiz() {
+      const satirlar = tumu ? sonuc.liste : sonuc.liste.slice(0, 30);
+      const frag = document.createDocumentFragment();
+      for (const h of satirlar) {
+        const tr = document.createElement('tr');
+        tr.dataset.ticker = h.ticker;
+        tr.tabIndex = 0;
+        if (h.kadran === 'ideal') tr.classList.add('ideal');
+        if (h.ticker === secili) tr.classList.add('selected');
+        const hisse = document.createElement('td');
+        const t = document.createElement('span');
+        t.className = 'ticker';
+        t.textContent = h.ticker;
+        const ad = document.createElement('span');
+        ad.className = 'company';
+        ad.textContent = h.ad;
+        hisse.append(t, ad);
+        const kadran = document.createElement('td');
+        const rozet = document.createElement('span');
+        rozet.className = `badge badge-${h.kadran}`;
+        rozet.textContent = KADRAN_ADI[h.kadran];
+        kadran.append(rozet);
+        tr.append(
+          hucre(String(h.mf_sira), 'numeric'),
+          hisse,
+          hucre(h.sektor, 'muted'),
+          hucre(yuzde(h.ey), 'numeric'),
+          hucre(yuzde(h.roic), 'numeric'),
+          hucre(sira(h.ey_sira), 'numeric muted'),
+          hucre(sira(h.roic_sira), 'numeric muted'),
+          hucre(sira(h.mf_skor), 'numeric'),
+          kadran,
+        );
+        frag.append(tr);
+      }
+      tabloGovde.replaceChildren(frag);
+      if (tumunuBtn.parentElement) tumunuBtn.parentElement.hidden = sonuc.liste.length <= 30;
+      tumunuBtn.textContent = tumu ? 'İlk 30\'u göster' : `Tümünü göster (${sonuc.liste.length})`;
+    }
+
+    function hepsiniCiz() {
+      sonuc = hesapla(veri.hisseler, filtre);
+      if (secili && !sonuc.liste.some((h) => h.ticker === secili)) secili = null;
+      ozetCiz();
+      grafigiCiz();
+      idealCiz();
+      degisimCiz();
+      tabloCiz();
+    }
+
+    // ─── Seçim ve arama ──────────────────────────────────────────────────────
+    function notGoster(metin: string | null) {
+      durumNotu.hidden = !metin;
+      durumNotu.textContent = metin || '';
+    }
+
+    function sec(ticker: string | null, aramadan: boolean) {
+      notGoster(null);
+      if (ticker) {
+        const h = tumHisseler.get(ticker);
+        if (!h) {
+          const d = veri.disarida.find((x) => x.ticker === ticker);
+          notGoster(d ? `${ticker} haritada yok: ${d.neden}.` : `${ticker} haritada yok (finansal şirketler kapsam dışıdır).`);
+          return;
+        }
+        // Seçili evrende değilse filtreyi genişlet
+        const genislet: string[] = [];
+        if (filtre.evren !== 'TUM' && !h.endeksler.includes(filtre.evren)) {
+          filtre.evren = 'TUM';
+          genislet.push('evren "Tüm BIST"');
+        }
+        if (filtre.sektor && filtre.sektor !== h.sektor) {
+          filtre.sektor = '';
+          genislet.push('sektör filtresi kaldırıldı');
+        }
+        if (h.holding && !filtre.holding) {
+          filtre.holding = true;
+          genislet.push('holdingler açıldı');
+        }
+        if (h.bayraklar.includes('zarar') && !filtre.zarar) {
+          filtre.zarar = true;
+          genislet.push('zarar edenler açıldı');
+        }
+        if (genislet.length) {
+          kontrolleriEsitle();
+          notGoster(`${ticker} için ${genislet.join(', ')}.`);
+        }
+      }
+      secili = ticker;
+      hepsiniCiz();
+      if (ticker && grafik) {
+        const i = sonuc.liste.findIndex((h) => h.ticker === ticker);
+        if (i >= 0) grafik.dispatchAction({ type: 'showTip', seriesIndex: 2, dataIndex: i });
+        if (aramadan) grafikEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function kontrolleriEsitle() {
+      document.querySelectorAll<HTMLButtonElement>('.seg-btn').forEach((b) => {
+        const aktif = b.dataset.evren === filtre.evren;
+        b.classList.toggle('active', aktif);
+        b.setAttribute('aria-pressed', aktif ? 'true' : 'false');
+      });
+      sektorSec.value = filtre.sektor;
+      holdingSec.checked = filtre.holding;
+      zararSec.checked = filtre.zarar;
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('.seg-btn').forEach((b) =>
+      b.addEventListener('click', () => {
+        filtre.evren = (b.dataset.evren as MfFiltre['evren']) || 'XU100';
+        kontrolleriEsitle();
+        notGoster(null);
+        hepsiniCiz();
+      }),
+    );
+    sektorSec.addEventListener('change', () => {
+      filtre.sektor = sektorSec.value;
+      notGoster(null);
+      hepsiniCiz();
+    });
+    holdingSec.addEventListener('change', () => {
+      filtre.holding = holdingSec.checked;
+      hepsiniCiz();
+    });
+    zararSec.addEventListener('change', () => {
+      filtre.zarar = zararSec.checked;
+      hepsiniCiz();
+    });
+    araInput.addEventListener('change', () => {
+      const t = araInput.value.trim().toLocaleUpperCase('tr').replace(/İ/g, 'I');
+      if (t) sec(t, true);
+    });
+    araInput.addEventListener('search', () => {
+      if (!araInput.value) sec(null, false);
+    });
+    tumunuBtn.addEventListener('click', () => {
+      tumu = !tumu;
+      tabloCiz();
+    });
+
+    // Tablo satırı ve çiplerle seçim (olay delegasyonu)
+    const tiklamaSec = (e: Event) => {
+      const hedef = (e.target as HTMLElement).closest<HTMLElement>('[data-ticker]');
+      if (hedef?.dataset.ticker) sec(secili === hedef.dataset.ticker ? null : hedef.dataset.ticker, true);
+    };
+    tabloGovde.addEventListener('click', tiklamaSec);
+    tabloGovde.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Enter') tiklamaSec(e);
+    });
+    document.querySelectorAll('#ideal-liste, #girenler, #cikanlar').forEach((el) => el.addEventListener('click', tiklamaSec));
+
+    // Tema değişince yeniden çiz
+    new MutationObserver(() => grafigiCiz()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    // ─── PNG indir (paylaşılabilir kart) ─────────────────────────────────────
+    document.getElementById('png-indir')?.addEventListener('click', async () => {
+      const r = renkler();
+      const W = 1440, H = 1350, CW = 1320, CH = 1000;
+      const kap = document.createElement('div');
+      kap.style.cssText = `position:fixed;left:-10000px;top:0;width:${CW}px;height:${CH}px;`;
+      document.body.append(kap);
+      const gecici = echarts.init(kap, null, { renderer: 'canvas', width: CW, height: CH, devicePixelRatio: 1 });
+      gecici.setOption(secenekKur(r, CW, true));
+      const resim = new Image();
+      resim.src = gecici.getDataURL({ type: 'png', pixelRatio: 1, backgroundColor: r.yuzey });
+      await resim.decode();
+      gecici.dispose();
+      kap.remove();
+      await document.fonts?.ready;
+
+      const sigdir = (metin: string, x: number, y: number, boyut: number, kalinlik: number, aile: string, maks: number) => {
+        let b = boyut;
+        do {
+          c.font = `${kalinlik} ${b}px ${aile}`;
+          b -= 1;
+        } while (c.measureText(metin).width > maks && b > 10);
+        c.fillText(metin, x, y);
+      };
+      const tuval = document.createElement('canvas');
+      tuval.width = W;
+      tuval.height = H;
+      const c = tuval.getContext('2d')!;
+      const kok = getComputedStyle(document.documentElement);
+      const baslikFont = kok.getPropertyValue('--font-heading').trim() || 'Lora, Georgia, serif';
+      const govdeFont = r.fontGovde;
+      c.fillStyle = r.yuzey;
+      c.fillRect(0, 0, W, H);
+      const ic = W - 120;
+      c.fillStyle = kok.getPropertyValue('--warm-accent').trim() || r.ideal;
+      sigdir('GREENBLATT MAGIC FORMULA · BORSA İSTANBUL', 60, 78, 22, 700, govdeFont, ic);
+      c.fillStyle = r.metin;
+      sigdir('Ucuz + kaliteli: Magic Formula haritası', 60, 136, 46, 700, baslikFont, ic);
+      c.fillStyle = r.soluk;
+      const kapsam = [EVREN_ADI[filtre.evren], filtre.sektor || null, filtre.holding ? 'holdingler dahil' : 'finansallar ve holdingler hariç'].filter(Boolean).join(' · ');
+      sigdir(`Yatay: FVÖK / firma değeri · Dikey: ROIC · sağ-üst köşe = ideal · ${kapsam}`, 60, 180, 25, 400, govdeFont, ic);
+      c.drawImage(resim, 60, 215, CW, CH);
+      c.strokeStyle = r.cizgi;
+      c.lineWidth = 2;
+      c.beginPath();
+      c.moveTo(60, 1240);
+      c.lineTo(W - 60, 1240);
+      c.stroke();
+      c.fillStyle = r.metin;
+      sigdir('yatirimnotlari.github.io', 60, 1284, 26, 700, govdeFont, 700);
+      c.fillStyle = r.soluk;
+      sigdir(`Fiyat: ${tarihTr(veri.fiyat_tarihi)} · Bilanço: ${donemTr(veri.baskin_donem)} (son 12 ay) · Veri: KAP/Borsa İstanbul, derleyen BilancoVeri.com`, 60, 1320, 20, 400, govdeFont, ic);
+      c.textAlign = 'right';
+      c.font = `400 20px ${govdeFont}`;
+      c.fillText('Yatırım tavsiyesi değildir', W - 60, 1284);
+
+      tuval.toBlob((blob) => {
+        if (!blob) return;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `bist-magic-formula-${(veri.fiyat_tarihi || '').slice(0, 10) || 'harita'}.png`;
+        document.body.append(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      }, 'image/png');
+    });
+
+    kontrolleriEsitle();
+    hepsiniCiz();
+  }
+</script>

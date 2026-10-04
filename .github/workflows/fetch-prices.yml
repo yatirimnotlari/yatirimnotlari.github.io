@@ -18,6 +18,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # veri değişince deploy.yml'yi tetiklemek için
 
 jobs:
   fetch:
@@ -42,13 +43,31 @@ jobs:
         run: python scripts/calculate_endeks_etki.py
 
       - name: JSON dosyalarını commit et
+        id: commit
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/data/bist-heatmap.json public/data/bist-endeks-etkisi.json
           if git diff --staged --quiet; then
             echo "Değişiklik yok"
+            echo "degisti=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "BIST verisi güncellendi: $(TZ='Europe/Istanbul' date '+%H:%M TRT')"
-            git push
+            OK=false
+            for i in 1 2 3 4 5; do
+              if git pull --rebase -q origin main && git push -q origin HEAD:main; then
+                OK=true; break
+              fi
+              echo "Push denemesi $i başarısız, tekrar deneniyor"; sleep $((i * 5))
+            done
+            if [ "$OK" != "true" ]; then echo "Push başarısız"; exit 1; fi
+            echo "degisti=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # GITHUB_TOKEN ile yapılan push deploy.yml'yi kendiliğinden tetiklemez;
+      # canlı sitenin güncel kalması için yayını açıkça başlatıyoruz.
+      - name: Siteyi yeniden yayınla
+        if: steps.commit.outputs.degisti == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main

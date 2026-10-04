@@ -1,0 +1,85 @@
+name: Magic Formula Verisi Güncelle
+
+on:
+  schedule:
+    # Her gün 22:40 TRT (19:40 UTC) — BilancoVeri'nin günlük güncellemesinden sonra.
+    # Yeni bilanço açıklayan şirketler ve güncel piyasa değerleri böylece işlenir.
+    - cron: "40 19 * * *"
+  workflow_dispatch:  # Elle de çalıştırılabilir
+  push:
+    branches: [main]
+    paths:
+      - "scripts/mf_lib.py"
+      - "scripts/fetch_tufe.py"
+      - "scripts/fetch_mali_tablolar.py"
+      - "scripts/calculate_magic_formula.py"
+      - "scripts/tests/test_mf_lib.py"
+      - ".github/workflows/magic-formula.yml"
+
+permissions:
+  contents: write
+  actions: write   # veri değişince deploy.yml'yi tetiklemek için
+
+concurrency:
+  group: magic-formula
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Veriyi çek ve hesapla
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıkları yükle
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Testleri çalıştır
+        run: python -m unittest discover -s scripts/tests -v
+
+      - name: TÜFE verisini güncelle
+        run: python scripts/fetch_tufe.py
+        continue-on-error: true
+
+      - name: Şirket listesi ve mali tabloları çek
+        run: python scripts/fetch_mali_tablolar.py
+
+      - name: Magic Formula hesapla
+        run: python scripts/calculate_magic_formula.py
+
+      - name: Değişiklikleri kaydet
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/magic-formula public/data/magic-formula.json
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok"
+            echo "sayfa_degisti=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          SAYFA=false
+          git diff --staged --quiet -- public/data/magic-formula.json || SAYFA=true
+          git commit -q -m "Magic Formula verisi güncellendi: $(TZ='Europe/Istanbul' date '+%d.%m.%Y %H:%M TRT')"
+          OK=false
+          for i in 1 2 3 4 5; do
+            if git pull --rebase -q origin "$GITHUB_REF_NAME" && git push -q origin "HEAD:$GITHUB_REF_NAME"; then
+              OK=true; break
+            fi
+            echo "Push denemesi $i başarısız, tekrar deneniyor"; sleep $((i * 5))
+          done
+          if [ "$OK" != "true" ]; then echo "Push başarısız"; exit 1; fi
+          echo "sayfa_degisti=$SAYFA" >> "$GITHUB_OUTPUT"
+
+      - name: Siteyi yeniden yayınla
+        if: steps.commit.outputs.sayfa_degisti == 'true' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
