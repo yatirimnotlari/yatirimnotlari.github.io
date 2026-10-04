@@ -1,0 +1,45 @@
+---
+// Araç sayfalarının üstündeki kısa yasal not. Sayfaya özel metin verilebilir;
+// verilmezse genel metin kullanılır. Bkz. KILAVUZ.md › İçerik dili (SPK).
+interface Props {
+  metin?: string;
+}
+
+const { metin } = Astro.props;
+const varsayilan =
+  'Bu sayfadaki sonuçlar kamuya açık verilerden, sayfada açıklanan sabit kurallarla otomatik olarak hesaplanır. Hiçbir sonuç belirli bir hisse için al, sat veya tut önerisi değildir ve yatırım danışmanlığı kapsamında değildir.';
+---
+
+<aside class="arac-uyari" aria-label="Yasal not">
+  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.6"></circle>
+    <path d="M12 10.6v6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path>
+    <circle cx="12" cy="7.4" r="1.2" fill="currentColor"></circle>
+  </svg>
+  <p>
+    <strong>Bilgi amaçlıdır, yatırım tavsiyesi değildir.</strong>
+    {metin ?? varsayilan}
+    <a href="/yasal-uyari/">Yasal Uyarı</a>
+  </p>
+</aside>
+
+<style>
+  .arac-uyari {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    max-width: 820px;
+    margin: 1rem 0 0;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+  .arac-uyari svg { flex-shrink: 0; margin-top: 0.15rem; }
+  .arac-uyari p { margin: 0; }
+  .arac-uyari strong { color: var(--text); font-weight: 600; }
+  .arac-uyari a { color: var(--accent); white-space: nowrap; }
+</style>

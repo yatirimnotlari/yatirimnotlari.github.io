@@ -1,6 +1,6 @@
 ---
-title: "Hangisine yatırım yapmalı? BIST vs SPX"
-description: "BIST ve S&P 500 arasındaki korelasyon nedir? Yatırımları zaman zaman ikisi arasında kaydırarak getiriyi artırmak mümkün mü?"
+title: "BIST 100 ve S&P 500: Dolar Bazlı Bir Karşılaştırma"
+description: "1990'dan bu yana BIST 100 ve S&P 500'ün dolar bazlı yıllık getirileri, aralarındaki ilişki ve geçmiş veriler üzerinde varsayımsal bir rotasyon denemesi."
 pubDate: 2023-11-26
 heroImage: /images/bist-100-vs-sp-500.png
 ---
@@ -27,7 +27,7 @@ Ayrıntılara baktığımızda sonuçların epey iyileştiğini görebiliyoruz. 
 
 ![Strateji sonuçlarının ayrıntılı gösterimi](/images/Screenshot-2023-10-30-144330.png)
 
-Tabi bu hesaplamaların sadece endeks değerleri üzerinden yapıldığını ayrıca vergilerin ve komisyonların hesaba katılmadığını unutmamak lazım.
+Tabi bu hesaplamaların sadece endeks değerleri üzerinden yapıldığını, vergilerin ve komisyonların hesaba katılmadığını ve sonuçların geçmiş veriler üzerinde yapılmış varsayımsal bir test olduğunu unutmamak lazım. Geçmiş getiriler gelecekteki getirilerin göstergesi değildir.
 
 Endekslere yatırım yapma imkanı sağlayan pasif yatırım fonları benzer getiriler sağlasa da bireysel yatırımcıların kendilerin oluşturdukları portföylerinin daha fazla kazanç ve kayıp şansı oluşturabileceğini de göz önünde bulundurmak gerekir.
 

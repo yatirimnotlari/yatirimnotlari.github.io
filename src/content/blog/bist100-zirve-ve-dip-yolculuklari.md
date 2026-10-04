@@ -48,14 +48,14 @@ tespit edildi.
 | 2000 | -%67,03 | Ekonomik Kriz |
 | 2007 | -%64,47 | Küresel Finans Krizi |
 
-## Yatırımcıya Notlar
+## Verilerden Çıkardığım Notlar
 
-Bu analizden çıkarılabilecek pratik sonuçlar:
+Bu tablo bana şunları düşündürüyor (genel gözlemlerdir, yatırım tavsiyesi değildir):
 
-1. **Düşüş ve düzeltmeler borsanın doğasında var.** %25 civarındaki düzeltmeler olağan kabul edilmeli.
-2. **Yatırım hesabındaki paraya en az 2 yıl ihtiyaç duyulmamalı.** Kısa vadeli ihtiyaçlar için borsa uygun değil.
-3. **Yedek nakit bulundur.** Büyük düzeltmelerde alım yapabilmek için el altında likit kaynak olmalı.
-4. **%50'nin üzerindeki düzeltmelerde korkmadan alım yapılabilir.** Tarihsel veriler, bu seviyelerin iyi giriş noktaları sunduğunu gösteriyor.
+1. **Düşüş ve düzeltmeler borsanın doğasında var.** İncelenen dönemde %25 civarındaki düzeltmeler olağan sayılabilecek sıklıkta yaşandı.
+2. **Düzeltmelerin ne kadar süreceği önceden bilinemiyor.** Bu yüzden kısa vadede ihtiyaç duyulacak birikimler açısından borsadaki dalgalanma önemli bir risk.
+3. **Likidite esneklik sağlıyor.** Sert düşüş dönemlerinde el altında nakit bulunması, kişinin seçeneklerini açık tutuyor.
+4. **%50'yi aşan düzeltmeler nadir ama derin oldu.** İncelenen dönemde bu düşüşlerin ardından endeks (TL bazında) zamanla toparlandı; ancak bu, geçmişteki seyrin tekrarlanacağı ya da belirli bir düşüş seviyesinin alım için uygun olduğu anlamına gelmez.
 
 ![TradingView zirveden düşüş indikatörü](/images/zirveden-dusus-indikatoru-1024x484.png)
 

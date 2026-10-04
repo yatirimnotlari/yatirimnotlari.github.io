@@ -28,9 +28,9 @@ otomatik yazar; elle değiştirilmemelidir.
 | `fd` | Firma değeri = piyasa değeri + finansal borçlar − nakit − KV finansal yatırımlar + azınlık payları (milyon TL) |
 | `fvok` | Son 12 ay net faaliyet kârı = brüt kâr − pazarlama − genel yönetim − Ar-Ge (milyon TL, bilanço tarihinin parasıyla) |
 | `sermaye` | Yatırılan sermaye = max(net işletme sermayesi, 0) + maddi duran varlıklar + kullanım hakkı varlıkları + yatırım amaçlı gayrimenkuller (milyon TL) |
-| `ey` | Ucuzluk (%) = FVÖK (TÜFE ile fiyat ayına taşınmış) / firma değeri |
-| `roic` | Kalite (%) = FVÖK / yatırılan sermaye |
-| `mf_sira` | Magic Formula sırası: tüm BIST'te, holdingler ve zarar edenler hariç (1 = en iyi). Boşsa o gün sıralamaya girmedi |
+| `ey` | FVÖK / FD (%) = FVÖK (TÜFE ile fiyat ayına taşınmış) / firma değeri — Greenblatt'ın "earnings yield" ölçüsü |
+| `roic` | ROIC (%) = FVÖK / yatırılan sermaye |
+| `mf_sira` | Magic Formula sırası: tüm BIST'te, holdingler ve zarar edenler hariç (1 = sıralamada ilk). Boşsa o gün sıralamaya girmedi |
 | `not` | Bayraklar (`zarar`, `onceki_donem`, `yilliklandirilmis`, `son_donem_eksik`, `fvok_bilesenlerden`, `mali_yil_sonu_N`) ya da haritaya girmediyse `disarida:<kod>` |
 
 `disarida` kodları: `fd_negatif`, `sermaye_negatif`, `sermaye_kucuk` (sermaye toplam
@@ -56,7 +56,7 @@ bist100 = df[df["endeks"].isin(["30", "50", "100"])]
 
 `mf_sira` tüm BIST içindir; başka bir evren (ör. yalnızca BIST 100) için sırayı
 `ey` ve `roic` sütunlarından yeniden hesaplayın: iki ölçütte ayrı ayrı büyükten
-küçüğe sıra verilir, sıraların toplamı en küçük olan en iyidir.
+küçüğe sıra verilir, sıraların toplamı en küçük olan ilk sırayı alır.
 
 ## Notlar
 

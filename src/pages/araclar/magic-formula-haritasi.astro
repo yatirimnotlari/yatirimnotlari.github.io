@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import AracUyari from '../../components/AracUyari.astro';
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import {
@@ -7,6 +8,7 @@ import {
   VARSAYILAN_FILTRE,
   EVREN_ADI,
   KADRAN_ADI,
+  KADRAN_ACIKLAMA,
   yuzde,
   sira,
   tarihTr,
@@ -19,7 +21,7 @@ const jsonPath = resolve('public/data/magic-formula.json');
 const veri: MfVeri | null = existsSync(jsonPath) ? JSON.parse(readFileSync(jsonPath, 'utf-8')) : null;
 const sonuc = veri ? hesapla(veri.hisseler, VARSAYILAN_FILTRE) : null;
 const tabloIlk = sonuc ? sonuc.liste.slice(0, 30) : [];
-const idealler = sonuc ? sonuc.liste.filter((h) => h.kadran === 'ideal') : [];
+const sagUsttekiler = sonuc ? sonuc.liste.filter((h) => h.kadran === 'sagUst') : [];
 const sektorler = veri
   ? [...new Set(veri.hisseler.map((h) => h.sektor))].sort((a, b) => a.localeCompare(b, 'tr'))
   : [];
@@ -31,7 +33,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
 
 <Base
   title="BIST Magic Formula Haritası"
-  description="Joel Greenblatt'ın Magic Formula yöntemi Borsa İstanbul'da: ucuzluk (FVÖK / firma değeri) ve kalite (ROIC) haritası, sıralama tablosu. Her gün güncellenir."
+  description="Joel Greenblatt'ın Magic Formula yöntemindeki iki oran (FVÖK / firma değeri ve ROIC) Borsa İstanbul şirketleri için harita ve sıralama tablosu olarak. Her gün otomatik güncellenir. Yatırım tavsiyesi değildir."
 >
   <div class="mf-page">
     <a class="back-link" href="/araclar/">← Araçlar</a>
@@ -40,9 +42,10 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
       <p class="eyebrow">Greenblatt Magic Formula · BIST</p>
       <h1>Magic Formula Haritası</h1>
       <p class="intro">
-        Joel Greenblatt'ın formülü iki soruyu birlikte sorar: şirket <strong>ucuz</strong> mu, işi
-        <strong>kaliteli</strong> mi? Yatay eksen ucuzluğu (FVÖK / firma değeri), dikey eksen kaliteyi
-        (yatırılan sermaye getirisi) gösterir. Sağ-üst köşedekiler ikisinde de evrenin ortasının üzerinde.
+        Joel Greenblatt'ın Magic Formula yöntemi şirketleri iki finansal orana göre sıralar:
+        <strong>FVÖK / firma değeri</strong> (yöntemdeki "ucuzluk" ölçüsü) ve <strong>ROIC</strong>,
+        yani yatırılan sermaye getirisi (yöntemdeki "kalite" ölçüsü). Harita bu iki oranı yan yana gösterir;
+        kesikli çizgiler seçili evrenin medyanlarıdır. Sağ-üst köşedeki şirketlerde iki oran da medyanın üzerindedir.
       </p>
       {veri && (
         <div class="update-line">
@@ -58,6 +61,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         </div>
       )}
       <p id="eski-veri" class="stale-note" role="status" hidden></p>
+      <AracUyari metin="Harita ve sıralama, kamuya açık mali tablolardan aşağıda açıklanan sabit kurallarla otomatik olarak hesaplanır; hisseler elle seçilmez. Bir şirketin haritadaki konumu ya da sırası, o hisse için al, sat veya tut önerisi değildir ve yatırım danışmanlığı kapsamında değildir." />
     </header>
 
     {!veri || !sonuc ? (
@@ -97,20 +101,20 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
 
         <!-- Özet -->
         <section class="summary-grid" aria-label="Özet">
-          <div><span>Sağ-üst köşede</span><strong id="ozet-ideal">{idealler.length} şirket</strong></div>
-          <div><span>Medyan ucuzluk</span><strong id="ozet-ey">{yuzde(sonuc.medyanEy)}</strong></div>
-          <div><span>Medyan kalite</span><strong id="ozet-roic">{yuzde(sonuc.medyanRoic)}</strong></div>
+          <div><span>Sağ-üst köşede</span><strong id="ozet-sagust">{sagUsttekiler.length} şirket</strong></div>
+          <div><span>Medyan FVÖK / FD</span><strong id="ozet-ey">{yuzde(sonuc.medyanEy)}</strong></div>
+          <div><span>Medyan ROIC</span><strong id="ozet-roic">{yuzde(sonuc.medyanRoic)}</strong></div>
           <div><span>Haritadaki şirket</span><strong id="ozet-n">{sonuc.liste.length}</strong></div>
         </section>
 
         <!-- Harita -->
         <section class="chart-card" aria-labelledby="harita-baslik">
           <div class="chart-head">
-            <h2 id="harita-baslik">Ucuzluk × kalite</h2>
+            <h2 id="harita-baslik">FVÖK / FD × ROIC</h2>
             <ul class="legend" aria-label="Gösterim">
-              <li><span class="key key-ideal"></span>Ucuz + kaliteli (sağ-üst)</li>
+              <li><span class="key key-sagust"></span>Sağ-üst: iki oran da medyan üstü</li>
               <li><span class="key key-diger"></span>Diğer şirketler</li>
-              <li><span class="key key-halka"></span>Magic Formula ilk 5</li>
+              <li><span class="key key-halka"></span>Sıralamada ilk 5</li>
               <li><span class="key key-medyan"></span>Medyan</li>
             </ul>
             <button type="button" id="png-indir" class="ghost-btn small-btn" title="Haritayı paylaşılabilir PNG olarak indir">
@@ -118,7 +122,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
               PNG indir
             </button>
           </div>
-          <div id="mf-chart" class="chart" role="img" aria-label="Magic Formula dağılım grafiği: yatay eksende ucuzluk, dikey eksende kalite. Değerler aşağıdaki tabloda da yer alır."></div>
+          <div id="mf-chart" class="chart" role="img" aria-label="Magic Formula dağılım grafiği: yatay eksende FVÖK / firma değeri, dikey eksende ROIC. Değerler aşağıdaki tabloda da yer alır."></div>
           <p class="chart-note">
             Kesikli çizgiler seçili evrenin medyanlarıdır. Eksen dışında kalan uç değerler kenarda ◆ ile gösterilir;
             gerçek değer üzerine gelince görünür. Noktaya tıklayınca hisse işaretlenir.
@@ -126,13 +130,13 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         </section>
 
         <!-- Sağ-üst köşedekiler -->
-        <section class="block" aria-labelledby="ideal-baslik">
+        <section class="block" aria-labelledby="sagust-baslik">
           <div class="block-head">
-            <h2 id="ideal-baslik">Sağ-üst köşedekiler</h2>
-            <p>Magic Formula sırasına göre. Tıklayınca haritada işaretlenir.</p>
+            <h2 id="sagust-baslik">Sağ-üst köşedekiler</h2>
+            <p>İki oranı da medyanın üzerinde olanlar, Magic Formula sırasına göre. Tıklayınca haritada işaretlenir.</p>
           </div>
-          <div id="ideal-liste" class="chip-list">
-            {idealler.map((h) => (
+          <div id="sagust-liste" class="chip-list">
+            {sagUsttekiler.map((h) => (
               <button type="button" class="chip" data-ticker={h.ticker}>
                 <strong>{h.ticker}</strong><span>#{h.mf_sira}</span>
               </button>
@@ -162,7 +166,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         <section class="block table-card" aria-labelledby="tablo-baslik">
           <div class="block-head padded">
             <h2 id="tablo-baslik">Magic Formula sıralaması</h2>
-            <p>Seçili evrende ucuzluk sırası + kalite sırası; en düşük toplam en iyisi.</p>
+            <p>Seçili evrende FVÖK / FD sırası + ROIC sırası; toplamı en düşük olan en üstte yer alır.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -171,17 +175,17 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
                   <th class="numeric">#</th>
                   <th>Hisse</th>
                   <th>Sektör</th>
-                  <th class="numeric">Ucuzluk</th>
-                  <th class="numeric">Kalite</th>
-                  <th class="numeric">Ucuzluk sırası</th>
-                  <th class="numeric">Kalite sırası</th>
+                  <th class="numeric">FVÖK / FD</th>
+                  <th class="numeric">ROIC</th>
+                  <th class="numeric">FVÖK / FD sırası</th>
+                  <th class="numeric">ROIC sırası</th>
                   <th class="numeric">Skor</th>
                   <th>Kadran</th>
                 </tr>
               </thead>
               <tbody id="tablo-govde">
                 {tabloIlk.map((h) => (
-                  <tr data-ticker={h.ticker} tabindex="0" class:list={[{ ideal: h.kadran === 'ideal' }]}>
+                  <tr data-ticker={h.ticker} tabindex="0" class:list={[{ 'sag-ust': h.kadran === 'sagUst' }]}>
                     <td class="numeric">{h.mf_sira}</td>
                     <td><span class="ticker">{h.ticker}</span><span class="company">{h.ad}</span></td>
                     <td class="muted">{h.sektor}</td>
@@ -190,7 +194,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
                     <td class="numeric muted">{sira(h.ey_sira)}</td>
                     <td class="numeric muted">{sira(h.roic_sira)}</td>
                     <td class="numeric">{sira(h.mf_skor)}</td>
-                    <td><span class:list={['badge', `badge-${h.kadran}`]}>{KADRAN_ADI[h.kadran]}</span></td>
+                    <td><span class:list={['badge', `badge-${h.kadran}`]} title={KADRAN_ACIKLAMA[h.kadran]}>{KADRAN_ADI[h.kadran]}</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -206,24 +210,24 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
           <h2 id="yontem-baslik">Yöntem</h2>
           <dl class="formula-list">
             <div>
-              <dt>Ucuzluk</dt>
-              <dd><code>FVÖK / Firma değeri</code> — Greenblatt'ın "earnings yield" ölçüsü. Yüksek değer, şirketin kazancına göre ucuz olduğunu gösterir.</dd>
+              <dt>FVÖK / FD</dt>
+              <dd><code>FVÖK / Firma değeri</code> — Greenblatt'ın "earnings yield" (kazanç getirisi) ölçüsü; yöntemde ucuzluk göstergesi olarak kullanılır. Firma değerinin her 100 lirası karşılığında son 12 ayda kaç liralık faaliyet kârı elde edildiğini gösterir.</dd>
             </div>
             <div>
               <dt>FVÖK</dt>
-              <dd>Son 12 ayın net faaliyet kârı: brüt kâr − pazarlama, satış ve dağıtım − genel yönetim − Ar-Ge giderleri. Kur farkı, vade farkı gibi esas faaliyetlerden diğer gelir/giderler ve parasal kazanç/kayıp dahil değildir. Ucuzluk hesabında FVÖK, bilanço tarihinden en son açıklanan TÜFE ayının parasına taşınır.</dd>
+              <dd>Son 12 ayın net faaliyet kârı: brüt kâr − pazarlama, satış ve dağıtım − genel yönetim − Ar-Ge giderleri. Kur farkı, vade farkı gibi esas faaliyetlerden diğer gelir/giderler ve parasal kazanç/kayıp dahil değildir. FVÖK / FD hesabında FVÖK, bilanço tarihinden en son açıklanan TÜFE ayının parasına taşınır.</dd>
             </div>
             <div>
               <dt>Firma değeri</dt>
               <dd>Piyasa değeri + kısa ve uzun vadeli finansal borçlar − nakit ve kısa vadeli finansal yatırımlar + azınlık payları.</dd>
             </div>
             <div>
-              <dt>Kalite (ROIC)</dt>
-              <dd><code>FVÖK / (net işletme sermayesi + maddi duran varlıklar + kullanım hakkı varlıkları + yatırım amaçlı gayrimenkuller)</code>. Net işletme sermayesi = (dönen varlıklar − nakit − KV finansal yatırımlar) − (KV yükümlülükler − KV finansal borçlar); negatifse sıfır alınır.</dd>
+              <dt>ROIC</dt>
+              <dd>Yatırılan sermaye getirisi; yöntemde kalite göstergesi olarak kullanılır. <code>FVÖK / (net işletme sermayesi + maddi duran varlıklar + kullanım hakkı varlıkları + yatırım amaçlı gayrimenkuller)</code>. Net işletme sermayesi = (dönen varlıklar − nakit − KV finansal yatırımlar) − (KV yükümlülükler − KV finansal borçlar); negatifse sıfır alınır.</dd>
             </div>
             <div>
               <dt>Sıra ve kadranlar</dt>
-              <dd>Seçili evrendeki her şirket ucuzlukta ve kalitede ayrı ayrı sıralanır; iki sıranın toplamı Magic Formula skorudur. Kesikli çizgiler seçili evrenin medyanlarıdır, bu yüzden evren değişince kadranlar da değişir.</dd>
+              <dd>Seçili evrendeki her şirket iki oranda ayrı ayrı sıralanır (oranı en yüksek olan 1. sıra); iki sıranın toplamı Magic Formula skorudur. Kesikli çizgiler seçili evrenin medyanlarıdır. Kadranlar yalnızca bir şirketin iki oranda medyanın üstünde mi altında mı olduğunu gösterir; evren değişince kadranlar da değişir.</dd>
             </div>
             <div>
               <dt>Enflasyon muhasebesi</dt>
@@ -236,9 +240,11 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
           </dl>
           <p class="method-foot">
             Veri her gün 22:40 civarında otomatik yenilenir; yeni bilanço açıklayan şirketler kendiliğinden güncellenir.
-            Uç değerler (çok küçük sermayeli şirketler, tek seferlik kalemler) ve fonksiyonel para birimi TL olmayan
-            şirketler (ör. havayolları) için rakamları şirketin kendi raporuyla birlikte değerlendirin.
-            Magic Formula tek başına alım-satım sinyali değildir.
+            Hesaplamalar yalnızca geçmiş mali tablolara ve güncel piyasa değerine dayanır; geleceğe dair tahmin,
+            hedef fiyat ya da değerleme içermez. İki oran, şirketlerin borç yapısı, sektör koşulları ya da kur riski
+            gibi pek çok özelliğini yansıtmaz. Uç değerler (çok küçük sermayeli şirketler, tek seferlik kalemler) ve
+            fonksiyonel para birimi TL olmayan şirketler (ör. havayolları) için rakamları şirketin KAP'taki kendi
+            raporuyla birlikte değerlendirin.
           </p>
         </section>
 
@@ -265,7 +271,8 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         <p class="legal-note">
           Veri: KAP/Borsa İstanbul, derleyen <a href="https://bilancoveri.com" rel="noopener" target="_blank">BilancoVeri.com</a> ·
           Endeks üyelikleri: Borsa İstanbul · TÜFE: TCMB/TÜİK. Fiyatlar en az 15 dakika gecikmelidir.
-          Bu sayfa yalnızca bilgi amaçlıdır; yatırım tavsiyesi değildir. Ayrıntılar için <a href="/yasal-uyari/">Yasal Uyarı</a>.
+          Veriler ve hesaplamalar hata içerebilir. Bu sayfa yalnızca bilgi ve eğitim amaçlıdır; yatırım tavsiyesi değildir.
+          Ayrıntılar için <a href="/yasal-uyari/">Yasal Uyarı</a>.
         </p>
 
         <script type="application/json" id="mf-veri" is:inline set:html={veriJson}></script>
@@ -276,14 +283,14 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
 
 <style is:global>
   .mf-page {
-    --mf-ideal: #b5702f;
+    --mf-sagust: #b5702f;
     --mf-diger: #9ea6b3;
     max-width: 1080px;
     margin: 0 auto;
     padding: 1.5rem 1.25rem 3.5rem;
   }
   [data-theme='dark'] .mf-page {
-    --mf-ideal: #c8823f;
+    --mf-sagust: #c8823f;
     --mf-diger: #687081;
   }
   .mf-page .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -338,8 +345,8 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
   .mf-page .legend { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin: 0; padding: 0; list-style: none; color: var(--text-muted); font-size: 0.78rem; }
   .mf-page .legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
   .mf-page .key { display: inline-block; flex-shrink: 0; }
-  .mf-page .key-ideal, .mf-page .key-diger { width: 10px; height: 10px; border-radius: 50%; }
-  .mf-page .key-ideal { background: var(--mf-ideal); }
+  .mf-page .key-sagust, .mf-page .key-diger { width: 10px; height: 10px; border-radius: 50%; }
+  .mf-page .key-sagust { background: var(--mf-sagust); }
   .mf-page .key-diger { background: var(--mf-diger); }
   .mf-page .key-halka { width: 14px; height: 14px; border: 1.5px solid var(--text); border-radius: 50%; }
   .mf-page .key-medyan { width: 18px; border-top: 1.5px dashed var(--text-muted); }
@@ -353,7 +360,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
   .mf-page .block-head p { margin: 0; color: var(--text-muted); font-size: 0.82rem; }
   .mf-page .block-head.padded { padding: 1.2rem 1.4rem 0; }
   .mf-page .chip-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-  .mf-page .chip { display: inline-flex; align-items: baseline; gap: 0.4rem; min-height: 34px; padding: 0.35rem 0.65rem; border: 1px solid color-mix(in srgb, var(--mf-ideal) 45%, var(--border)); border-radius: 8px; background: color-mix(in srgb, var(--mf-ideal) 9%, var(--card-bg)); color: var(--text); font: 0.82rem var(--font-body); cursor: pointer; }
+  .mf-page .chip { display: inline-flex; align-items: baseline; gap: 0.4rem; min-height: 34px; padding: 0.35rem 0.65rem; border: 1px solid color-mix(in srgb, var(--mf-sagust) 45%, var(--border)); border-radius: 8px; background: color-mix(in srgb, var(--mf-sagust) 9%, var(--card-bg)); color: var(--text); font: 0.82rem var(--font-body); cursor: pointer; }
   .mf-page .chip strong { font-weight: 700; letter-spacing: 0.02em; }
   .mf-page .chip span { color: var(--text-muted); font-size: 0.74rem; }
   .mf-page .chip:hover, .mf-page .chip.selected { border-color: var(--accent); }
@@ -378,7 +385,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
   .mf-page .ticker { display: block; font-weight: 700; color: var(--text); letter-spacing: 0.025em; }
   .mf-page .company { display: block; max-width: 220px; overflow: hidden; text-overflow: ellipsis; color: var(--text-muted); font-size: 0.74rem; }
   .mf-page .badge { display: inline-flex; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; background: var(--bg-secondary); color: var(--text-muted); }
-  .mf-page .badge-ideal { background: color-mix(in srgb, var(--mf-ideal) 16%, transparent); color: var(--text); }
+  .mf-page .badge-sagUst { background: color-mix(in srgb, var(--mf-sagust) 16%, transparent); color: var(--text); }
   .mf-page .table-foot { padding: 0.75rem 1rem; border-top: 1px solid var(--border); background: var(--bg-secondary); }
   .mf-page table.compact th, .mf-page table.compact td { padding: 0.45rem 0.8rem; white-space: normal; }
 
@@ -420,6 +427,8 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
     VARSAYILAN_FILTRE,
     EVREN_ADI,
     KADRAN_ADI,
+    KADRAN_ACIKLAMA,
+    KADRAN_ETIKETI,
     yuzde,
     tutar,
     sira,
@@ -429,6 +438,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
     type MfFiltre,
     type MfSirali,
     type MfSonuc,
+    type Kadran,
   } from '../../lib/magicFormula';
 
   echarts.use([ScatterChart, GridComponent, TooltipComponent, MarkLineComponent, MarkAreaComponent, LabelLayout, CanvasRenderer]);
@@ -448,7 +458,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
     const zararSec = $<HTMLInputElement>('zarar-sec')!;
     const araInput = $<HTMLInputElement>('hisse-ara')!;
     const durumNotu = $<HTMLParagraphElement>('durum-notu')!;
-    const idealListe = $('ideal-liste')!;
+    const sagUstListe = $('sagust-liste')!;
 
     const filtre: MfFiltre = { ...VARSAYILAN_FILTRE };
     let secili: string | null = null;
@@ -467,7 +477,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         cizgi: v(kok, '--border', '#E7E5E0'),
         yuzey: v(kok, '--card-bg', '#FFFFFF'),
         vurgu: v(kok, '--accent', '#4A5B7A'),
-        ideal: v(sayfa, '--mf-ideal', '#b5702f'),
+        sagUst: v(sayfa, '--mf-sagust', '#b5702f'),
         diger: v(sayfa, '--mf-diger', '#9ea6b3'),
         fontGovde: v(kok, '--font-body', 'Inter, system-ui, sans-serif'),
       };
@@ -548,25 +558,25 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         const kirpik = x !== h.ey || y !== h.roic;
         // Kenara sabitlenen noktaların etiketi grafiğin içine doğru yazılır
         const konum = y >= yMax ? 'bottom' : x >= xMax ? 'left' : 'top';
-        const ideal = h.kadran === 'ideal';
+        const sagUst = h.kadran === 'sagUst';
         const vurgulu = ilk5.has(h.ticker) || h.ticker === secili;
         return {
           value: [x, y],
           name: h.ticker,
           symbol: kirpik ? 'diamond' : 'circle',
-          symbolSize: (vurgulu ? 13 : ideal ? 11 : 9) * (disaAktarim ? 1.3 : 1),
-          itemStyle: { color: ideal ? r.ideal : r.diger, borderColor: r.yuzey, borderWidth: 2 },
+          symbolSize: (vurgulu ? 13 : sagUst ? 11 : 9) * (disaAktarim ? 1.3 : 1),
+          itemStyle: { color: sagUst ? r.sagUst : r.diger, borderColor: r.yuzey, borderWidth: 2 },
           label: {
             show: etiketli.has(h.ticker),
             formatter: h.ticker,
             position: konum as 'top' | 'bottom' | 'left',
             distance: vurgulu ? 9 : 6,
-            color: vurgulu || ideal ? r.metin : r.soluk,
+            color: vurgulu || sagUst ? r.metin : r.soluk,
             fontWeight: (vurgulu ? 700 : 500) as 700 | 500,
             fontSize: Math.round((vurgulu ? 12 : 11) * yazi),
             fontFamily: r.fontGovde,
           },
-          z: ideal ? 3 : 2,
+          z: sagUst ? 3 : 2,
           h,
         };
       });
@@ -598,13 +608,15 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         padding: [3, 6],
         distance: 6,
       });
+      // Kadran etiketleri yalnızca konumu anlatır (iki oranın medyana göre yeri)
+      const kEt = (k: Kadran) => (dar ? KADRAN_ETIKETI[k].kisa : KADRAN_ETIKETI[k].uzun);
       const kadranlar =
         mx !== null && my !== null
           ? [
-              [{ coord: [xMin, my], label: kadranEtiket(KADRAN_ADI.pahali, 'insideTopLeft') }, { coord: [mx, yMax] }],
-              [{ coord: [mx, my], itemStyle: { color: r.ideal, opacity: 0.09 }, label: kadranEtiket(KADRAN_ADI.ideal, 'insideTopRight', true) }, { coord: [xMax, yMax] }],
-              [{ coord: [xMin, yMin], label: kadranEtiket(KADRAN_ADI.zayif, 'insideBottomLeft') }, { coord: [mx, my] }],
-              [{ coord: [mx, yMin], label: kadranEtiket(KADRAN_ADI.vasat, 'insideBottomRight') }, { coord: [xMax, my] }],
+              [{ coord: [xMin, my], label: kadranEtiket(kEt('solUst'), 'insideTopLeft') }, { coord: [mx, yMax] }],
+              [{ coord: [mx, my], itemStyle: { color: r.sagUst, opacity: 0.09 }, label: kadranEtiket(kEt('sagUst'), 'insideTopRight', true) }, { coord: [xMax, yMax] }],
+              [{ coord: [xMin, yMin], label: kadranEtiket(kEt('solAlt'), 'insideBottomLeft') }, { coord: [mx, my] }],
+              [{ coord: [mx, yMin], label: kadranEtiket(kEt('sagAlt'), 'insideBottomRight') }, { coord: [xMax, my] }],
             ]
           : [];
 
@@ -621,7 +633,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
           type: 'value',
           min: xMin,
           max: xMax,
-          name: 'Ucuzluk →  FVÖK / firma değeri (%)',
+          name: 'FVÖK / firma değeri (%)  →',
           nameLocation: 'middle',
           nameGap: disaAktarim ? 52 : dar ? 30 : 36,
           nameTextStyle: { ...eksenYazi, color: r.metin, fontSize: Math.round(12 * yazi) },
@@ -634,7 +646,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
           type: 'value',
           min: yMin,
           max: yMax,
-          name: 'Kalite →  ROIC (%)',
+          name: 'ROIC (%)  →',
           nameLocation: 'middle',
           nameGap: disaAktarim ? 62 : dar ? 34 : 44,
           nameTextStyle: { ...eksenYazi, color: r.metin, fontSize: Math.round(12 * yazi) },
@@ -720,8 +732,8 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
           </div>
           <div style="color:${r.soluk};font-size:11.5px;margin:2px 0 8px;white-space:normal">${esc(h.ad)} · ${esc(h.sektor)}</div>
           <table style="border-collapse:collapse;font-size:12px;width:100%">
-            ${satir('Ucuzluk', yuzde(h.ey), `sıra ${sira(h.ey_sira)}`)}
-            ${satir('Kalite (ROIC)', yuzde(h.roic), `sıra ${sira(h.roic_sira)}`)}
+            ${satir('FVÖK / FD', yuzde(h.ey), `sıra ${sira(h.ey_sira)}`)}
+            ${satir('ROIC', yuzde(h.roic), `sıra ${sira(h.roic_sira)}`)}
             ${satir('FVÖK (12 ay)', tutar(h.fvok))}
             ${satir('Firma değeri', tutar(h.fd))}
             ${satir('Piyasa değeri', tutar(h.piyasa_degeri))}
@@ -729,7 +741,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
             ${satir('Yatırılan sermaye', tutar(h.sermaye))}
             ${satir('Bilanço', esc(h.donem))}
           </table>
-          <div style="margin-top:6px;font-size:11.5px;color:${r.soluk}">${esc(KADRAN_ADI[h.kadran])}${notlar.length ? ' · ' + notlar.map(esc).join(' · ') : ''}</div>
+          <div style="margin-top:6px;font-size:11.5px;color:${r.soluk}">${esc(KADRAN_ADI[h.kadran])}: ${esc(KADRAN_ACIKLAMA[h.kadran])}${notlar.length ? ' · ' + notlar.map(esc).join(' · ') : ''}</div>
         </div>`;
     }
 
@@ -765,7 +777,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
     }
 
     function ozetCiz() {
-      yaz('ozet-ideal', `${sonuc.liste.filter((h) => h.kadran === 'ideal').length} şirket`);
+      yaz('ozet-sagust', `${sonuc.liste.filter((h) => h.kadran === 'sagUst').length} şirket`);
       yaz('ozet-ey', yuzde(sonuc.medyanEy));
       yaz('ozet-roic', yuzde(sonuc.medyanRoic));
       yaz('ozet-n', String(sonuc.liste.length));
@@ -791,9 +803,9 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
       return p;
     }
 
-    function idealCiz() {
-      const idealler = sonuc.liste.filter((h) => h.kadran === 'ideal');
-      idealListe.replaceChildren(...(idealler.length ? idealler.map((h) => chip(h, `#${h.mf_sira}`)) : [bosNot('Bu seçimde sağ-üst köşede şirket yok.')]));
+    function sagUstCiz() {
+      const sagUsttekiler = sonuc.liste.filter((h) => h.kadran === 'sagUst');
+      sagUstListe.replaceChildren(...(sagUsttekiler.length ? sagUsttekiler.map((h) => chip(h, `#${h.mf_sira}`)) : [bosNot('Bu seçimde sağ-üst köşede şirket yok.')]));
     }
 
     function degisimCiz() {
@@ -809,7 +821,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
       const giren = document.getElementById('girenler')!;
       const cikan = document.getElementById('cikanlar')!;
       giren.replaceChildren(...(d.girenler.length ? d.girenler.map((h) => chip(h, `#${h.mf_sira}`)) : [bosNot('Yok')]));
-      cikan.replaceChildren(...(d.cikanlar.length ? d.cikanlar.map((h) => chip(h, KADRAN_ADI[h.kadran].toLocaleLowerCase('tr'), true)) : [bosNot('Yok')]));
+      cikan.replaceChildren(...(d.cikanlar.length ? d.cikanlar.map((h) => chip(h, `→ ${KADRAN_ADI[h.kadran].toLocaleLowerCase('tr')}`, true)) : [bosNot('Yok')]));
     }
 
     function hucre(metin: string, sinif = '') {
@@ -826,7 +838,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         const tr = document.createElement('tr');
         tr.dataset.ticker = h.ticker;
         tr.tabIndex = 0;
-        if (h.kadran === 'ideal') tr.classList.add('ideal');
+        if (h.kadran === 'sagUst') tr.classList.add('sag-ust');
         if (h.ticker === secili) tr.classList.add('selected');
         const hisse = document.createElement('td');
         const t = document.createElement('span');
@@ -840,6 +852,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         const rozet = document.createElement('span');
         rozet.className = `badge badge-${h.kadran}`;
         rozet.textContent = KADRAN_ADI[h.kadran];
+        rozet.title = KADRAN_ACIKLAMA[h.kadran];
         kadran.append(rozet);
         tr.append(
           hucre(String(h.mf_sira), 'numeric'),
@@ -864,7 +877,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
       if (secili && !sonuc.liste.some((h) => h.ticker === secili)) secili = null;
       ozetCiz();
       grafigiCiz();
-      idealCiz();
+      sagUstCiz();
       degisimCiz();
       tabloCiz();
     }
@@ -969,7 +982,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
     tabloGovde.addEventListener('keydown', (e) => {
       if ((e as KeyboardEvent).key === 'Enter') tiklamaSec(e);
     });
-    document.querySelectorAll('#ideal-liste, #girenler, #cikanlar').forEach((el) => el.addEventListener('click', tiklamaSec));
+    document.querySelectorAll('#sagust-liste, #girenler, #cikanlar').forEach((el) => el.addEventListener('click', tiklamaSec));
 
     // Tema değişince yeniden çiz
     new MutationObserver(() => grafigiCiz()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -977,7 +990,7 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
     // ─── PNG indir (paylaşılabilir kart) ─────────────────────────────────────
     document.getElementById('png-indir')?.addEventListener('click', async () => {
       const r = renkler();
-      const W = 1440, H = 1350, CW = 1320, CH = 1000;
+      const W = 1440, H = 1392, CW = 1320, CH = 1000;
       const kap = document.createElement('div');
       kap.style.cssText = `position:fixed;left:-10000px;top:0;width:${CW}px;height:${CH}px;`;
       document.body.append(kap);
@@ -1008,13 +1021,13 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
       c.fillStyle = r.yuzey;
       c.fillRect(0, 0, W, H);
       const ic = W - 120;
-      c.fillStyle = kok.getPropertyValue('--warm-accent').trim() || r.ideal;
+      c.fillStyle = kok.getPropertyValue('--warm-accent').trim() || r.sagUst;
       sigdir('GREENBLATT MAGIC FORMULA · BORSA İSTANBUL', 60, 78, 22, 700, govdeFont, ic);
       c.fillStyle = r.metin;
-      sigdir('Ucuz + kaliteli: Magic Formula haritası', 60, 136, 46, 700, baslikFont, ic);
+      sigdir('Magic Formula haritası: FVÖK / FD ve ROIC', 60, 136, 46, 700, baslikFont, ic);
       c.fillStyle = r.soluk;
       const kapsam = [EVREN_ADI[filtre.evren], filtre.sektor || null, filtre.holding ? 'holdingler dahil' : 'finansallar ve holdingler hariç'].filter(Boolean).join(' · ');
-      sigdir(`Yatay: FVÖK / firma değeri · Dikey: ROIC · sağ-üst köşe = ideal · ${kapsam}`, 60, 180, 25, 400, govdeFont, ic);
+      sigdir(`Yatay: FVÖK / firma değeri · Dikey: ROIC · kesikli çizgiler: medyan · ${kapsam}`, 60, 180, 25, 400, govdeFont, ic);
       c.drawImage(resim, 60, 215, CW, CH);
       c.strokeStyle = r.cizgi;
       c.lineWidth = 2;
@@ -1026,8 +1039,10 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
       sigdir('yatirimnotlari.github.io', 60, 1284, 26, 700, govdeFont, 700);
       c.fillStyle = r.soluk;
       sigdir(`Fiyat: ${tarihTr(veri.fiyat_tarihi)} · Bilanço: ${donemTr(veri.baskin_donem)} (son 12 ay) · Veri: KAP/Borsa İstanbul, derleyen BilancoVeri.com`, 60, 1320, 20, 400, govdeFont, ic);
+      sigdir('Kamuya açık verilerden sabit kurallarla otomatik hesaplanmıştır; hiçbir hisse için al, sat veya tut önerisi değildir.', 60, 1354, 20, 400, govdeFont, ic);
       c.textAlign = 'right';
-      c.font = `400 20px ${govdeFont}`;
+      c.fillStyle = r.metin;
+      c.font = `700 21px ${govdeFont}`;
       c.fillText('Yatırım tavsiyesi değildir', W - 60, 1284);
 
       tuval.toBlob((blob) => {

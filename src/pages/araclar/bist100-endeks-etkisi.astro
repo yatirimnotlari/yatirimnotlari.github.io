@@ -354,38 +354,43 @@ import Base from '../../layouts/Base.astro';
         return;
       }
 
-      // Endeks yönü
-      const yon = idx === null ? 'yatay seyretti'
-        : idx > 0.5 ? 'yükseldi'
-        : idx < -0.5 ? 'geriledi'
-        : 'yatay seyretti';
+      // Endeks yönü: endeks verisi yoksa hisse katkılarının toplamı kullanılır;
+      // ikisi de yoksa yön hakkında bir şey söylenmez.
+      const toplam = DATA.endeks_katki_toplam?.[p];
+      const yonBul = (v) => (v > 0.5 ? 'yükseldi' : v < -0.5 ? 'geriledi' : 'yatay seyretti');
 
-      // En büyük pozitif sektör
-      const topPos = sektorler.find(s => s.katki > 0);
-      const topNeg = [...sektorler].reverse().find(s => s.katki < 0);
+      // En büyük pozitif ve negatif katkı yapan sektörler
+      // (liste mutlak katkıya göre sıralı geldiği için ikisi ayrı ayrı bulunur)
+      const topPos = sektorler.filter(s => s.katki > 0).sort((a, b) => b.katki - a.katki)[0];
+      const topNeg = sektorler.filter(s => s.katki < 0).sort((a, b) => a.katki - b.katki)[0];
 
       // En büyük bireysel katkı
       const topStk = stocks.find(h => h.katki !== null);
       const botStk = [...stocks].filter(h => h.katki !== null).slice(-1)[0];
 
-      let text = `BIST 100 ${label} bazda `;
-      text += idx !== null ? `<strong>${fmtPct(idx)}</strong> ile ${yon}. ` : `${yon}. `;
+      let text = '';
+      if (idx !== null && idx !== undefined) {
+        text = `BIST 100 ${label} bazda <strong>${fmtPct(idx)}</strong> ile ${yonBul(idx)}. `;
+      } else if (toplam !== null && toplam !== undefined) {
+        text = `Hisse katkılarının toplamına göre BIST 100 ${label} bazda yaklaşık <strong>${fmtPct(toplam)}</strong> ile ${yonBul(toplam)}. `;
+      }
 
       if (topPos) {
         text += `<strong>${esc(topPos.sektor)}</strong> sektörü `;
-        text += `${fmtKatki(topPos.katki)} katkıyla endeksi en çok destekleyen sektör oldu. `;
+        text += `${fmtKatki(topPos.katki)} ile en büyük pozitif katkıyı yaptı. `;
       }
       if (topNeg) {
         text += `<strong>${esc(topNeg.sektor)}</strong> sektörü `;
-        text += `${fmtKatki(topNeg.katki)} katkıyla en büyük baskıyı oluşturdu. `;
+        text += `${fmtKatki(topNeg.katki)} ile en büyük negatif katkıyı yaptı. `;
       }
-      if (topStk) {
-        text += `Bireysel olarak <strong>${esc(topStk.ticker)}</strong> (${fmtPct(topStk.degisim)}, katkı ${fmtKatki(topStk.katki)}) endekse en fazla pozitif katkı yaptı`;
-        if (botStk && botStk.ticker !== topStk.ticker) {
-          text += `; <strong>${esc(botStk.ticker)}</strong> (${fmtPct(botStk.degisim)}, katkı ${fmtKatki(botStk.katki)}) ise en çok baskı yaratan hisse oldu`;
-        }
-        text += '.';
+      const hisseParcalari = [];
+      if (topStk && topStk.katki > 0) {
+        hisseParcalari.push(`<strong>${esc(topStk.ticker)}</strong> (${fmtPct(topStk.degisim)}, katkı ${fmtKatki(topStk.katki)}) en büyük pozitif katkıyı`);
       }
+      if (botStk && botStk.katki < 0) {
+        hisseParcalari.push(`<strong>${esc(botStk.ticker)}</strong> (${fmtPct(botStk.degisim)}, katkı ${fmtKatki(botStk.katki)}) en büyük negatif katkıyı`);
+      }
+      if (hisseParcalari.length) text += `Hisse bazında ${hisseParcalari.join(', ')} yaptı.`;
 
       const veriEksik = stocks.filter(h => h.katki === null).length;
       if (veriEksik > 5) {
@@ -462,7 +467,7 @@ import Base from '../../layouts/Base.astro';
         }
       }
 
-      text += ` <br>Katkı = ağırlık (%) × fiyat değişimi (%) — yaklaşık endeks puanı katkısı. Yatırım tavsiyesi değildir.`;
+      text += ` <br>Katkı = ağırlık (%) × fiyat değişimi (%) — yaklaşık endeks puanı katkısı. Geçmiş fiyat hareketlerini gösterir; bilgi amaçlıdır, yatırım tavsiyesi değildir.`;
       document.getElementById('dogrulama-notu').innerHTML = text;
     }
 

@@ -348,7 +348,7 @@ def main() -> None:
         json.dump(output, handle, ensure_ascii=False, separators=(",", ":"))
 
     log.info(
-        "Tamamlandı: %s/%s hisse, %s AL sinyali, %ss",
+        "Tamamlandı: %s/%s hisse, %s yön değişimi, %ss",
         len(results),
         len(symbols),
         signals,

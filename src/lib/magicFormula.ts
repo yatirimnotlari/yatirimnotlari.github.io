@@ -76,13 +76,31 @@ export const EVREN_ADI: Record<Evren, string> = {
   TUM: 'Tüm BIST',
 };
 
-export type Kadran = 'ideal' | 'pahali' | 'vasat' | 'zayif';
+// Kadranlar yalnızca konumu anlatır: iki oranın seçili evrenin medyanına göre
+// üstte mi altta mı olduğu. Değer yargısı içeren adlar ("ucuz", "kaliteli",
+// "ideal" vb.) bilerek kullanılmaz — bkz. KILAVUZ.md › İçerik dili.
+export type Kadran = 'sagUst' | 'solUst' | 'sagAlt' | 'solAlt';
 
 export const KADRAN_ADI: Record<Kadran, string> = {
-  ideal: 'Ucuz + kaliteli',
-  pahali: 'Kaliteli ama pahalı',
-  vasat: 'Ucuz ama vasat',
-  zayif: 'Ne ucuz ne kaliteli',
+  sagUst: 'Sağ-üst',
+  solUst: 'Sol-üst',
+  sagAlt: 'Sağ-alt',
+  solAlt: 'Sol-alt',
+};
+
+export const KADRAN_ACIKLAMA: Record<Kadran, string> = {
+  sagUst: 'İki oran da medyanın üzerinde',
+  solUst: 'Yalnız ROIC medyanın üzerinde',
+  sagAlt: 'Yalnız FVÖK / FD medyanın üzerinde',
+  solAlt: 'İki oran da medyanın altında',
+};
+
+/** Grafik içindeki kadran etiketleri (dar ekranda kısa biçim). */
+export const KADRAN_ETIKETI: Record<Kadran, { uzun: string; kisa: string }> = {
+  sagUst: { uzun: 'İkisi de medyan üstü', kisa: 'İkisi de üstte' },
+  solUst: { uzun: 'Yalnız ROIC medyan üstü', kisa: 'ROIC üstte' },
+  sagAlt: { uzun: 'Yalnız FVÖK / FD medyan üstü', kisa: 'FVÖK / FD üstte' },
+  solAlt: { uzun: 'İkisi de medyan altı', kisa: 'İkisi de altta' },
 };
 
 export interface MfSirali extends MfHisse {
@@ -132,12 +150,12 @@ export function siralar(degerler: number[]): number[] {
 }
 
 export function kadranBul(ey: number, roic: number, mx: number | null, my: number | null): Kadran {
-  const ucuz = mx !== null && ey >= mx;
-  const kaliteli = my !== null && roic >= my;
-  if (ucuz && kaliteli) return 'ideal';
-  if (kaliteli) return 'pahali';
-  if (ucuz) return 'vasat';
-  return 'zayif';
+  const eyUstte = mx !== null && ey >= mx;
+  const roicUstte = my !== null && roic >= my;
+  if (eyUstte && roicUstte) return 'sagUst';
+  if (roicUstte) return 'solUst';
+  if (eyUstte) return 'sagAlt';
+  return 'solAlt';
 }
 
 export function hesapla(hisseler: MfHisse[], f: MfFiltre): MfSonuc {
@@ -159,7 +177,7 @@ export function hesapla(hisseler: MfHisse[], f: MfFiltre): MfSonuc {
   return { liste, medyanEy, medyanRoic };
 }
 
-/** Önceki çeyreğin anlık görüntüsüne göre ideal kadrana girenler / çıkanlar. */
+/** Önceki çeyreğin anlık görüntüsüne göre sağ-üst kadrana girenler / çıkanlar. */
 export function kadranDegisimleri(veri: MfVeri, sonuc: MfSonuc) {
   const onceki = veri.onceki;
   if (!onceki) return null;
@@ -175,10 +193,10 @@ export function kadranDegisimleri(veri: MfVeri, sonuc: MfSonuc) {
   const girenler: MfSirali[] = [];
   const cikanlar: MfSirali[] = [];
   ortak.forEach((h, i) => {
-    const eskiIdeal = kadranBul(pEy[i], pRoic[i], mx, my) === 'ideal';
-    const yeniIdeal = h.kadran === 'ideal';
-    if (yeniIdeal && !eskiIdeal) girenler.push(h);
-    if (!yeniIdeal && eskiIdeal) cikanlar.push(h);
+    const eskiSagUst = kadranBul(pEy[i], pRoic[i], mx, my) === 'sagUst';
+    const yeniSagUst = h.kadran === 'sagUst';
+    if (yeniSagUst && !eskiSagUst) girenler.push(h);
+    if (!yeniSagUst && eskiSagUst) cikanlar.push(h);
   });
   return { donem: onceki.donem, tarih: onceki.tarih, aciklama: onceki.aciklama, girenler, cikanlar, karsilastirilan: ortak.length };
 }

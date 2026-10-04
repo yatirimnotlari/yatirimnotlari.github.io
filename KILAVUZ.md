@@ -102,6 +102,33 @@ Bu dosyaları metin editörüyle açıp düzenleyebilirsin. HTML taglerini (`<p>
 
 ---
 
+## İçerik Dili (SPK Uyumu)
+
+Site bir yatırım danışmanlığı hizmeti değildir; yazılar ve araçlar bunu dilleriyle de yansıtmalı.
+Belirli hisseler için yönlendirici öneriler izinsiz yatırım danışmanlığı sayılabilir; fiyatları
+etkilemek amacıyla yanlış veya yanıltıcı bilgi, söylenti ya da yorum yaymak ise piyasa dolandırıcılığı
+suçudur (6362 sayılı Sermaye Piyasası Kanunu m. 107/2). "Yatırım tavsiyesi değildir" notu tek başına
+yeterli değildir; asıl önemli olan metnin kendisidir.
+
+Yeni bir yazı ya da araç eklerken (yapay zekâ araçlarıyla çalışırken de bu bölümü göster):
+
+- Hisse bazında **al / sat / tut, AL sinyali, hedef fiyat, fırsat, ideal, kaçırma, uçacak** gibi
+  yönlendirici ifadeler ve **ucuz / pahalı / kaliteli / vasat** gibi değer yargıları kullanma.
+- Araç sonuçlarını ölçütün adıyla anlat: "FVÖK / FD medyanın üzerinde", "SuperTrend yönü yukarı
+  döndü", "endekse en büyük pozitif katkı".
+- Bir yöntemin kendi terimini kullanman gerekiyorsa sahibine atfet: "Greenblatt'ın yönteminde
+  ucuzluk ölçüsü".
+- Her araç sayfasının üstüne `<AracUyari />` bileşenini (`src/components/AracUyari.astro`), altına
+  veri kaynağını ve Yasal Uyarı bağlantısını koy.
+- Geçmiş veriye dayanan yazılara ve geriye dönük testlere "geçmiş performans gelecekteki sonuçların
+  göstergesi değildir" notunu ekle; geçmişteki bir sonucu kural ya da garanti gibi sunma.
+- Belirli bir şirket hakkında doğrulanmamış haber veya söylenti paylaşma; resmi kaynak KAP'tır.
+- Pozisyon taşıdığın bir hisseyi ayrıca ele alıyorsan bunu yazıda belirt.
+- Paylaşılabilir görsellerde (ör. Magic Formula PNG'si) "yatırım tavsiyesi değildir" notu görselin
+  içinde yer almalı.
+
+---
+
 ## Site Yapısı
 
 ```
@@ -111,7 +138,8 @@ src/
 ├── layouts/Base.astro  ← Ortak HTML çatısı (SEO, fontlar)
 ├── components/
 │   ├── Header.astro    ← Üst menü + dark mode butonu
-│   └── Footer.astro    ← Alt bilgi
+│   ├── Footer.astro    ← Alt bilgi
+│   └── AracUyari.astro ← Araç sayfalarının üstündeki kısa yasal not
 └── styles/global.css   ← Renkler ve genel stiller
 
 public/
@@ -136,7 +164,7 @@ scripts/                ← Otomatik veri toplama scriptleri
 ├── mf_lib.py                     ← Magic Formula hesap çekirdeği (formüller burada)
 ├── fetch_mali_tablolar.py        ← Magic Formula: şirket listesi + mali tablolar (günlük)
 ├── fetch_tufe.py                 ← Magic Formula: TÜFE aylık değişimleri (günlük)
-├── calculate_magic_formula.py    ← Magic Formula: ucuzluk/kalite hesabı (günlük)
+├── calculate_magic_formula.py    ← Magic Formula: FVÖK/FD ve ROIC hesabı (günlük)
 └── tests/test_mf_lib.py          ← Magic Formula hesap testleri
 ```
 
@@ -151,14 +179,15 @@ oran hesaplanır ve haritada gösterilir:
 
 | Ölçü | Formül |
 |------|--------|
-| Ucuzluk (yatay eksen) | FVÖK / Firma değeri |
-| Kalite (dikey eksen) | FVÖK / (net işletme sermayesi + maddi duran varlıklar + kullanım hakkı varlıkları) |
+| FVÖK / FD — yatay eksen (Greenblatt'ın ucuzluk ölçüsü) | FVÖK / Firma değeri |
+| ROIC — dikey eksen (Greenblatt'ın kalite ölçüsü) | FVÖK / (net işletme sermayesi + maddi duran varlıklar + kullanım hakkı varlıkları + yatırım amaçlı gayrimenkuller) |
 
 - **FVÖK:** son 12 ayın net faaliyet kârı (brüt kâr − pazarlama − genel yönetim − Ar-Ge).
   Kur farkı / vade farkı gibi diğer faaliyet gelir-giderleri dahil değildir.
 - **Firma değeri:** piyasa değeri + finansal borçlar − nakit − KV finansal yatırımlar + azınlık payları.
-- **Kesikli çizgiler:** seçili evrenin (BIST 30/50/100/Tümü) medyanları. Sağ-üst köşe = ikisinde de medyanın üstü.
-- **Magic Formula sırası:** ucuzluk sırası + kalite sırası (en düşük toplam en iyi).
+- **Kesikli çizgiler:** seçili evrenin (BIST 30/50/100/Tümü) medyanları. Sağ-üst köşe = iki oran da medyanın üstünde.
+  Kadranlar sayfada yalnızca konumla adlandırılır (sağ-üst, sol-üst…), değer yargısı içeren ad kullanılmaz.
+- **Magic Formula sırası:** FVÖK/FD sırası + ROIC sırası (toplamı en düşük olan en üstte).
 - Bankalar, sigorta, aracı kurumlar, finansal kiralama/faktoring, yatırım ortaklıkları,
   GYO'lar ve spor kulüpleri kapsam dışıdır. Holdingler sayfada bir anahtarla açılır.
 - Formüllerin kodu: `scripts/mf_lib.py` (testleri `scripts/tests/test_mf_lib.py`).
@@ -228,13 +257,13 @@ olarak `data/magic-formula/gecmis/` klasörüne yazılır. Sitede yayınlanmaz, 
 
 Tüm BIST hisselerinde SuperTrend (ATR 10, çarpan 3, kaynak HL2) hesaplar.
 Güncel haftalık mum taramaya alınmaz; yalnızca bir önceki haftalık mumda
-satış trendinden alış trendine dönen hisseler listelenir. Yahoo Finance OHLC
+SuperTrend göstergesinin yönü aşağıdan yukarıya dönen hisseler listelenir. Yahoo Finance OHLC
 verisi bölünme ve nakit temettülere göre düzeltilir; eksik şirket işlemleri
 fiyat onarım özelliğiyle tamamlanır.
 
 Sayfa güncel sonucun altında önceki 12 tarama haftasını da gösterir. Her geçmiş
 haftada pazartesi tarama tarihi, değerlendirilen cuma kapanışı ve o kapanışta
-AL veren hisseler yer alır. Pazartesi güncellemesinde liste otomatik olarak bir
+gösterge yönü yukarı dönen hisseler yer alır. Pazartesi güncellemesinde liste otomatik olarak bir
 hafta ileri kayar.
 
 Veri her pazartesi 10:15 TRT'de otomatik yenilenir. Elle yenilemek için:

@@ -50,6 +50,6 @@ Bunu netleştirmekte fayda var çünkü isim aynı:
 
 ## Pratik kullanım
 
-Weinstein metodunda Mansfield RSI bir filtre olarak çalışır: 30 haftalık hareketli ortalamanın üzerinde, yatay direnci kıran ve aynı zamanda Mansfield RSI'ı sıfırın üzerinde olan hisseler Stage 2 adayıdır. Bu üçlü şart, sahte breakout'ları büyük ölçüde eler.
+Weinstein metodunda Mansfield RSI bir filtre olarak çalışır: 30 haftalık hareketli ortalamanın üzerinde, yatay direnci kıran ve aynı zamanda Mansfield RSI'ı sıfırın üzerinde olan hisseler Stage 2 adayıdır. Weinstein'a göre bu üçlü şart, sahte breakout'ları elemeye yardımcı olur.
 
 BIST tarafında uygulamak isterseniz karşılaştırma endeksi olarak XU100 (veya hissenin sektör endeksi) doğal seçimdir; aynı analizi sektör endeksi vs. XU100 üzerine kurarak hangi sektörün liderlik ettiğini de görebilirsiniz.
