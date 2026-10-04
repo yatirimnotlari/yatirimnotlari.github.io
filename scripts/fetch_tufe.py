@@ -96,6 +96,10 @@ def main() -> None:
         "aylik_degisim": dict(sorted(birlesik.items())),
         "endeks": {k: round(v, 6) for k, v in endeks.items()},
     }
+    # Veri değişmediyse dosyaya dokunma (gereksiz commit olmasın)
+    if onceki and onceki.get("aylik_degisim") == cikti["aylik_degisim"]:
+        log.info(f"TÜFE değişmedi (son ay {cikti['son_ay']})")
+        return
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(json.dumps(cikti, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     log.info(f"TÜFE kaydedildi: {len(endeks)} ay, son ay {cikti['son_ay']}")

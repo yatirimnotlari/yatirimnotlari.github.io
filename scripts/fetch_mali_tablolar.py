@@ -238,9 +238,12 @@ def main() -> None:
                 hatali += 1
                 continue
             sade["ticker"] = t
-            if json_yaz(TABLO_DIR / f"{t}.json", sade, girinti=None):
+            degisti = json_yaz(TABLO_DIR / f"{t}.json", sade, girinti=None)
+            if degisti:
                 guncellenen += 1
-            gunluk[t] = simdi.isoformat(timespec="seconds")
+            # Eksik dönem kontrolünde veri değişmediyse günlüğe yazma (her gün commit olmasın)
+            if degisti or t not in eksik:
+                gunluk[t] = simdi.isoformat(timespec="seconds")
             basarili += 1
         except Exception as exc:
             log.warning(f"{t}: {exc}")
