@@ -172,6 +172,7 @@ oran hesaplanır ve haritada gösterilir:
 | TCMB (TÜİK verisi) | TÜFE aylık değişimleri | `data/magic-formula/tufe.json` |
 | Hesap sonucu | Sayfanın okuduğu dosya | `public/data/magic-formula.json` |
 | Çeyreklik arşiv | "Kadran değiştirenler" karşılaştırması | `data/magic-formula/arsiv.json` |
+| Günlük arşiv (backtest için) | Her günün tüm BIST Magic Formula listesi | `data/magic-formula/gecmis/YYYY/YYYY-AA-GG.csv.gz` |
 
 BilancoVeri'nin ücretsiz geliştirici planı kaynak gösterilmesini şart koşar; sayfanın
 altındaki "Veri: KAP/Borsa İstanbul, derleyen BilancoVeri.com" satırı bu yüzden var,
@@ -195,11 +196,26 @@ TÜFE yalnızca FVÖK'ü bilanço tarihinden fiyat tarihine taşımak için kull
 
 Elle yenilemek için: GitHub → **Actions** → **Magic Formula Verisi Güncelle** → **Run workflow**.
 
+Sayfanın üstündeki "Son güncelleme" rozeti son hesaplamanın zamanını gösterir. Veri 3 günden
+eskiyse rozet sarıya döner ve altında bir uyarı çıkar; bu, otomatik güncellemenin aksadığı anlamına gelir.
+
+### Günlük arşiv (backtest için)
+
+Her çalıştırmada, tüm BIST şirketlerinin o günkü listesi (ucuzluk, kalite, Magic Formula sırası,
+fiyat, piyasa değeri, firma değeri, FVÖK, sermaye, bilanço dönemi, endeks üyeliği) sıkıştırılmış CSV
+olarak `data/magic-formula/gecmis/` klasörüne yazılır. Sitede yayınlanmaz, yalnızca GitHub'da durur.
+
+- Dosya adı fiyatların ait olduğu gündür: `2026/2026-10-05.csv.gz`
+- İçerik bir önceki günle aynıysa (hafta sonu, tatil) yeni dosya açılmaz.
+- Bir dosya ~14 KB; yılda ~3,5 MB, 10 yılda ~35 MB.
+- Sütunların açıklaması ve Python ile okuma örneği: `data/magic-formula/gecmis/README.md`
+
 ### Sorun giderme
 
 | Sorun | Muhtemel neden | Çözüm |
 |-------|---------------|-------|
 | Sayfada "Veri henüz hazır değil" | `public/data/magic-formula.json` yok | İş akışını elle çalıştır |
+| "Veri X gündür güncellenmedi" uyarısı | İş akışı birkaç gündür başarısız ya da kaynak güncellenmiyor | Actions'ta kırmızı çalışmaya bak, elle çalıştır |
 | Bir şirket haritada yok | Finansal şirket ya da "Haritada olmayan şirketler" listesindeki neden | Sayfadaki listeye bak |
 | İş akışı kırmızı (başarısız) | BilancoVeri / Borsa İstanbul geçici olarak erişilemez | Ertesi gün kendiliğinden düzelir; önceki veri sayfada kalır |
 | Testler başarısız | `scripts/mf_lib.py` değiştirilmiş | Değişikliği geri al ya da testi güncelle |

@@ -29,6 +29,8 @@ gerekmez. TÜFE yalnızca FVÖK'ü bilanço tarihinden fiyat tarihine taşımak 
 """
 from __future__ import annotations
 
+import csv
+import io
 import math
 import re
 from collections import Counter
@@ -400,13 +402,13 @@ def sirket_metrikleri(
     })
 
     if fvok is None:
-        sonuc["hata"] = "FVÖK verisi yok"
+        sonuc["hata"], sonuc["hata_kodu"] = "FVÖK verisi yok", "fvok_yok"
         return sonuc
     if not donen or kvy is None:
-        sonuc["hata"] = "Bilanço verisi eksik"
+        sonuc["hata"], sonuc["hata_kodu"] = "Bilanço verisi eksik", "bilanco_eksik"
         return sonuc
     if not piyasa_degeri or piyasa_degeri <= 0:
-        sonuc["hata"] = "Piyasa değeri yok"
+        sonuc["hata"], sonuc["hata_kodu"] = "Piyasa değeri yok", "piyasa_degeri_yok"
         return sonuc
 
     nis = (donen - nakit) - (kvy - kv_borc)
@@ -433,17 +435,17 @@ def sirket_metrikleri(
             sonuc["fd_favok"] = fd / (favok * k)
 
     if fd <= 0:
-        sonuc["hata"] = "Firma değeri sıfır ya da negatif (net nakit piyasa değerini aşıyor)"
+        sonuc["hata"], sonuc["hata_kodu"] = "Firma değeri sıfır ya da negatif (net nakit piyasa değerini aşıyor)", "fd_negatif"
         sonuc["bayraklar"].append("fd_negatif")
         return sonuc
     if sermaye <= 0:
-        sonuc["hata"] = "Yatırılan sermaye sıfır ya da negatif"
+        sonuc["hata"], sonuc["hata_kodu"] = "Yatırılan sermaye sıfır ya da negatif", "sermaye_negatif"
         return sonuc
     if fvok > 0 and (satis is None or satis <= 0 or fvok > satis * ESIK_FVOK_MARJI):
-        sonuc["hata"] = "FVÖK satışların %90'ından büyük; gelirin çoğu yatırım/değerleme geliri görünüyor"
+        sonuc["hata"], sonuc["hata_kodu"] = "FVÖK satışların %90'ından büyük; gelirin çoğu yatırım/değerleme geliri görünüyor", "fvok_marji"
         return sonuc
     if toplam_varlik and sermaye < toplam_varlik * ESIK_SERMAYE_VARLIK:
-        sonuc["hata"] = "Yatırılan sermaye toplam varlıkların %2'sinden az; ROIC anlamlı değil"
+        sonuc["hata"], sonuc["hata_kodu"] = "Yatırılan sermaye toplam varlıkların %2'sinden az; ROIC anlamlı değil", "sermaye_kucuk"
         return sonuc
 
     sonuc["ey"] = fvok_guncel / fd * 100
@@ -498,3 +500,56 @@ def baskin_donem(donemler: Iterable[str]) -> str | None:
     if not sayac:
         return None
     return max(sayac.items(), key=lambda kv: (kv[1], donem_sirasi(kv[0])))[0]
+
+
+# ─── Günlük arşiv ─────────────────────────────────────────────────────────────
+
+ARSIV_SUTUNLARI = (
+    "ticker", "sektor_kodu", "endeks", "donem", "fiyat", "piyasa_degeri", "fd",
+    "fvok", "sermaye", "ey", "roic", "mf_sira", "not",
+)
+
+
+def _yaz(deger, basamak: int) -> str:
+    if deger is None:
+        return ""
+    if isinstance(deger, float) and not math.isfinite(deger):
+        return ""
+    metin = f"{deger:.{basamak}f}".rstrip("0").rstrip(".") if basamak else str(int(round(deger)))
+    return "0" if metin in ("-0", "") else metin
+
+
+def arsiv_csv(hisseler: list[dict], disarida: list[dict], fiyatlar: dict[str, float | None]) -> str:
+    """
+    Günlük arşiv dosyasının içeriği (CSV, ticker'a göre sıralı).
+    hisseler: hesaplanan şirketler (çıktıdaki alanlarla, tutarlar milyon TL)
+    disarida: haritaya giremeyenler (kod alanıyla)
+    mf_sira: tüm BIST'te, holding ve zarar edenler hariç Magic Formula sırası.
+    """
+    evren = [h for h in hisseler if not h.get("holding") and "zarar" not in (h.get("bayraklar") or [])]
+    sira = {h["ticker"]: h["mf_sira"] for h in magic_formula_sirala(evren)}
+
+    def endeks(h: dict) -> str:
+        e = h.get("endeksler") or []
+        return "30" if "XU030" in e else "50" if "XU050" in e else "100" if "XU100" in e else ""
+
+    satirlar = []
+    for h in hisseler:
+        satirlar.append([
+            h["ticker"], h.get("sektor_kodu") or "", endeks(h), h.get("donem") or "",
+            _yaz(fiyatlar.get(h["ticker"]), 2), _yaz(h.get("piyasa_degeri"), 1), _yaz(h.get("fd"), 1),
+            _yaz(h.get("fvok"), 1), _yaz(h.get("sermaye"), 1), _yaz(h.get("ey"), 2), _yaz(h.get("roic"), 2),
+            str(sira[h["ticker"]]) if h["ticker"] in sira else "",
+            "|".join(b for b in (h.get("bayraklar") or []) if b != "nis_negatif"),
+        ])
+    for d in disarida:
+        satirlar.append([
+            d["ticker"], d.get("sektor_kodu") or "", endeks(d), d.get("donem") or "",
+            _yaz(fiyatlar.get(d["ticker"]), 2), "", "", "", "", "", "", "", "disarida:" + (d.get("kod") or "diger"),
+        ])
+    satirlar.sort(key=lambda r: r[0])
+    tampon = io.StringIO()
+    yazici = csv.writer(tampon, lineterminator="\n")
+    yazici.writerow(ARSIV_SUTUNLARI)
+    yazici.writerows(satirlar)
+    return tampon.getvalue()

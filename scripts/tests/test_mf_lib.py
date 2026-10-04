@@ -9,6 +9,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from mf_lib import (  # noqa: E402
+    ARSIV_SUTUNLARI,
+    arsiv_csv,
     baskin_donem,
     donem_eksik_mi,
     kullanilacak_donem,
@@ -156,6 +158,7 @@ class MetrikTestleri(unittest.TestCase):
     def test_fd_negatif(self):
         m = sirket_metrikleri(self.tablo(**{"1AA": 5000}), "2026/6", 1000.0)
         self.assertIn("hata", m)
+        self.assertEqual(m["hata_kodu"], "fd_negatif")
         self.assertIn("fd_negatif", m["bayraklar"])
 
     def test_piyasa_degeri_yok(self):
@@ -227,6 +230,33 @@ class SiralamaTestleri(unittest.TestCase):
     def test_medyan_cift(self):
         self.assertEqual(medyan([1, 2, 3, 4]), 2.5)
         self.assertIsNone(medyan([]))
+
+
+class ArsivTestleri(unittest.TestCase):
+    def test_csv(self):
+        hisseler = [
+            {"ticker": "BBB", "sektor_kodu": "XMESY", "endeksler": ["XU050", "XU100"], "holding": False,
+             "donem": "2026/6", "piyasa_degeri": 1000.0, "fd": 1200.56, "fvok": 120.0, "sermaye": 400.0,
+             "ey": 10.0, "roic": 30.0, "bayraklar": ["nis_negatif"]},
+            {"ticker": "AAA", "sektor_kodu": "XHOLD", "endeksler": [], "holding": True,
+             "donem": "2026/6", "piyasa_degeri": 50.0, "fd": 60.0, "fvok": 6.0, "sermaye": 10.0,
+             "ey": 10.0, "roic": 60.0, "bayraklar": []},
+            {"ticker": "CCC", "sektor_kodu": "XGIDA", "endeksler": ["XU030", "XU050", "XU100"], "holding": False,
+             "donem": "2026/6", "piyasa_degeri": 500.0, "fd": 450.0, "fvok": 90.0, "sermaye": 150.0,
+             "ey": 20.0, "roic": 60.0, "bayraklar": []},
+        ]
+        disarida = [{"ticker": "DDD", "sektor_kodu": "XBLSM", "endeksler": [], "donem": "2026/6", "kod": "fd_negatif"}]
+        metin = arsiv_csv(hisseler, disarida, {"BBB": 12.5, "CCC": 7.0, "DDD": 1.0})
+        satirlar = metin.strip().split("\n")
+        self.assertEqual(satirlar[0], ",".join(ARSIV_SUTUNLARI))
+        self.assertEqual([r.split(",")[0] for r in satirlar[1:]], ["AAA", "BBB", "CCC", "DDD"])
+        # Holding sıralamaya girmez; CCC hem ucuz hem kaliteli → 1
+        self.assertEqual(satirlar[1].split(",")[11], "")
+        self.assertEqual(satirlar[3].split(",")[11], "1")
+        self.assertEqual(satirlar[2], "BBB,XMESY,50,2026/6,12.5,1000,1200.6,120,400,10,30,2,")
+        self.assertTrue(satirlar[4].endswith("disarida:fd_negatif"))
+        # Aynı girdi → aynı çıktı
+        self.assertEqual(metin, arsiv_csv(hisseler, disarida, {"BBB": 12.5, "CCC": 7.0, "DDD": 1.0}))
 
 
 class KapsamTestleri(unittest.TestCase):

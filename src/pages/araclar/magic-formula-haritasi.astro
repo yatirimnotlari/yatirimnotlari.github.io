@@ -45,11 +45,19 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         (yatırılan sermaye getirisi) gösterir. Sağ-üst köşedekiler ikisinde de evrenin ortasının üzerinde.
       </p>
       {veri && (
-        <p class="meta-line" id="meta-line">
-          Fiyatlar: {tarihTr(veri.fiyat_tarihi)} · Bilançolar: {donemTr(veri.baskin_donem)} (son 12 ay) ·
-          {' '}{veri.ozet.hesaplanan} şirket hesaplandı
-        </p>
+        <div class="update-line">
+          {veri.updated_at && (
+            <span class="update-badge" id="guncelleme-rozet" data-guncelleme={veri.updated_at}>
+              <span class="update-dot" aria-hidden="true"></span>
+              <span id="guncelleme-metin">Son güncelleme: {tarihTr(veri.updated_at, true)}</span>
+            </span>
+          )}
+          <span class="meta-line">
+            Her gün otomatik güncellenir · Fiyatlar: {tarihTr(veri.fiyat_tarihi)} · Bilançolar: {donemTr(veri.baskin_donem)} (son 12 ay) · {veri.ozet.hesaplanan} şirket
+          </span>
+        </div>
       )}
+      <p id="eski-veri" class="stale-note" role="status" hidden></p>
     </header>
 
     {!veri || !sonuc ? (
@@ -284,7 +292,12 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
   .mf-page h1 { margin: 0 0 0.65rem; font-size: clamp(1.85rem, 4vw, 2.65rem); line-height: 1.15; }
   .mf-page .intro { max-width: 720px; margin: 0; color: var(--text-muted); font-size: 1rem; line-height: 1.65; }
   .mf-page .intro strong { color: var(--text); font-weight: 600; }
-  .mf-page .meta-line { margin: 0.75rem 0 0; color: var(--text-muted); font-size: 0.8rem; }
+  .mf-page .update-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; margin-top: 0.85rem; }
+  .mf-page .update-badge { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.22rem 0.65rem; border: 1px solid var(--border); border-radius: 999px; background: var(--card-bg); color: var(--text); font-size: 0.78rem; font-weight: 600; }
+  .mf-page .update-dot { width: 8px; height: 8px; border-radius: 50%; background: #0ca30c; }
+  .mf-page .update-badge.eski .update-dot { background: #fab219; }
+  .mf-page .meta-line { color: var(--text-muted); font-size: 0.8rem; }
+  .mf-page .stale-note { margin: 0.7rem 0 0; padding: 0.55rem 0.8rem; border-left: 3px solid #fab219; background: var(--bg-secondary); color: var(--text); font-size: 0.84rem; }
   .mf-page .mf-header { margin-bottom: 1.5rem; }
 
   .mf-page .empty-card { padding: 2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text-muted); text-align: center; }
@@ -1028,6 +1041,21 @@ const kapsamDisi = veri ? Object.entries(veri.ozet.kapsam_disi) : [];
         setTimeout(() => URL.revokeObjectURL(a.href), 2000);
       }, 'image/png');
     });
+
+    // Veri tazeliği: 3 günden eskiyse uyar (otomatik güncelleme aksamış olabilir)
+    const rozet = document.getElementById('guncelleme-rozet');
+    const zaman = rozet?.dataset.guncelleme ? new Date(rozet.dataset.guncelleme).getTime() : NaN;
+    if (rozet && Number.isFinite(zaman)) {
+      const gun = Math.floor((Date.now() - zaman) / 86_400_000);
+      if (gun >= 3) {
+        rozet.classList.add('eski');
+        const uyari = document.getElementById('eski-veri');
+        if (uyari) {
+          uyari.textContent = `Veri ${gun} gündür güncellenmedi. Otomatik güncelleme gecikmiş olabilir; harita son başarılı hesaplamayı gösteriyor.`;
+          uyari.hidden = false;
+        }
+      }
+    }
 
     kontrolleriEsitle();
     hepsiniCiz();
